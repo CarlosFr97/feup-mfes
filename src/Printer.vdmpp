@@ -1,0 +1,21 @@
+class Printer
+instance variables
+  queue:set of (Queue) := {};
+  id:int := 0;
+  location:seq of (char) := [];
+
+operations
+	public Printer: int * seq of (char) ==> Printer
+		Printer(identifier,local) ==
+			(
+				id := identifier;
+				location := local;
+				return self;
+			);
+			
+  public  queryPrint : ()  ==> ?
+  queryPrint() ==
+    is not yet specified;
+
+
+end Printer

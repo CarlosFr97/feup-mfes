@@ -1,0 +1,11 @@
+class Employee is subclass of Person
+instance variables
+  malfunctions:set of (Malfunction) := {};
+  
+operations
+	
+	public addMalfunction: Malfunction ==> ()
+		addMalfunction(malf) == 
+			malfunctions := malfunctions union {malf}
+
+end Employee

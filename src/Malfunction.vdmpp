@@ -1,0 +1,19 @@
+class Malfunction
+instance variables
+  client:Client;
+  employee:[Employee];
+  printer:Printer;
+  state:malfunctionState := <InAnalysis>;
+types
+	malfunctionState = <InAnalysis> | <InRepair> | <Fixed>; 
+	
+operations
+	public Malfunction : Client * [Employee] * Printer ==> Malfunction
+		Malfunction(cli,emp,print) == 
+			(
+				client := cli;
+				employee := emp;
+				printer := print;
+				return self;
+			);
+end Malfunction

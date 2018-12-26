@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_S29VwAkdEemYGPZNuCT4Vw" name="printing system">
+  <eAnnotations xmi:id="_S29VwQkdEemYGPZNuCT4Vw" source="Objing">
+    <contents xmi:type="uml:Property" xmi:id="_S29VwgkdEemYGPZNuCT4Vw" name="exporterVersion">
+      <defaultValue xmi:type="uml:LiteralString" xmi:id="_S29VwwkdEemYGPZNuCT4Vw" value="3.0.0"/>
+    </contents>
+  </eAnnotations>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29VxAkdEemYGPZNuCT4Vw" name="Person" isAbstract="true">
+    <ownedComment xmi:id="_S29VxQkdEemYGPZNuCT4Vw">
+      <body>&lt;p>Representa&amp;ccedil;&amp;atilde;o abstrata de uma pessoa, que para este sistema so poder&amp;aacute; ser de dois tipos, Cliente e Empregado&lt;/p>
+</body>
+    </ownedComment>
+    <ownedAttribute xmi:id="_S29VxgkdEemYGPZNuCT4Vw" name="name" visibility="private" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29VxwkdEemYGPZNuCT4Vw" name="birthDay" visibility="private" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29VyAkdEemYGPZNuCT4Vw" name="Client">
+    <generalization xmi:id="_S29VyQkdEemYGPZNuCT4Vw" general="_S29VxAkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29VygkdEemYGPZNuCT4Vw" name="malfunctions" visibility="public" type="_S29WDQkdEemYGPZNuCT4Vw" association="_S29V1gkdEemYGPZNuCT4Vw">
+      <ownedComment xmi:id="_S29VywkdEemYGPZNuCT4Vw">
+        <body>&lt;Enter note text here></body>
+      </ownedComment>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29VzAkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29VzQkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29VzgkdEemYGPZNuCT4Vw" name="documents" visibility="public" type="_S29V3gkdEemYGPZNuCT4Vw" association="_S29V1wkdEemYGPZNuCT4Vw">
+      <ownedComment xmi:id="_S29VzwkdEemYGPZNuCT4Vw">
+        <body>&lt;Enter note text here></body>
+      </ownedComment>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V0AkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29V0QkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29V0gkdEemYGPZNuCT4Vw" name="account" visibility="private" isUnique="false">
+      <ownedComment xmi:id="_S29V0wkdEemYGPZNuCT4Vw">
+        <body>&lt;Enter note text here></body>
+      </ownedComment>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EFloat"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_S29V1AkdEemYGPZNuCT4Vw" name="printDocument" visibility="public"/>
+    <ownedOperation xmi:id="_S29V1QkdEemYGPZNuCT4Vw" name="payDocument" visibility="public"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29V1gkdEemYGPZNuCT4Vw" memberEnd="_S29VygkdEemYGPZNuCT4Vw _S29WDgkdEemYGPZNuCT4Vw"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29V1wkdEemYGPZNuCT4Vw" memberEnd="_S29VzgkdEemYGPZNuCT4Vw _S29V3wkdEemYGPZNuCT4Vw"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29V2AkdEemYGPZNuCT4Vw" name="Employee">
+    <generalization xmi:id="_S29V2QkdEemYGPZNuCT4Vw" general="_S29VxAkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29V2gkdEemYGPZNuCT4Vw" name="malfunctions" visibility="public" type="_S29WDQkdEemYGPZNuCT4Vw" association="_S29V3QkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V2wkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29V3AkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29V3QkdEemYGPZNuCT4Vw" memberEnd="_S29V2gkdEemYGPZNuCT4Vw _S29WDwkdEemYGPZNuCT4Vw"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29V3gkdEemYGPZNuCT4Vw" name="Document">
+    <ownedAttribute xmi:id="_S29V3wkdEemYGPZNuCT4Vw" name="client" visibility="public" type="_S29VyAkdEemYGPZNuCT4Vw" association="_S29V1wkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29V4AkdEemYGPZNuCT4Vw" name="queue" visibility="public" type="_S29WBwkdEemYGPZNuCT4Vw" association="_S29V5AkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29V4QkdEemYGPZNuCT4Vw" name="size" visibility="private" type="_S29V5QkdEemYGPZNuCT4Vw" isUnique="false"/>
+    <ownedAttribute xmi:id="_S29V4gkdEemYGPZNuCT4Vw" name="color" visibility="private" type="_S29V6QkdEemYGPZNuCT4Vw" isUnique="false"/>
+    <ownedAttribute xmi:id="_S29V4wkdEemYGPZNuCT4Vw" name="type" visibility="private" type="_S29V7AkdEemYGPZNuCT4Vw" isUnique="false"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29V5AkdEemYGPZNuCT4Vw" memberEnd="_S29V4AkdEemYGPZNuCT4Vw _S29WCAkdEemYGPZNuCT4Vw"/>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_S29V5QkdEemYGPZNuCT4Vw" name="documentSize">
+    <ownedComment xmi:id="_S29V5gkdEemYGPZNuCT4Vw">
+      <body>&lt;Enter note text here></body>
+    </ownedComment>
+    <ownedLiteral xmi:id="_S29V5wkdEemYGPZNuCT4Vw" name="A3"/>
+    <ownedLiteral xmi:id="_S29V6AkdEemYGPZNuCT4Vw" name="A4"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_S29V6QkdEemYGPZNuCT4Vw" name="documentColor">
+    <ownedLiteral xmi:id="_S29V6gkdEemYGPZNuCT4Vw" name="Black and White"/>
+    <ownedLiteral xmi:id="_S29V6wkdEemYGPZNuCT4Vw" name="Colors"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_S29V7AkdEemYGPZNuCT4Vw" name="documentType">
+    <ownedLiteral xmi:id="_S29V7QkdEemYGPZNuCT4Vw" name="Portrait"/>
+    <ownedLiteral xmi:id="_S29V7gkdEemYGPZNuCT4Vw" name="Landscape"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29V7wkdEemYGPZNuCT4Vw" name="Printer">
+    <ownedAttribute xmi:id="_S29V8AkdEemYGPZNuCT4Vw" name="queue" visibility="public" type="_S29WBwkdEemYGPZNuCT4Vw" association="_S29V9gkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V8QkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29V8gkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29V8wkdEemYGPZNuCT4Vw" name="id" visibility="private" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29V9AkdEemYGPZNuCT4Vw" name="location" visibility="private" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_S29V9QkdEemYGPZNuCT4Vw" name="queryPrint" visibility="public"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29V9gkdEemYGPZNuCT4Vw" memberEnd="_S29V8AkdEemYGPZNuCT4Vw _S29WCwkdEemYGPZNuCT4Vw"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29V9wkdEemYGPZNuCT4Vw" name="Print Manager">
+    <ownedAttribute xmi:id="_S29V-AkdEemYGPZNuCT4Vw" name="client" visibility="public" type="_S29VyAkdEemYGPZNuCT4Vw" association="_S29WAQkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V-QkdEemYGPZNuCT4Vw" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29V-gkdEemYGPZNuCT4Vw" name="employee" visibility="public" type="_S29V2AkdEemYGPZNuCT4Vw" association="_S29WAwkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V-wkdEemYGPZNuCT4Vw" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29V_AkdEemYGPZNuCT4Vw" name="printer" visibility="public" type="_S29V7wkdEemYGPZNuCT4Vw" association="_S29WBQkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29V_QkdEemYGPZNuCT4Vw" value="*"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_S29V_gkdEemYGPZNuCT4Vw" name="reportPrinters" visibility="public"/>
+    <ownedOperation xmi:id="_S29V_wkdEemYGPZNuCT4Vw" name="reportClients" visibility="public"/>
+    <ownedOperation xmi:id="_S29WAAkdEemYGPZNuCT4Vw" name="reportEmployees" visibility="public"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29WAQkdEemYGPZNuCT4Vw" memberEnd="_S29V-AkdEemYGPZNuCT4Vw _S29WAgkdEemYGPZNuCT4Vw">
+    <ownedEnd xmi:id="_S29WAgkdEemYGPZNuCT4Vw" visibility="public" type="_S29V9wkdEemYGPZNuCT4Vw" association="_S29WAQkdEemYGPZNuCT4Vw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29WAwkdEemYGPZNuCT4Vw" memberEnd="_S29V-gkdEemYGPZNuCT4Vw _S29WBAkdEemYGPZNuCT4Vw">
+    <ownedEnd xmi:id="_S29WBAkdEemYGPZNuCT4Vw" visibility="public" type="_S29V9wkdEemYGPZNuCT4Vw" association="_S29WAwkdEemYGPZNuCT4Vw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29WBQkdEemYGPZNuCT4Vw" memberEnd="_S29V_AkdEemYGPZNuCT4Vw _S29WBgkdEemYGPZNuCT4Vw">
+    <ownedEnd xmi:id="_S29WBgkdEemYGPZNuCT4Vw" visibility="public" type="_S29V9wkdEemYGPZNuCT4Vw" association="_S29WBQkdEemYGPZNuCT4Vw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29WBwkdEemYGPZNuCT4Vw" name="Queue">
+    <ownedAttribute xmi:id="_S29WCAkdEemYGPZNuCT4Vw" name="documents" visibility="public" type="_S29V3gkdEemYGPZNuCT4Vw" association="_S29V5AkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29WCQkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29WCgkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29WCwkdEemYGPZNuCT4Vw" name="printer" visibility="public" type="_S29V7wkdEemYGPZNuCT4Vw" association="_S29V9gkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29WDAkdEemYGPZNuCT4Vw" value="*"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_S29WDQkdEemYGPZNuCT4Vw" name="Malfunction">
+    <ownedAttribute xmi:id="_S29WDgkdEemYGPZNuCT4Vw" name="client" visibility="public" type="_S29VyAkdEemYGPZNuCT4Vw" association="_S29V1gkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29WDwkdEemYGPZNuCT4Vw" name="employee" visibility="public" type="_S29V2AkdEemYGPZNuCT4Vw" association="_S29V3QkdEemYGPZNuCT4Vw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29WEAkdEemYGPZNuCT4Vw"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_S29WEQkdEemYGPZNuCT4Vw" name="printer" visibility="public" type="_S29V7wkdEemYGPZNuCT4Vw" association="_S29WEwkdEemYGPZNuCT4Vw"/>
+    <ownedAttribute xmi:id="_S29WEgkdEemYGPZNuCT4Vw" name="state" visibility="private" type="_S29WFwkdEemYGPZNuCT4Vw" isUnique="false"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S29WEwkdEemYGPZNuCT4Vw" memberEnd="_S29WEQkdEemYGPZNuCT4Vw _S29WFAkdEemYGPZNuCT4Vw">
+    <ownedEnd xmi:id="_S29WFAkdEemYGPZNuCT4Vw" visibility="public" type="_S29WDQkdEemYGPZNuCT4Vw" association="_S29WEwkdEemYGPZNuCT4Vw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S29WFQkdEemYGPZNuCT4Vw" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S29WFgkdEemYGPZNuCT4Vw"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_S29WFwkdEemYGPZNuCT4Vw" name="malfunctionState">
+    <ownedLiteral xmi:id="_S29WGAkdEemYGPZNuCT4Vw" name="In Analysis"/>
+    <ownedLiteral xmi:id="_S29WGQkdEemYGPZNuCT4Vw" name="In Repair"/>
+    <ownedLiteral xmi:id="_S29WGgkdEemYGPZNuCT4Vw" name="Fixed"/>
+  </packagedElement>
+</uml:Model>

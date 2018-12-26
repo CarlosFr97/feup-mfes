@@ -1,0 +1,34 @@
+class PrintManager
+instance variables
+  clients:set of (Client) := {};
+  employees:set of (Employee) := {};
+  printers:set of (Printer) := {};
+
+operations
+
+	public addClient:  set of (Document) * real ==> ()
+		addClient(document,account) ==
+			clients := clients union {new Client (document,account)};
+			
+	public addEmployee: () ==> ()
+		addEmployee() ==
+			 employees := employees union {new Employee()};
+	
+	public addPrinter: int * seq of (char) ==> ()
+		addPrinter(id,local) == 
+			printers := printers union {new Printer(id,local)};
+
+  public  reportPrinters : ()  ==> ?
+  reportPrinters() ==
+    is not yet specified;
+
+  public  reportClients : ()  ==> ?
+  reportClients() ==
+    is not yet specified;
+
+  public  reportEmployees : ()  ==> ?
+  reportEmployees() ==
+    is not yet specified;
+
+
+end PrintManager

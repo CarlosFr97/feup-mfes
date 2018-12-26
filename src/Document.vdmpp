@@ -1,0 +1,44 @@
+class Document
+instance variables
+  client:Client;
+  queue:Queue;
+  size:documentSize := <A4>;
+  color:documentColor := <BlackWhite>;
+  type:documentType := <Portrait>;
+  price:real := 0;
+ 
+types
+	public documentSize = <A3> | <A4>;
+	public documentColor = <BlackWhite> | <Colors>;
+	public documentType = <Portrait> | <Landscape>;
+operations
+
+	public Document : Client * documentSize * documentColor * documentType ==> Document
+		Document(cli,siz,col,ty) == 
+			(
+				client := cli;
+				size := siz;
+				color := col;
+				type := ty;
+				return self;
+			);
+
+	public getPrice: () ==> real
+		getPrice() ==
+			return price;
+
+	public calculatePrice : () ==> ()
+	calculatePrice() ==
+		cases true: 
+			(size = <A3>) ->	 price := price + 0.2, 
+			(size = <A4>) ->  price := price + 0.1,
+			(color = <BlackWhite>) -> price := price + 0.1,
+			(color = <Colors>) -> price := price + 0.25,
+			others -> price := price
+		end;
+		
+	public sendToPrint: () ==> ()
+		sendToPrint() ==
+			 is not yet specified;
+	
+end Document

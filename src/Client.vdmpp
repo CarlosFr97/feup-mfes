@@ -1,0 +1,46 @@
+class Client is subclass of Person
+instance variables
+  malfunctions:set of (Malfunction) := {};
+  documents:set of (Document) := {};
+  account:real := 0;
+
+types
+	public documentSize = <A3> | <A4>;
+	public documentColor = <BlackWhite> | <Colors>;
+	public documentType = <Portrait> | <Landscape>;
+
+operations
+
+	public Client: set of (Document) * real ==> Client
+		Client(doc,acc) == 
+			(
+				documents := doc;
+				account := acc;
+				return self;
+			)
+			pre acc > 0
+			post account >= 0.2;
+	
+	public depositMoney: real ==> ()
+		depositMoney(money) ==
+			   is not yet specified
+		pre money > 0 and account >= 0
+		post account = account + money; 
+	
+	public createDocument: documentSize * documentType * documentColor ==> ()
+		createDocument(size,type,color) ==
+			(
+				documents := documents union {new Document(self,size,color,type)}
+			);
+	
+  public  printDocuments : ()  ==> ?
+  printDocuments() ==
+    is not yet specified;
+
+  public  payDocument : Document  ==> ()
+  payDocument(d) ==
+    	 account := account - d.getPrice()
+	pre d in set documents and account > 0
+
+
+end Client

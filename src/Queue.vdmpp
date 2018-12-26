@@ -1,0 +1,19 @@
+class Queue
+instance variables
+  documents:seq of (Document) := [];
+  printer:set of (Printer) := {};
+  
+operations
+	
+	public addDocument: Document ==> ()
+		addDocument(d) ==
+			documents := documents ^ [d];
+	/*public removeDocument: Document ==> ()
+		removeDocument(d) ==
+			documents := documents \ [d];
+			
+	public removeFirst: () ==> ()
+		removeFirst() == 
+			documents := documents \ [hd documents];*/
+			
+end Queue

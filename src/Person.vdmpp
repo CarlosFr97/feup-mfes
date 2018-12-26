@@ -1,0 +1,6 @@
+class Person
+instance variables
+  name:seq of (char);
+  birthDay:seq of (char);
+
+end Person
