@@ -1,19 +1,43 @@
 class Malfunction
 instance variables
   client:Client;
-  employee:[Employee];
+  employee:[Employee] := nil;
   printer:Printer;
-  state:malfunctionState := <InAnalysis>;
+  state:malfunctionState := <Waiting>;
+  description: seq of (char) := [];
+  problem: problemType := nil;
 types
-	malfunctionState = <InAnalysis> | <InRepair> | <Fixed>; 
+	public malfunctionState = <Waiting> | <InRepair> | <Fixed>; 
+	public problemType = <Toner> | <Paper> | <Other>;
 	
 operations
-	public Malfunction : Client * [Employee] * Printer ==> Malfunction
-		Malfunction(cli,emp,print) == 
+	public Malfunction : Client  * Printer * problemType * seq of (char) ==> Malfunction
+		Malfunction(cli,print,type,desc) == 
 			(
 				client := cli;
-				employee := emp;
 				printer := print;
+				description := desc;
+				problem := type;
 				return self;
 			);
+			
+	public getState: () ==> malfunctionState
+		getState() == 
+			return state;
+			
+			
+	public assignEmployee: Employee * Employee ==> ()
+		assignEmployee(adm,emp) ==
+			(
+			employee:= emp;
+			changeState(emp,<InRepair>);
+			emp.addMalfunction(self);
+			)
+		pre employee = nil and state = <Waiting> and adm.getRole() = <Admin> and emp.getRole() = <Regular>;
+			
+	public changeState: Employee * malfunctionState ==> ()
+		changeState(emp,newState) ==
+			state := newState
+		pre state <> nil and state <> <Fixed> and (emp = employee or emp.getRole() = <Admin>)
+		post state <> nil and state <> <Waiting> ;
 end Malfunction

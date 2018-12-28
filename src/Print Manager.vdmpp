@@ -72,12 +72,32 @@ operations
    pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
    
 
-  public  reportEmployees : ()  ==> ?
-  reportEmployees() ==
-    is not yet specified
+  public  reportEmployees : seq of (char)  ==> ?
+  reportEmployees(name) ==
+  (
+  	
+  	dcl allMalfs :map Malfunction`malfunctionState to int := {<InRepair>|-> 0,<Fixed> |-> 0};
+    dcl employee :Employee := getEmployee(name);
+    for all malfunction in set employee.getMalfunctions() do (
+    	dcl pair :map Malfunction`malfunctionState to int := {malfunction.getState()} <: allMalfs;
+  		dcl state :Malfunction`malfunctionState := malfunction.getState();
+    	dcl newPair :map Malfunction`malfunctionState to int := {state |-> pair(state) + 1};
+    	allMalfs := allMalfs ++ newPair;
+    );
+    return allMalfs;
+   )
   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
   
     
+  public getEmployee: seq of (char) ==> [Employee]
+  	getEmployee(name) ==
+  		(for all employee in set employees do (
+  			if employee.getName() = name then (
+  				return employee
+  			)
+  		
+  		);
+  		return nil);
 
 
 end PrintManager

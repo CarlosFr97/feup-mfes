@@ -3,6 +3,7 @@ instance variables
   id:int := 0;
   queues: set of (Queue) := {};
   location:seq of (char) := [];
+  malfunctions: set of (Malfunction) := {};
 
 operations
 	public Printer: int * seq of (char) * set of (Queue) ==> Printer
@@ -32,7 +33,11 @@ operations
    			client.payDocument(doc);
    			list.removeDocument(doc);
    		);
-   		
+   	
+   	public addMalfunction: Malfunction ==> ()
+   		addMalfunction(malf) ==
+   			malfunctions := malfunctions union {malf}
+   		post malf in set malfunctions;
    	
    
 	

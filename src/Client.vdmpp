@@ -43,5 +43,15 @@ operations
     	 account := account - d.getPrice()
 	pre d in set documents and account > d.getPrice()
 	post account = account~ - d.getPrice();
+	
+	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> ()
+		reportMalfunction(printer,type,desc) ==
+		(
+			dcl malf :Malfunction := new Malfunction(self,printer,type,desc);
+			printer.addMalfunction(malf);
+			malfunctions := malfunctions union {malf};
+		);
+		
+		
 
 end Client
