@@ -3,12 +3,15 @@ instance variables
   clients:set of (Client) := {};
   employees:set of (Employee) := {};
   printers:set of (Printer) := {};
+  queues: set of (Queue) := {};
 
 operations
 
 	public addClient:  set of (Document) * real ==> ()
 		addClient(document,account) ==
-			clients := clients union {new Client (document,account)};
+			(
+				clients := clients union {new Client(document, account, self)};
+			);
 			
 	public addEmployee: () ==> ()
 		addEmployee() ==
@@ -29,6 +32,7 @@ operations
   public  reportEmployees : ()  ==> ?
   reportEmployees() ==
     is not yet specified;
+    
 
 
 end PrintManager

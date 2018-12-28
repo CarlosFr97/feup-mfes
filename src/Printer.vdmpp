@@ -1,6 +1,5 @@
 class Printer
 instance variables
-  queue:set of (Queue) := {};
   id:int := 0;
   location:seq of (char) := [];
 

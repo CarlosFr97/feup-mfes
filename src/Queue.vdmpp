@@ -1,9 +1,22 @@
 class Queue
 instance variables
   documents:seq of (Document) := [];
-  printer:set of (Printer) := {};
+  size:documentSize;
+  color:documentColor;
   
+types
+	public documentSize = <A3> | <A4>;
+	public documentColor = <BlackWhite> | <Colors>;
+
 operations
+
+	public Queue: documentSize*documentColor ==> Queue
+		Queue(newSize, newColor) == 
+		(
+				size := newSize;
+				color := newColor;
+				return self;
+		);
 	
 	public addDocument: Document ==> ()
 		addDocument(d) ==

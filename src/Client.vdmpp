@@ -3,6 +3,7 @@ instance variables
   malfunctions:set of (Malfunction) := {};
   documents:set of (Document) := {};
   account:real := 0;
+  manager: [PrintManager];
 
 types
 	public documentSize = <A3> | <A4>;
@@ -11,26 +12,28 @@ types
 
 operations
 
-	public Client: set of (Document) * real ==> Client
-		Client(doc,acc) == 
+	public Client: set of (Document) * real * [PrintManager] ==> Client
+		Client(doc,acc, man) == 
 			(
 				documents := doc;
 				account := acc;
+				manager := man;
 				return self;
 			)
 			pre acc > 0
-			post account >= 0.2;
+			post account >= 0.2 and account = account~ + acc;
 	
 	public depositMoney: real ==> ()
-		depositMoney(money) ==
-			   is not yet specified
-		pre money > 0 and account >= 0
-		post account = account + money; 
+		depositMoney(value) ==
+			   account := account + value
+		pre value > 0 and account >= 0
+		post account = account + value; 
 	
 	public createDocument: documentSize * documentType * documentColor ==> ()
 		createDocument(size,type,color) ==
 			(
 				documents := documents union {new Document(self,size,color,type)}
+				
 			);
 	
   public  printDocuments : ()  ==> ?

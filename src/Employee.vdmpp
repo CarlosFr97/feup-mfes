@@ -1,8 +1,16 @@
 class Employee is subclass of Person
 instance variables
   malfunctions:set of (Malfunction) := {};
-  
+  role: Role := <Regular>;
+
+types
+	public Role = <Regular> | <Admin>; 
+
 operations
+	
+	public Employee: Role ==> Employee
+		Employee(newRole) ==
+			role := newRole;
 	
 	public addMalfunction: Malfunction ==> ()
 		addMalfunction(malf) == 
