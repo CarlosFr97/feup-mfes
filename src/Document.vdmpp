@@ -1,16 +1,17 @@
 class Document
 instance variables
   client:Client;
-  queue:Queue;
   size:documentSize := <A4>;
   color:documentColor := <BlackWhite>;
   type:documentType := <Portrait>;
   price:real := 0;
+  state: documentState := <ToPrint>;
  
 types
 	public documentSize = <A3> | <A4>;
 	public documentColor = <BlackWhite> | <Colors>;
 	public documentType = <Portrait> | <Landscape>;
+	public documentState = <Printed> | <ToPrint>;
 operations
 
 	public Document : Client * documentSize * documentColor * documentType ==> Document
@@ -23,10 +24,15 @@ operations
 				return self;
 			);
 
-	public getPrice: () ==> real
+	public pure getPrice: () ==> real
 		getPrice() ==
 			return price;
 
+	public pure getClient: () ==> Client
+		getClient() ==
+			return client;
+			
+		
 	public calculatePrice : () ==> ()
 	calculatePrice() ==
 		cases true: 
@@ -36,9 +42,6 @@ operations
 			(color = <Colors>) -> price := price + 0.25,
 			others -> price := price
 		end;
-		
-	public sendToPrint: () ==> ()
-		sendToPrint() ==
-			 is not yet specified;
-	
+
+
 end Document

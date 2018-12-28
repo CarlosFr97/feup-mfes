@@ -1,0 +1,7 @@
+class PrintManagerTest is subclass of Test
+
+operations
+	public static main: () ==> ()
+		main() ==
+			is not yet specified ;
+end PrintManagerTest

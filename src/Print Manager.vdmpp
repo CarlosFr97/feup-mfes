@@ -2,36 +2,81 @@ class PrintManager
 instance variables
   clients:set of (Client) := {};
   employees:set of (Employee) := {};
-  printers:set of (Printer) := {};
-  queues: set of (Queue) := {};
+  printers:set of Printer := {};
+	queues: set of (Queue) := {};
+	static currentUser: [Person] := nil; 
+	static adminLogged: bool := false;
+
 
 operations
 
-	public addClient:  set of (Document) * real ==> ()
-		addClient(document,account) ==
+	public addClient: real ==> ()
+		addClient(account) ==
 			(
-				clients := clients union {new Client(document, account, self)};
+				clients := clients union {new Client(account, self)};
 			);
-			
-	public addEmployee: () ==> ()
-		addEmployee() ==
-			 employees := employees union {new Employee()};
+		
+	public addQueue: Document`documentSize * Document`documentColor ==> ()
+		addQueue(size,color) ==
+			queues := queues union {new Queue(size,color)}
+		pre currentUser <> nil and currentUser in set employees;
+				
+	public addEmployee: Person`Role ==> ()
+		addEmployee(role) ==
+			 employees := employees union {new Employee(role)};
 	
-	public addPrinter: int * seq of (char) ==> ()
-		addPrinter(id,local) == 
-			printers := printers union {new Printer(id,local)};
-
+	public addPrinter: int * seq of (char) * set of (Queue) ==> ()
+		addPrinter(id,local,listofQueues) == 
+			(
+			dcl aux :Printer := new Printer(id,local,listofQueues);
+			printers := printers union { aux }
+			)
+		pre currentUser <> nil and currentUser in set employees;
+	
+	
+	public addDocument: Document`documentSize * Document`documentType * Document`documentColor ==> ()
+		addDocument(size,type,color) == 
+			(
+				dcl newDoc :Document := currentUser.addDocument(size,type,color);
+				for all queue in set queues do (
+					if queue.getColor() = color and queue.getSize() = size then
+						(
+							queue.addDocument(newDoc);
+							return;
+						)					
+				)
+			)
+		pre currentUser <> nil and currentUser in set clients;
+			
+	
+	public static getCurrentUser: () ==> Person	
+		getCurrentUser()==
+			return currentUser;
+	
+	public getPrinters: () ==> set of Printer
+		getPrinters() == 
+			return  printers
+		pre currentUser <> nil; 
+			
+			
   public  reportPrinters : ()  ==> ?
   reportPrinters() ==
-    is not yet specified;
+    is not yet specified
+   pre currentUser <> nil and currentUser in set employees;
+   	
 
+   	
   public  reportClients : ()  ==> ?
   reportClients() ==
-    is not yet specified;
+    is not yet specified
+   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+   
 
   public  reportEmployees : ()  ==> ?
   reportEmployees() ==
-    is not yet specified;
+    is not yet specified
+  pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+  
     
 
 

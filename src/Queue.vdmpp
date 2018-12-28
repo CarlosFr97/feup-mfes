@@ -1,16 +1,13 @@
 class Queue
 instance variables
-  documents:seq of (Document) := [];
-  size:documentSize;
-  color:documentColor;
-  
-types
-	public documentSize = <A3> | <A4>;
-	public documentColor = <BlackWhite> | <Colors>;
+  documents:set of (Document) := {};
+  size:Document`documentSize;
+  color:Document`documentColor;
+
 
 operations
 
-	public Queue: documentSize*documentColor ==> Queue
+	public Queue: Document`documentSize*Document`documentColor ==> Queue
 		Queue(newSize, newColor) == 
 		(
 				size := newSize;
@@ -18,15 +15,37 @@ operations
 				return self;
 		);
 	
+	
+	public getSize: () ==> Document`documentSize
+		getSize() ==
+			return size;
+	
+	public getColor: () ==> Document`documentColor
+		getColor() ==
+			return color;
+	
 	public addDocument: Document ==> ()
 		addDocument(d) ==
-			documents := documents ^ [d];
-	/*public removeDocument: Document ==> ()
+			documents := documents union  {d}
+		pre d not in set documents
+		post d in set documents;
+	
+	public removeDocument: Document ==> ()
 		removeDocument(d) ==
-			documents := documents \ [d];
-			
-	public removeFirst: () ==> ()
-		removeFirst() == 
-			documents := documents \ [hd documents];*/
+			documents := documents \ {d}
+		pre d in set documents
+		post d not in set documents;
+		
+	public getClientDocs: Client ==> set of (Document)
+		getClientDocs(client) ==
+		(	dcl allDocs: set of (Document) := {};
+			for all document in set documents do (
+				if document.getClient() = client then
+					allDocs := allDocs union {document};
+		
+			);
+			return allDocs;
+		)
+		
 			
 end Queue

@@ -1,0 +1,7 @@
+class Test
+
+operations
+	protected assert:bool ==> ()
+		assert(a) == return
+	pre a
+end Test

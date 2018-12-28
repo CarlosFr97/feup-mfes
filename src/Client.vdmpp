@@ -5,17 +5,13 @@ instance variables
   account:real := 0;
   manager: [PrintManager];
 
-types
-	public documentSize = <A3> | <A4>;
-	public documentColor = <BlackWhite> | <Colors>;
-	public documentType = <Portrait> | <Landscape>;
 
 operations
 
-	public Client: set of (Document) * real * [PrintManager] ==> Client
-		Client(doc,acc, man) == 
+	public Client:real * [PrintManager] ==> Client
+		Client(acc, man) == 
 			(
-				documents := doc;
+				role := <Client>;
 				account := acc;
 				manager := man;
 				return self;
@@ -29,21 +25,23 @@ operations
 		pre value > 0 and account >= 0
 		post account = account + value; 
 	
-	public createDocument: documentSize * documentType * documentColor ==> ()
+	public createDocument: documentSize * documentType * documentColor ==> Document
 		createDocument(size,type,color) ==
 			(
-				documents := documents union {new Document(self,size,color,type)}
+				dcl  doc :Document:= new Document(self,size,color,type);
+				documents := documents union {doc};
+				return doc;
 				
 			);
 	
-  public  printDocuments : ()  ==> ?
-  printDocuments() ==
+  public  printDocuments : set of Document  ==> ?
+  printDocuments(docs) ==
     is not yet specified;
 
   public  payDocument : Document  ==> ()
   payDocument(d) ==
     	 account := account - d.getPrice()
-	pre d in set documents and account > 0
-
+	pre d in set documents and account > d.getPrice()
+	post account = account~ - d.getPrice();
 
 end Client
