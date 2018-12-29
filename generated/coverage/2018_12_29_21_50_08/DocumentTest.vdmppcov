@@ -1,6 +1,0 @@
-class DocumentTest is subclass of Test
-
-operations
--- TODO Define operations here
-
-end DocumentTest

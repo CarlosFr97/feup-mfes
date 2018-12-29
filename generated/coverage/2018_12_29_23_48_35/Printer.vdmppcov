@@ -39,7 +39,9 @@ operations
    			malfunctions := malfunctions union {malf}
    		post malf in set malfunctions;
    	
-   
+   public getMalfunctions: () ==> set of (Malfunction)
+   	getMalfunctions() == 
+   		return malfunctions;
 	
 	
 

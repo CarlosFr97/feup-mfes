@@ -41,22 +41,37 @@ operations
 
   public  payDocument : Document  ==> ()
   payDocument(d) ==
-    	 account := account - d.getPrice()
+    	(
+    	 account := account - d.getPrice();
+    	 documents := documents \ {d}
+    	)
 	pre d in set documents and account > d.getPrice()
-	post account = account~ - d.getPrice();
+	post account = account~ - d.getPrice() and d not in set documents;
 	
-	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> ()
+	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
 		reportMalfunction(printer,type,desc) ==
 		(
 			dcl malf :Malfunction := new Malfunction(self,printer,type,desc);
 			printer.addMalfunction(malf);
 			malfunctions := malfunctions union {malf};
-		);
+			return malf
+		)
+		pre manager <> nil and printer in set manager.getPrinters(); 
 		
 	public getAccount: () ==> real
 		getAccount() ==
 			return account;
 		
+	public getDocuments: () ==> set of (Document)
+		getDocuments() ==
+			return documents;
+			
+	public getManager: () ==> PrintManager
+		getManager() ==
+			return manager;
 		
-
+	public getMalfunctions: () ==> set of (Malfunction)
+		getMalfunctions() ==
+			return malfunctions;
+	
 end Client

@@ -10,26 +10,34 @@ instance variables
 
 operations
 
-	public addClient: seq of (char) * seq of (char) * real ==> ()
+	public addClient: seq of (char) * seq of (char) * real ==> Client
 		addClient(username,password,account) ==
 			(
-				clients := clients union {new Client(username,password,account, self)};
+				dcl cli:Client := new Client(username,password,account, self);
+				clients := clients union {cli};
+				return cli
 			);
+			
 		
-	public addQueue: Document`documentSize * Document`documentColor ==> ()
+	public addQueue: Document`documentSize * Document`documentColor ==> Queue
 		addQueue(size,color) ==
-			queues := queues union {new Queue(size,color)}
+		(
+			dcl queue:Queue := new Queue(size,color);
+			queues := queues union {queue};
+			return queue
+		)
 		pre currentUser <> nil and currentUser in set employees;
 				
 	public addEmployee: User`Role ==> ()
 		addEmployee(role) ==
 			 employees := employees union {new Employee(role)};
 	
-	public addPrinter: int * seq of (char) * set of (Queue) ==> ()
+	public addPrinter: int * seq of (char) * set of (Queue) ==> Printer
 		addPrinter(id,local,listofQueues) == 
 			(
 			dcl aux :Printer := new Printer(id,local,listofQueues);
-			printers := printers union { aux }
+			printers := printers union { aux };
+			return aux
 			)
 		pre currentUser <> nil and currentUser in set employees;
 	
@@ -47,13 +55,16 @@ operations
 				)
 			)
 		pre currentUser <> nil and currentUser in set clients;
-			
+	
+	public static setCurrentUser: Client ==> ()
+		setCurrentUser(cli) ==
+			currentUser := cli;
 	
 	public static getCurrentUser: () ==> User	
 		getCurrentUser()==
 			return currentUser;
 	
-	public getPrinters: () ==> set of Printer
+	public pure getPrinters: () ==> set of Printer
 		getPrinters() == 
 			return  printers
 		pre currentUser <> nil; 
