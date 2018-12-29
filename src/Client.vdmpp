@@ -1,4 +1,4 @@
-class Client is subclass of Person
+class Client is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
   documents:set of (Document) := {};
@@ -8,9 +8,10 @@ instance variables
 
 operations
 
-	public Client:real * [PrintManager] ==> Client
-		Client(acc, man) == 
+	public Client:seq of (char) * seq of (char) * real * [PrintManager] ==> Client
+		Client(username,pass,acc, man) == 
 			(
+				initUser(username, pass);
 				role := <Client>;
 				account := acc;
 				manager := man;
@@ -51,6 +52,10 @@ operations
 			printer.addMalfunction(malf);
 			malfunctions := malfunctions union {malf};
 		);
+		
+	public getAccount: () ==> real
+		getAccount() ==
+			return account;
 		
 		
 

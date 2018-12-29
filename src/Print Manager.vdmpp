@@ -4,16 +4,16 @@ instance variables
   employees:set of (Employee) := {};
   printers:set of Printer := {};
 	queues: set of (Queue) := {};
-	static currentUser: [Person] := nil; 
+	static currentUser: [User] := nil; 
 	static adminLogged: bool := false;
 
 
 operations
 
-	public addClient: real ==> ()
-		addClient(account) ==
+	public addClient: seq of (char) * seq of (char) * real ==> ()
+		addClient(username,password,account) ==
 			(
-				clients := clients union {new Client(account, self)};
+				clients := clients union {new Client(username,password,account, self)};
 			);
 		
 	public addQueue: Document`documentSize * Document`documentColor ==> ()
@@ -21,7 +21,7 @@ operations
 			queues := queues union {new Queue(size,color)}
 		pre currentUser <> nil and currentUser in set employees;
 				
-	public addEmployee: Person`Role ==> ()
+	public addEmployee: User`Role ==> ()
 		addEmployee(role) ==
 			 employees := employees union {new Employee(role)};
 	
@@ -49,7 +49,7 @@ operations
 		pre currentUser <> nil and currentUser in set clients;
 			
 	
-	public static getCurrentUser: () ==> Person	
+	public static getCurrentUser: () ==> User	
 		getCurrentUser()==
 			return currentUser;
 	

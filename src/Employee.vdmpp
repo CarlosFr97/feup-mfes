@@ -1,4 +1,4 @@
-class Employee is subclass of Person
+class Employee is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
 

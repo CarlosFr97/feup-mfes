@@ -1,14 +1,25 @@
-class ClientTest
-types
--- TODO Define types here
-values
--- TODO Define values here
-instance variables
--- TODO Define instance variables here
+class ClientTest is subclass of Test
+
 operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+ 	public createClient: () ==> Client
+ 		createClient() ==
+ 			return new Client("utilizador","12345678",10.0,new PrintManager());
+ 	
+ 	public testClient: () ==> ()
+ 		testClient() ==
+ 			(
+ 				dcl cli:Client  := createClient();
+ 				assertEqual(cli.getRole(), <Client>);
+ 				assertEqual(cli.getAccount(), 10.0);
+ 			);
+ 			
+ 	public testAddMoney: () ==> ()
+ 		testAddMoney() ==
+ 			(
+ 				dcl cli:Client := createClient();
+ 				dcl money:real := 5.0;
+ 				cli.depositMoney(money);
+ 				assertEqual(cli.getAccount(),15.0);
+ 			);
+
 end ClientTest

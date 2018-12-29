@@ -1,6 +1,7 @@
-class Person
+class User
 instance variables
   protected name:seq of (char) := [];
+  protected password: seq of (char) := [];
   protected birthDay:seq of (char) := [];
   protected role: Role := nil;
 types
@@ -10,6 +11,16 @@ types
 	public documentType = <Portrait> | <Landscape>;
 	
 operations
+
+	protected initUser: seq of (char) * seq of (char) ==> ()
+		initUser(username,pass) ==
+		(
+			name := username;
+			password := pass;
+		)
+		pre len pass >= 8 and len username > 3
+		post name = username and password = pass;
+
 	public pure getRole: () ==> Role
 		getRole() ==
 			return role;
@@ -21,4 +32,4 @@ operations
 	public getName: () ==> seq of (char)
 		getName() == 
 			return name;
-end Person
+end User
