@@ -1,0 +1,103 @@
+class PrintManager
+instance variables
+  clients:set of (Client) := {};
+  employees:set of (Employee) := {};
+  printers:set of Printer := {};
+	queues: set of (Queue) := {};
+	static currentUser: [User] := nil; 
+	static adminLogged: bool := false;
+
+
+operations
+
+	public addClient: seq of (char) * seq of (char) * real ==> ()
+		addClient(username,password,account) ==
+			(
+				clients := clients union {new Client(username,password,account, self)};
+			);
+		
+	public addQueue: Document`documentSize * Document`documentColor ==> ()
+		addQueue(size,color) ==
+			queues := queues union {new Queue(size,color)}
+		pre currentUser <> nil and currentUser in set employees;
+				
+	public addEmployee: User`Role ==> ()
+		addEmployee(role) ==
+			 employees := employees union {new Employee(role)};
+	
+	public addPrinter: int * seq of (char) * set of (Queue) ==> ()
+		addPrinter(id,local,listofQueues) == 
+			(
+			dcl aux :Printer := new Printer(id,local,listofQueues);
+			printers := printers union { aux }
+			)
+		pre currentUser <> nil and currentUser in set employees;
+	
+	
+	public addDocument: Document`documentSize * Document`documentType * Document`documentColor ==> ()
+		addDocument(size,type,color) == 
+			(
+				dcl newDoc :Document := currentUser.addDocument(size,type,color);
+				for all queue in set queues do (
+					if queue.getColor() = color and queue.getSize() = size then
+						(
+							queue.addDocument(newDoc);
+							return;
+						)					
+				)
+			)
+		pre currentUser <> nil and currentUser in set clients;
+			
+	
+	public static getCurrentUser: () ==> User	
+		getCurrentUser()==
+			return currentUser;
+	
+	public getPrinters: () ==> set of Printer
+		getPrinters() == 
+			return  printers
+		pre currentUser <> nil; 
+			
+			
+  public  reportPrinters : ()  ==> ?
+  reportPrinters() ==
+    is not yet specified
+   pre currentUser <> nil and currentUser in set employees;
+   	
+
+   	
+  public  reportClients : ()  ==> ?
+  reportClients() ==
+    is not yet specified
+   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+   
+
+  public  reportEmployees : seq of (char)  ==> ?
+  reportEmployees(name) ==
+  (
+  	
+  	dcl allMalfs :map Malfunction`malfunctionState to int := {<InRepair>|-> 0,<Fixed> |-> 0};
+    dcl employee :Employee := getEmployee(name);
+    for all malfunction in set employee.getMalfunctions() do (
+    	dcl pair :map Malfunction`malfunctionState to int := {malfunction.getState()} <: allMalfs;
+  		dcl state :Malfunction`malfunctionState := malfunction.getState();
+    	dcl newPair :map Malfunction`malfunctionState to int := {state |-> pair(state) + 1};
+    	allMalfs := allMalfs ++ newPair;
+    );
+    return allMalfs;
+   )
+  pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+  
+    
+  public getEmployee: seq of (char) ==> [Employee]
+  	getEmployee(name) ==
+  		(for all employee in set employees do (
+  			if employee.getName() = name then (
+  				return employee
+  			)
+  		
+  		);
+  		return nil);
+
+
+end PrintManager

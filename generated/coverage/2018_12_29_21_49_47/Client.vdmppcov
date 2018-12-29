@@ -24,7 +24,7 @@ operations
 		depositMoney(value) ==
 			   account := account + value
 		pre value > 0 and account >= 0
-		post account = account~ + value; 
+		post account = account + value; 
 	
 	public createDocument: documentSize * documentType * documentColor ==> Document
 		createDocument(size,type,color) ==

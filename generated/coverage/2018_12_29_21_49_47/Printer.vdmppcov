@@ -1,0 +1,46 @@
+class Printer
+instance variables
+  id:int := 0;
+  queues: set of (Queue) := {};
+  location:seq of (char) := [];
+  malfunctions: set of (Malfunction) := {};
+
+operations
+	public Printer: int * seq of (char) * set of (Queue) ==> Printer
+		Printer(identifier,local,lists) ==
+			(
+				queues := lists ;
+				id := identifier;
+				location := local;
+				return self;
+			);
+			
+  public  queryPrint : Client  ==> set of (Document)
+  queryPrint(client) ==
+   (
+   	dcl docs: set of Document := {};
+   	for all queue in set queues do (
+   		docs := docs union queue.getClientDocs(client);
+   		
+   	);
+   	return docs;
+   );
+   
+   public print: Document*Queue ==> ()
+   	print(doc,list) ==
+   		(
+   			dcl client: Client := doc.getClient();
+   			client.payDocument(doc);
+   			list.removeDocument(doc);
+   		);
+   	
+   	public addMalfunction: Malfunction ==> ()
+   		addMalfunction(malf) ==
+   			malfunctions := malfunctions union {malf}
+   		post malf in set malfunctions;
+   	
+   
+	
+	
+
+end Printer
