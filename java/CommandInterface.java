@@ -386,6 +386,7 @@ public class CommandInterface {
             switch (option) {
                 case 1:
                     System.out.println("Add Employee");
+                    addEmployeeMenu();
                     break;
                 case 2:
                     System.out.println("Assign Employee to malfunction");
@@ -413,6 +414,22 @@ public class CommandInterface {
                     break;
             }
         }
+    }
+
+    public void addEmployeeMenu(){
+        System.out.println("============================");
+        System.out.println("|       NEW EMPLOYEE       |");
+        System.out.println("============================");
+        String employeeType;
+        System.out.println("    1 - Regular        2 - Admin    ");
+        int option = Utils.inInt("Choose what tyoe of employee: ");
+        employeeType = (option == 1) ? "<Regular>" : "<Admin>";
+
+        String employeeName = Utils.inString("Write the employee name: ");
+        String password = Utils.inPassword("Write employee password: ");
+
+        //TODO create employee
+
     }
 
 
