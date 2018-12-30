@@ -15,7 +15,11 @@ public class Utils{
             else
                 Runtime.getRuntime().exec("clear");
         } catch (IOException | InterruptedException ex) {}
-    }  
+    } 
+
+    public static boolean isNumeric(String str){
+        return str.matches("-?\\d+?");  //match a number
+    }
 
     //Method to make sure no data is available in the
     //input stream
