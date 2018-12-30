@@ -309,6 +309,114 @@ public class CommandInterface {
 
     }
 
+
+
+    public void employeeMenu() {
+        int option;
+        boolean running = true;
+
+        while(running){
+
+            Utils.clearScreen();
+            
+            // Display menu graphics
+            System.out.println("============================");
+            System.out.println("|     PRINTING SYSTEM      |");
+            System.out.println("============================");
+            System.out.println("| Employee Menu:           |");
+            System.out.println("|        1. Add Printer    |");
+            System.out.println("|        2. Add Queue      |");
+            System.out.println("|        3. Malfunctions   |");
+            System.out.println("|        4. Printers Report|");
+            System.out.println("|        5. Log Out        |");
+            System.out.println("============================");
+            option = Utils.inInt("Select Option: ");
+
+            //Switch construct
+            switch (option) {
+                case 1:
+                    System.out.println("Add Printer");
+                    break;
+                case 2:
+                    System.out.println("Add Queue");
+                    break;
+                case 3:
+                    System.out.println("Handle Malfunctions");
+                    break;
+                case 4:
+                    System.out.println("Printers Report");
+                    break;
+                case 5:
+                    System.out.println("Log Out");
+                    logOut();
+                    running = false;
+                    mainMenu();
+                    break;
+                default:
+                    System.out.println("Invalid Selection");
+                    break;
+            }
+        }
+    }
+
+    public void adminMenu() {
+        int option;
+        boolean running = true;
+
+        while(running){
+
+            Utils.clearScreen();
+            
+            // Display menu graphics
+            System.out.println("=============================");
+            System.out.println("|     PRINTING SYSTEM       |");
+            System.out.println("=============================");
+            System.out.println("| Admin Menu:               |");
+            System.out.println("|        1. Add Employee    |");
+            System.out.println("|        2. Assign Employee |");
+            System.out.println("|        3. Malfunctions    |");
+            System.out.println("|        4. Printers Report |");
+            System.out.println("|        5. Clients Report  |");
+            System.out.println("|        6. Employees Report|");
+            System.out.println("|        7. Log Out         |");
+            System.out.println("=============================");
+            option = Utils.inInt("Select Option: ");
+
+            //Switch construct
+            switch (option) {
+                case 1:
+                    System.out.println("Add Employee");
+                    break;
+                case 2:
+                    System.out.println("Assign Employee to malfunction");
+                    break;
+                case 3:
+                    System.out.println("Handle Malfunctions");
+                    break;
+                case 4:
+                    System.out.println("Printers Report");
+                    break;
+                case 5:
+                    System.out.println("Client Report");
+                    break;
+                case 6:
+                    System.out.println("Employees Report");
+                    break;
+                case 7:
+                    System.out.println("Log Out");
+                    logOut();
+                    running = false;
+                    mainMenu();
+                    break;
+                default:
+                    System.out.println("Invalid Selection");
+                    break;
+            }
+        }
+    }
+
+
+
     public void logOut(){
         //TODO LOGOUT
     }
