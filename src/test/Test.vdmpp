@@ -22,5 +22,16 @@ operations
 			)
 			post expected = actual;
 	
+		protected assertNotEqual: ? * ? ==> ()
+		assertNotEqual(expected,actual) ==
+			if expected = actual then (
+				IO`print("Actual value (");
+  			IO`print(actual); 
+  			IO`print(") equal to expected (");
+  			IO`print(expected);
+  			IO`println(")\n");
+			)
+			post expected <> actual;
+	
 	
 end Test

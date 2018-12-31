@@ -15,26 +15,27 @@ operations
 				return self;
 			);
 			
-  public  queryPrint : Client  ==> set of (Document)
-  queryPrint(client) ==
-   (
-   	dcl docs: set of Document := {};
-   	for all queue in set queues do (
-   		docs := docs union queue.getClientDocs(client);
-   		
-   	);
-   	return docs;
-   );
+  public queryPrint: ()  ==> set of (Document)
+	  queryPrint() ==
+	  (
+		   	dcl docs: set of Document := {};
+		   	for all queue in set queues do (
+		   		docs := docs union queue.getClientDocs();
+		   	);
+		   	return docs;
+	  )
+	  pre PrintManager`getInstance().getCurrentUser() <> nil;
    
-   public print: Document*Queue ==> ()
-   	print(doc,list) ==
-   		(
-   			dcl client: Client := doc.getClient();
-   			client.payDocument(doc);
-   			list.removeDocument(doc);
-   		);
+ public print: Document ==> ()
+		print(doc) ==
+		(
+			dcl client: Client := doc.getClient();
+			client.payDocument(doc);
+			doc.remove();
+		)
+		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs();
    	
-   	public addMalfunction: Malfunction ==> ()
+   public addMalfunction: Malfunction ==> ()
    		addMalfunction(malf) ==
    			malfunctions := malfunctions union {malf}
    		post malf in set malfunctions;

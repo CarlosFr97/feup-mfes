@@ -1,52 +1,54 @@
 class Client is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
-  documents:set of (Document) := {};
   account:real := 0;
-  manager: [PrintManager];
 
-
+	inv account >= 0
 operations
 
-	public Client:seq of (char) * seq of (char) * real * [PrintManager] ==> Client
-		Client(username,pass,acc, man) == 
+	public Client:seq of (char) * seq of (char) * real ==> Client
+		Client(username,pass,acc) == 
 			(
-				initUser(username, pass);
-				role := <Client>;
+				initUser(username, pass, <Client>);
 				account := acc;
-				manager := man;
 				return self;
 			)
 			pre acc > 0
 			post account >= 0.2 and account = account~ + acc;
 	
+	--accounting
+	
 	public depositMoney: real ==> ()
 		depositMoney(value) ==
-			   account := account + value
-		pre value > 0 and account >= 0
-		post account = account~ + value; 
-	
-	public createDocument: documentSize * documentType * documentColor ==> Document
-		createDocument(size,type,color) ==
 			(
-				dcl  doc :Document:= new Document(self,size,color,type);
-				documents := documents union {doc};
-				return doc;
-				
-			);
-	
-  public  printDocuments : set of Document  ==> ?
-  printDocuments(docs) ==
-    is not yet specified;
+				account := account + value;
+			)
+			pre value > 0 and PrintManager`getInstance().getCurrentUser() = self
+			post account = account~ + value; 
+		
+		
+	public  payDocument : Document  ==> ()
+  	payDocument(d) ==
+	  	(
+	  	 	account := account - d.getPrice();
+	  	)
+			pre d.getClient() = self and account > d.getPrice() and PrintManager`getInstance().getCurrentUser() = self
+			post account = account~ - d.getPrice();
+		
 
-  public  payDocument : Document  ==> ()
-  payDocument(d) ==
-    	(
-    	 account := account - d.getPrice();
-    	 documents := documents \ {d}
-    	)
-	pre d in set documents and account > d.getPrice()
-	post account = account~ - d.getPrice() and d not in set documents;
+ --actions
+ 
+	public addDocument: Document`documentSize * Document`documentType * Document`documentColor * seq of (char) * Document`Date ==> [Document]
+		addDocument(size,color, type, name, date) == 
+		(
+			dcl newDoc :Document := new Document(self, size,type,color, name, date);
+			if PrintManager`getInstance().addDocumentToQueue(newDoc) then 
+				return newDoc	
+			else
+				return nil;
+		)
+		pre PrintManager`getInstance().getCurrentUser() = self;
+		
 	
 	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
 		reportMalfunction(printer,type,desc) ==
@@ -56,22 +58,18 @@ operations
 			malfunctions := malfunctions union {malf};
 			return malf
 		)
-		pre manager <> nil and printer in set manager.getPrinters(); 
+		pre printer in set PrintManager`getInstance().getPrinters() and PrintManager`getInstance().getCurrentUser() = self; 
 		
-	public getAccount: () ==> real
+	-- getters
+		
+	public pure getAccount: () ==> real
 		getAccount() ==
-			return account;
-		
-	public getDocuments: () ==> set of (Document)
-		getDocuments() ==
-			return documents;
-			
-	public getManager: () ==> PrintManager
-		getManager() ==
-			return manager;
+			return account
+		pre PrintManager`getInstance().getCurrentUser() = self;
 		
 	public getMalfunctions: () ==> set of (Malfunction)
 		getMalfunctions() ==
-			return malfunctions;
+			return malfunctions
+		pre PrintManager`getInstance().getCurrentUser() = self;
 	
 end Client

@@ -15,7 +15,6 @@ operations
 				return self;
 		);
 	
-	
 	public getSize: () ==> Document`documentSize
 		getSize() ==
 			return size;
@@ -36,16 +35,23 @@ operations
 		pre d in set documents
 		post d not in set documents;
 		
-	public getClientDocs: Client ==> set of (Document)
-		getClientDocs(client) ==
-		(	dcl allDocs: set of (Document) := {};
-			for all document in set documents do (
+	public pure getClientDocs: () ==> set of (Document)
+		getClientDocs() ==
+		(	
+			dcl allDocs: set of (Document) := {};
+		  dcl client: User := PrintManager`getInstance().getCurrentUser();
+			for all document in set documents do
+			(
 				if document.getClient() = client then
 					allDocs := allDocs union {document};
-		
 			);
 			return allDocs;
 		)
+		pre PrintManager`getInstance().getCurrentUser() <> nil and PrintManager`getInstance().getCurrentUser().getRole() = <Client>;
+	
+	public pure getDocs: () ==> set of (Document)
+		getDocs() ==
+			return documents;
 		
 			
 end Queue

@@ -4,79 +4,130 @@ instance variables
   employees:set of (Employee) := {};
   printers:set of Printer := {};
 	queues: set of (Queue) := {};
-	static currentUser: [User] := nil; 
-	static adminLogged: bool := false;
-
+	currentUser: [User] := nil; 
+	private static printManager: PrintManager := new PrintManager();
 
 operations
 
-	public addClient: seq of (char) * seq of (char) * real ==> Client
-		addClient(username,password,account) ==
+	-- User authentication
+
+	private pure clientExists: seq of (char)  ==> bool
+		clientExists(name) ==
 			(
-				dcl cli:Client := new Client(username,password,account, self);
-				clients := clients union {cli};
-				return cli
+				for all client in set clients do
+				(
+					if client.getName() = name then
+						return true;
+				);
+				return false;
 			);
 			
+	private pure employeeExists: seq of (char)  ==> bool
+	employeeExists(name) ==
+		(
+			for all employee in set employees do
+			(
+				if employee.getName() = name then
+					return true;
+			);
+			return false;
+		);
+	
+
+	public addClient: seq of (char) * seq of (char) * real ==> [Client]
+		addClient(username,password,account) ==
+			(
+				dcl cli:Client := new Client(username,password,account);
+				clients := clients union {cli};
+				return login(username, password);
+			)
+			pre currentUser = nil and not clientExists(username)
+			post RESULT.getName() = username and RESULT.getAccount() = account;
+			
+				
+	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> Employee
+		addEmployee(username, password, role) ==
+			(
+				dcl emp: Employee := new Employee(username, password, role);
+			 	employees := employees union {emp};
+			 	return login(username, password);
+			)
+			pre currentUser = nil and not employeeExists(username)
+			post RESULT.getName() = username and RESULT.getRole() = role;
+			
+			
+	public login: seq of (char) * seq of (char) ==> User
+		login(username, password) ==
+		(
+			dcl users: set of (User) := clients union employees;
+			for all user in set users do
+			(
+				if user.isLoginCorrected(username, password) then
+				(
+					currentUser := user;
+					return currentUser;
+				);
+			);
+			return currentUser;
+		)
+		pre len password > 5 and len username > 3 and currentUser = nil;
 		
+	
+	public logout: () ==> ()
+		logout() ==
+			currentUser := nil
+		pre currentUser <> nil
+		post currentUser = nil;
+			
+	-- Employee interaction
+	
+	
 	public addQueue: Document`documentSize * Document`documentColor ==> Queue
 		addQueue(size,color) ==
-		(
-			dcl queue:Queue := new Queue(size,color);
-			queues := queues union {queue};
-			return queue
-		)
-		pre currentUser <> nil and currentUser in set employees;
-				
-	public addEmployee: User`Role ==> ()
-		addEmployee(role) ==
-			 employees := employees union {new Employee(role)};
+			(
+				dcl queue:Queue := new Queue(size,color);
+				queues := queues union {queue};
+				return queue
+			)
+			pre currentUser <> nil and currentUser in set employees;
 	
-	public addPrinter: int * seq of (char) * set of (Queue) ==> Printer
+	public addPrinter: int * seq of (char) * set of Queue ==> Printer
 		addPrinter(id,local,listofQueues) == 
 			(
 			dcl aux :Printer := new Printer(id,local,listofQueues);
 			printers := printers union { aux };
 			return aux
 			)
-		pre currentUser <> nil and currentUser in set employees;
+			pre currentUser <> nil and currentUser in set employees;
+			
 	
+	-- client interaction
 	
-	public addDocument: Document`documentSize * Document`documentType * Document`documentColor ==> ()
-		addDocument(size,type,color) == 
+	public addDocumentToQueue: Document ==> bool
+		addDocumentToQueue(doc) ==
+		(
+			for all queue in set queues do 
 			(
-				dcl newDoc :Document := currentUser.addDocument(size,type,color);
-				for all queue in set queues do (
-					if queue.getColor() = color and queue.getSize() = size then
-						(
-							queue.addDocument(newDoc);
-							return;
-						)					
-				)
-			)
-		pre currentUser <> nil and currentUser in set clients;
+					if queue.getColor() = doc.getColor() and queue.getSize() = doc.getSize() then
+					(
+						queue.addDocument(doc);
+						doc.setQueue(queue);
+						return true;
+					)
+			);
+			return false;
+		)
+		pre forall queue in set queues & doc not in set queue.getDocs() and currentUser <> nil and currentUser in set clients;
+
+
+	-- reporting
 	
-	public static setCurrentUser: Client ==> ()
-		setCurrentUser(cli) ==
-			currentUser := cli;
-	
-	public static getCurrentUser: () ==> User	
-		getCurrentUser()==
-			return currentUser;
-	
-	public pure getPrinters: () ==> set of Printer
-		getPrinters() == 
-			return  printers
-		pre currentUser <> nil; 
-			
-			
-  public  reportPrinters : ()  ==> ?
+	public  reportPrinters : ()  ==> ?
   reportPrinters() ==
     is not yet specified
    pre currentUser <> nil and currentUser in set employees;
    	
 
-   	
   public  reportClients : ()  ==> ?
   reportClients() ==
     is not yet specified
@@ -98,17 +149,50 @@ operations
     return allMalfs;
    )
   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+
+
+
+ -- general functions
+ 
+ pure public static getInstance: () ==> PrintManager
+ 	getInstance() ==
+ 		return printManager;
+	
+ public static clearInstance: () ==> ()
+ 	clearInstance() ==
+	 		printManager := new PrintManager();
+	 		
+	
+	public pure getCurrentUser: () ==> [User]	
+		getCurrentUser()==
+			return currentUser;
+			 
+			
+	
+	public pure getPrinters: () ==> set of Printer
+		getPrinters() == 
+			return  printers
+		pre currentUser <> nil;
+		
+	public pure getQueues: () ==> set of Queue
+		getQueues() == 
+			return  queues
+		pre currentUser <> nil;
   
     
   public getEmployee: seq of (char) ==> [Employee]
   	getEmployee(name) ==
-  		(for all employee in set employees do (
-  			if employee.getName() = name then (
-  				return employee
-  			)
-  		
-  		);
-  		return nil);
+  		(
+	  		for all employee in set employees do 
+	  		(
+	  			if employee.getName() = name then 
+	  			(
+	  				return employee
+	  			)
+	  		);
+	  		return nil
+  		)
+  	pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
 
 
 end PrintManager

@@ -5,7 +5,7 @@ instance variables
   printer:Printer;
   state:malfunctionState := <Waiting>;
   description: seq of (char) := [];
-  problem: problemType := nil;
+  problem: problemType;
 types
 	public malfunctionState = <Waiting> | <InRepair> | <Fixed>; 
 	public problemType = <Toner> | <Paper> | <Other>;

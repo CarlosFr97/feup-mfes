@@ -4,24 +4,48 @@ operations
  	public createClient: () ==> Client
  		createClient() ==
  		(
- 			dcl manager:PrintManager := new PrintManager();
- 			dcl cli:Client :=  manager.addClient("utilizador","12345678",10.0);
- 			manager.setCurrentUser(cli);
- 			return cli
+ 			dcl manager:PrintManager;
+ 			dcl cli:Client;
+ 			manager := PrintManager`getInstance();
+ 			cli := manager.addClient("utilizador","12345678",10.0);
+ 			return cli;
  		);
+ 		
+ 	public createEmployee: () ==> Employee
+ 		createEmployee() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:Employee;
+ 			manager := PrintManager`getInstance();
+ 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			return emp;
+ 		);
+ 		
+ 	public createQueue: () ==> Queue
+ 		createQueue() ==
+ 		(
+ 				return PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
+ 		);
+ 				
  	public testClient: () ==> ()
  		testClient() ==
  			(
- 				dcl cli:Client  := createClient();
- 				assertEqual(cli.getRole(), <Client>);
+
+ 				dcl cli:Client;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - create\n");
+ 				cli := createClient();
  				assertEqual(cli.getAccount(), 10.0);
  			);
  			
  	public testAddMoney: () ==> ()
  		testAddMoney() ==
  			(
- 				dcl cli:Client := createClient();
  				dcl money:real := 5.0;
+ 				dcl cli:Client;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - deposit money\n");
+ 				cli := createClient();
  				cli.depositMoney(money);
  				assertEqual(cli.getAccount(),15.0);
  			);
@@ -29,17 +53,44 @@ operations
  	public testCreateDocument: () ==> ()
  		testCreateDocument() ==
  			(
- 				dcl cli:Client := createClient();
- 				dcl doc:Document := cli.createDocument(<A4>,<Portrait>,<BlackWhite>);
- 				assertTrue(doc in set cli.getDocuments());
+ 				dcl emp: Employee; 
+ 				dcl queue: Queue; 
+ 				dcl cli:Client;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - create document\n");
+ 				emp := createEmployee();
+ 				queue := createQueue();
+				PrintManager`getInstance().logout();
+ 				cli := createClient();
+ 				assertNotEqual(cli.addDocument(<A4>,<Portrait>,<BlackWhite>,"Teste", mk_Document`Date(21,12,2014)), nil);
+ 			);
+ 			
+ 	 	public testCreateDocumentWithoutProperQueue: () ==> ()
+ 		testCreateDocumentWithoutProperQueue() ==
+ 			(
+ 				dcl cli:Client;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - create document without proper queue\n");
+ 				cli := createClient();
+ 				assertEqual(cli.addDocument(<A4>,<Portrait>,<BlackWhite>,"Teste", mk_Document`Date(21,12,2014)), nil);
  			);
  			
  	public testPayDocument: () ==> ()
  		testPayDocument() ==
  			(
- 				dcl cli:Client := createClient();
- 				dcl acc:real := cli.getAccount();
- 				dcl doc:Document := cli.createDocument(<A4>,<Portrait>,<BlackWhite>);
+ 				dcl emp: Employee; 
+ 				dcl queue: Queue; 
+ 				dcl cli:Client; 
+ 				dcl acc:real; 
+ 				dcl doc:Document;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - pay document\n");
+ 				emp := createEmployee();
+ 				queue := createQueue();
+				PrintManager`getInstance().logout();
+ 				cli := createClient();
+ 				acc := cli.getAccount();
+ 				doc := cli.addDocument(<A4>,<Portrait>,<BlackWhite>, "Teste", mk_Document`Date(21,12,2014));
  				cli.payDocument(doc);
  				assertEqual(cli.getAccount(), acc - doc.getPrice());
  			);
@@ -47,10 +98,19 @@ operations
 	public testReportMalfunction: () ==> ()
 		testReportMalfunction() ==
 			(
-				dcl cli:Client := createClient();
-				dcl queue:set of (Queue) := {cli.getManager().addQueue(<A4>,<BlackWhite>)};
-				dcl printer:Printer := cli.getManager().addPrinter(0,"local1",queue);
-				dcl malf:Malfunction := cli.reportMalfunction(printer,<Paper>,"problema");
+				dcl emp: Employee; 
+ 				dcl queue: set of Queue := {}; 
+ 				dcl cli:Client;
+ 				dcl printer:Printer;
+ 				dcl malf:Malfunction;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Client - report malfunction\n");
+ 				emp := createEmployee();
+ 				queue := queue union {createQueue()};
+ 				printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
+				PrintManager`getInstance().logout();
+ 				cli := createClient();
+				malf := cli.reportMalfunction(printer,<Paper>,"problema");
 				assertTrue(malf in set cli.getMalfunctions());
 				assertTrue(malf in set printer.getMalfunctions())
 				
@@ -63,7 +123,7 @@ operations
  				testAddMoney();
  				testCreateDocument();
  				testPayDocument();
- 				--testReportMalfunction();
+ 				testReportMalfunction();
  			);
  		
 

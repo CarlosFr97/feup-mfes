@@ -1,12 +1,21 @@
 class Employee is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
+  
+types
+		
 
 operations
 	
-	public Employee: Role ==> Employee
-		Employee(newRole) ==
-			role := newRole;
+	public Employee: seq of (char) * seq of (char) * Role ==> Employee
+		Employee(username, password, newRole) ==
+			(
+				initUser(username, password, newRole);
+			);
+			
+	public pure getRole: () ==> Role
+		getRole() ==
+			return role;
 	
 	public addMalfunction: Malfunction ==> ()
 		addMalfunction(malf) == 
