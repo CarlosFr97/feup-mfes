@@ -188,40 +188,6 @@ public class CommandInterface {
     }
 
     public void printDocumentsMenu(){
-        //First choose documents
-
-        //TODO GET DOCUMENTS
-        ArrayList<String> documents = new ArrayList<>();
-        //temporary documents
-        for(int i = 0; i < 10 ; i++){
-            documents.add("Doc " + i);
-        }
-
-        //TODO DOCUMENTS LIST SHOULD SHOW CHARACTERISTICS OF EACH
-        System.out.println("============================");
-        System.out.println("|          PRINT           |");
-        System.out.println("| Documents:               |");
-        for(int i = 0; i < documents.size(); i++){
-            System.out.println("|          " + i + " - " + documents.get(i) + "       |");
-        }
-        System.out.println("============================");
-        ArrayList<String> choosenDocs = new ArrayList<>();
-        String option[] = Utils.inString("Please choose the documents you wish to print (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
-        for(int i = 0; i < option.length; i++){
-            System.out.println("Chosen: " + option[i]);
-            if(Utils.isNumeric(option[i])){
-                System.out.println("Is Integer");
-                Integer number = new Integer(option[i]);
-                if(number >= 0 && number < documents.size()){
-                    choosenDocs.add(documents.get(number));
-                }else{
-                    System.out.println("Invalid Number");
-                }
-            }else{
-                System.out.println("Is not an Integer");
-            }
-        }
-
         Utils.clearScreen();
 
         //TODO GET PRINTERS
@@ -234,10 +200,6 @@ public class CommandInterface {
         //TODO PRINTERS LIST SHOULD SHOW WHAT TYPE OF DOCUMENTS THEY CAN PRINT
         System.out.println("============================");
         System.out.println("|          PRINT           |");
-        System.out.println("| Choosen:                 |");
-        for(int i = 0; i < choosenDocs.size(); i++){
-            System.out.println("|        "  + choosenDocs.get(i) + "             |");
-        }
         System.out.println("| Printers:                |");
         for(int i = 0; i < printers.size(); i++){
             System.out.println("|       " + i + " - " + printers.get(i) + "      |");
@@ -250,8 +212,48 @@ public class CommandInterface {
             choosenPrinter = printers.get(choose);
         }
         
-        System.out.println("\nPrinter: " + choosenPrinter);
-        System.out.println();
+    
+        
+
+        //TODO GET DOCUMENTS
+        ArrayList<String> documents = new ArrayList<>();
+        //temporary documents
+        for(int i = 0; i < 10 ; i++){
+            documents.add("Doc " + i);
+        }
+
+        //TODO DOCUMENTS LIST SHOULD SHOW CHARACTERISTICS OF EACH
+        System.out.println("============================");
+        System.out.println("|          PRINT           |");
+        System.out.println("| Printer:                 |");
+        System.out.println("|        "  + choosenPrinter + "         |");
+        
+        System.out.println("| Documents:               |");
+        for(int i = 0; i < documents.size(); i++){
+            System.out.println("|          " + i + " - " + documents.get(i) + "       |");
+        }
+        System.out.println("============================");
+        ArrayList<String> choosenDocs = new ArrayList<>();
+        String option[] = Utils.inString("Please choose the documents you wish to print (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
+        for(int i = 0; i < option.length; i++){
+            if(Utils.isNumeric(option[i])){
+                Integer number = new Integer(option[i]);
+                if(number >= 0 && number < documents.size()){
+                    choosenDocs.add(documents.get(number));
+                }
+            }
+        }
+
+        Utils.clearScreen();
+
+        System.out.println("============================");
+        System.out.println("|          PRINT           |");
+        System.out.println("| Printer:                 |");
+        System.out.println("|        "  + choosenPrinter + "         |");
+        System.out.println("| Choosen:                 |");
+        for(int i = 0; i < choosenDocs.size(); i++){
+            System.out.println("|        "  + choosenDocs.get(i) + "             |");
+        }
 
         char confirm = Character.toUpperCase(Utils.inChar("Are you sure you want to print? y/n"));
 
