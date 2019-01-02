@@ -135,6 +135,7 @@ public class CommandInterface {
             System.out.println("============================");
             System.out.println("|     PRINTING SYSTEM      |");
             System.out.println("============================");
+            System.out.println("| Moneu: " + ((Client) manager.getCurrentUser()).getAccount());
             System.out.println("| Client Menu:             |");
             System.out.println("|        1. Deposit Money  |");
             System.out.println("|        2. New Document   |");
@@ -231,7 +232,7 @@ public class CommandInterface {
         if(confirm == 'Y'){
             //TODO CREATE DOCUMENT
             Client user = (Client) manager.getCurrentUser();
-            user.addDocument(size,color,type,name,date);
+            user.addDocument(size,color,type,name,date,pages);
 
         }
 
@@ -515,7 +516,7 @@ public class CommandInterface {
     	 System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
          for(Object employee:employees){
-             System.out.println("|       " + index + " - " + ((Employee)employees).getName() + "      |");
+             System.out.println("|       " + index + " - " + ((Employee)employee).getName() + "      |");
              index++;
          }
          System.out.println("============================");

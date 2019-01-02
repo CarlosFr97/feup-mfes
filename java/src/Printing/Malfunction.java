@@ -38,6 +38,11 @@ public class Malfunction {
     return reportedBy;
   }
 
+  public Object getProblem() {
+
+    return problem;
+  }
+
   public Employee getAssignedBy() {
 
     return assignedBy;
@@ -56,7 +61,7 @@ public class Malfunction {
   public void assignEmployee(final Employee emp) {
 
     assignedTo = emp;
-    assignedBy = (Employee) PrintManager.getInstance().getCurrentUser();
+    assignedBy = ((Employee) PrintManager.getInstance().getCurrentUser());
     changeState(Printing.quotes.InRepairQuote.getInstance());
   }
 

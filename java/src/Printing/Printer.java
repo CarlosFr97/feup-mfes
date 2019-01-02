@@ -6,12 +6,15 @@ import org.overture.codegen.runtime.*;
 @SuppressWarnings("all")
 public class Printer {
   private Number id = 0L;
-  private VDMSet queues = SetUtil.set();
+  private VDMMap queues = MapUtil.map();
   private String location = SeqUtil.toStr(SeqUtil.seq());
 
   public void cg_init_Printer_1(final Number identifier, final String local, final VDMSet lists) {
 
-    queues = Utils.copy(lists);
+    for (Iterator iterator_11 = lists.iterator(); iterator_11.hasNext(); ) {
+      Queue queue = (Queue) iterator_11.next();
+      queues = MapUtil.munion(Utils.copy(queues), MapUtil.map(new Maplet(queue, 0L)));
+    }
     id = identifier;
     location = local;
     return;
@@ -35,8 +38,10 @@ public class Printer {
   public VDMSet queryPrintAsClient() {
 
     VDMSet docs = SetUtil.set();
-    for (Iterator iterator_5 = queues.iterator(); iterator_5.hasNext(); ) {
-      Queue queue = (Queue) iterator_5.next();
+    for (Iterator iterator_12 = MapUtil.dom(Utils.copy(queues)).iterator();
+        iterator_12.hasNext();
+        ) {
+      Queue queue = (Queue) iterator_12.next();
       docs = SetUtil.union(Utils.copy(docs), queue.getClientDocs());
     }
     return Utils.copy(docs);
@@ -45,8 +50,10 @@ public class Printer {
   public VDMSet queryPrint() {
 
     VDMSet docs = SetUtil.set();
-    for (Iterator iterator_6 = queues.iterator(); iterator_6.hasNext(); ) {
-      Queue queue = (Queue) iterator_6.next();
+    for (Iterator iterator_13 = MapUtil.dom(Utils.copy(queues)).iterator();
+        iterator_13.hasNext();
+        ) {
+      Queue queue = (Queue) iterator_13.next();
       docs = SetUtil.union(Utils.copy(docs), queue.getDocs());
     }
     return Utils.copy(docs);
@@ -55,8 +62,19 @@ public class Printer {
   public void print(final Document doc) {
 
     Client client = doc.getClient();
+    Queue newQueue = null;
     client.payDocument(doc);
-    doc.removeFromQueue();
+    newQueue = doc.removeFromQueue();
+    queues =
+        MapUtil.override(
+            Utils.copy(queues),
+            MapUtil.map(
+                new Maplet(newQueue, ((Number) Utils.get(queues, newQueue)).longValue() + 1L)));
+  }
+
+  public VDMMap getNumPrintedDocs() {
+
+    return Utils.copy(queues);
   }
 
   public Printer() {}

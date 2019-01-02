@@ -8,18 +8,13 @@ public class User {
   protected String name = SeqUtil.toStr(SeqUtil.seq());
   protected String password = SeqUtil.toStr(SeqUtil.seq());
   protected String birthDay = SeqUtil.toStr(SeqUtil.seq());
-  protected Object role = null;
+  protected Object role;
 
   protected void initUser(final String username, final String pass, final Object rol) {
 
     name = username;
     password = pass;
     role = rol;
-  }
-
-  public Object addDocument(final Object size, final Object type, final Object color) {
-
-    throw new UnsupportedOperationException();
   }
 
   public String getName() {
@@ -42,15 +37,15 @@ public class User {
 
   public Boolean isLoginCorrected(final String username, final String pass) {
 
-    Boolean andResult_23 = false;
+    Boolean andResult_49 = false;
 
     if (Utils.equals(name, username)) {
       if (Utils.equals(password, pass)) {
-        andResult_23 = true;
+        andResult_49 = true;
       }
     }
 
-    if (andResult_23) {
+    if (andResult_49) {
       return true;
     }
 
