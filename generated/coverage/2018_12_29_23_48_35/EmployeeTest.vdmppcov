@@ -1,6 +1,0 @@
-class EmployeeTest is subclass of Test
-
-operations
--- TODO Define operations here
-
-end EmployeeTest
