@@ -19,7 +19,6 @@ import Printing.quotes.BlackWhiteQuote;
 
 import org.overture.codegen.runtime.*;
 
-import com.sun.xml.internal.bind.v2.model.util.ArrayInfoUtil;
 
 public class CommandInterface {
 
