@@ -16,7 +16,7 @@ public class CommandInterface {
 
         while(running){
             
-            Utils.clearScreen();
+            MyUtils.clearScreen();
         
             // Display menu graphics
             System.out.println("============================");
@@ -27,7 +27,7 @@ public class CommandInterface {
             System.out.println("|        2. Register       |");
             System.out.println("|        3. Exit           |");
             System.out.println("============================");
-            option = Utils.inInt("Select Option: ");
+            option = MyUtils.inInt("Select Option: ");
 
             //Switch construct
             switch (option) {
@@ -57,8 +57,8 @@ public class CommandInterface {
         System.out.println("============================");
         System.out.println("|       LOGIN USER         |");
         System.out.println("============================");
-        String username = Utils.inString("Username: ");
-        String password = Utils.inPassword("Password: ");
+        String username = MyUtils.inString("Username: ");
+        String password = MyUtils.inPassword("Password: ");
         
         
         // TODO DO LOG IN 
@@ -70,9 +70,9 @@ public class CommandInterface {
         System.out.println("============================");
         System.out.println("|      REGISTER USER       |");
         System.out.println("============================");
-        String username = Utils.inString("Username: ");
-        String password = Utils.inPassword("Password: ");
-        double account = Utils.inDouble("Starting money: ");
+        String username = MyUtils.inString("Username: ");
+        String password = MyUtils.inPassword("Password: ");
+        double account = MyUtils.inDouble("Starting money: ");
 
         // TODO DO REGISTER 
 
@@ -88,7 +88,7 @@ public class CommandInterface {
 
         while(running){
 
-            Utils.clearScreen();
+            MyUtils.clearScreen();
             
             // Display menu graphics
             System.out.println("============================");
@@ -101,7 +101,7 @@ public class CommandInterface {
             System.out.println("|        4. Report         |");
             System.out.println("|        5. Log Out        |");
             System.out.println("============================");
-            option = Utils.inInt("Select Option: ");
+            option = MyUtils.inInt("Select Option: ");
 
             //Switch construct
             switch (option) {
@@ -138,8 +138,8 @@ public class CommandInterface {
         System.out.println("============================");
         System.out.println("|      DEPOSIT MONEY       |");
         System.out.println("============================");
-        double money = Utils.inDouble("Money quantity: ");
-        char sure = Character.toUpperCase(Utils.inChar("Are you sure you want to add " + money + " to your account? y/n"));
+        double money = MyUtils.inDouble("Money quantity: ");
+        char sure = Character.toUpperCase(MyUtils.inChar("Are you sure you want to add " + money + " to your account? y/n"));
 
         if(sure == 'Y') {
              //TODO ADD MONEY
@@ -160,25 +160,25 @@ public class CommandInterface {
         System.out.println("============================");
         //Choose size
         System.out.println("    1 - A4        2 - A3    ");
-        option = Utils.inInt("Choose size option: ");
+        option = MyUtils.inInt("Choose size option: ");
         size = (option == 1) ? "<A4>" : "<A3>";
 
         System.out.println("\nSize: " + size);
         System.out.println();
         System.out.println(" 1 - Portrait 2 - Landscape ");
-        option = Utils.inInt("Choose type option: ");
+        option = MyUtils.inInt("Choose type option: ");
         type = (option == 1) ? "<Portrait>" : "<Landscape>";
 
         System.out.println("\nType: " + type);
         System.out.println();
         System.out.println(" 1 - Black&White 2 - Colors ");
-        option = Utils.inInt("Choose print color option: ");
+        option = MyUtils.inInt("Choose print color option: ");
         color = (option == 1) ? "<BlackWhite>" : "<Colors>";
 
         System.out.println("\nColor: " + color);
         System.out.println();
-        String name = Utils.inString("What is the name of the Document? ");
-        char confirm = Character.toUpperCase(Utils.inChar("Are you sure you want to save " + name + " as a Document of size " + size + " displayed in " + type + " printed in " + color + "? y/n"));
+        String name = MyUtils.inString("What is the name of the Document? ");
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to save " + name + " as a Document of size " + size + " displayed in " + type + " printed in " + color + "? y/n"));
         if(confirm == 'Y'){
             //TODO CREATE DOCUMENT
         }
@@ -188,7 +188,7 @@ public class CommandInterface {
     }
 
     public void printDocumentsMenu(){
-        Utils.clearScreen();
+        MyUtils.clearScreen();
 
         //TODO GET PRINTERS
 
@@ -206,7 +206,7 @@ public class CommandInterface {
         }
         System.out.println("============================");
 
-        int choose = Utils.inInt("Please choose the printer option: ");
+        int choose = MyUtils.inInt("Please choose the printer option: ");
         String choosenPrinter = printers.get(0);
         if(choose >= 0 && choose < printers.size()){
             choosenPrinter = printers.get(choose);
@@ -234,9 +234,9 @@ public class CommandInterface {
         }
         System.out.println("============================");
         ArrayList<String> choosenDocs = new ArrayList<>();
-        String option[] = Utils.inString("Please choose the documents you wish to print (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
+        String option[] = MyUtils.inString("Please choose the documents you wish to print (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
         for(int i = 0; i < option.length; i++){
-            if(Utils.isNumeric(option[i])){
+            if(MyUtils.isNumeric(option[i])){
                 Integer number = new Integer(option[i]);
                 if(number >= 0 && number < documents.size()){
                     choosenDocs.add(documents.get(number));
@@ -244,7 +244,7 @@ public class CommandInterface {
             }
         }
 
-        Utils.clearScreen();
+        MyUtils.clearScreen();
 
         System.out.println("============================");
         System.out.println("|          PRINT           |");
@@ -255,7 +255,7 @@ public class CommandInterface {
             System.out.println("|        "  + choosenDocs.get(i) + "             |");
         }
 
-        char confirm = Character.toUpperCase(Utils.inChar("Are you sure you want to print? y/n"));
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to print? y/n"));
 
         if(confirm == 'Y'){
             //TODO PRINT
@@ -282,7 +282,7 @@ public class CommandInterface {
             System.out.println("|       " + i + " - " + printers.get(i) + "      |");
         }
         System.out.println("============================");
-        int choose = Utils.inInt("Please choose the printer option: ");
+        int choose = MyUtils.inInt("Please choose the printer option: ");
         String choosenPrinter = printers.get(0);
         if(choose >= 0 && choose < printers.size()){
             choosenPrinter = printers.get(choose);
@@ -291,7 +291,7 @@ public class CommandInterface {
         System.out.println("\nPrinter: " + choosenPrinter);
         System.out.println();
         System.out.println("    1 - Toner  2 - Paper 3 - Other  ");
-        choose = Utils.inInt("What is the problem: ");
+        choose = MyUtils.inInt("What is the problem: ");
         String problemType = "<Other>";
         if(choose == 1)
             problemType = "<Toner>";
@@ -300,9 +300,9 @@ public class CommandInterface {
         
         System.out.println("\nProblem type: " + problemType);
         System.out.println();
-        String description = Utils.inString("Please write a short description of the problem: ");
+        String description = MyUtils.inString("Please write a short description of the problem: ");
         
-        char confirm = Character.toUpperCase(Utils.inChar("Are you sure you want to report? y/n"));
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to report? y/n"));
 
         if(confirm == 'Y'){
             //TODO CREATE REPORT
@@ -319,7 +319,7 @@ public class CommandInterface {
 
         while(running){
 
-            Utils.clearScreen();
+            MyUtils.clearScreen();
             
             // Display menu graphics
             System.out.println("============================");
@@ -332,7 +332,7 @@ public class CommandInterface {
             System.out.println("|        4. Printers Report|");
             System.out.println("|        5. Log Out        |");
             System.out.println("============================");
-            option = Utils.inInt("Select Option: ");
+            option = MyUtils.inInt("Select Option: ");
 
             //Switch construct
             switch (option) {
@@ -367,7 +367,7 @@ public class CommandInterface {
 
         while(running){
 
-            Utils.clearScreen();
+            MyUtils.clearScreen();
             
             // Display menu graphics
             System.out.println("=============================");
@@ -382,7 +382,7 @@ public class CommandInterface {
             System.out.println("|        6. Employees Report|");
             System.out.println("|        7. Log Out         |");
             System.out.println("=============================");
-            option = Utils.inInt("Select Option: ");
+            option = MyUtils.inInt("Select Option: ");
 
             //Switch construct
             switch (option) {
@@ -424,11 +424,11 @@ public class CommandInterface {
         System.out.println("============================");
         String employeeType;
         System.out.println("    1 - Regular        2 - Admin    ");
-        int option = Utils.inInt("Choose what tyoe of employee: ");
+        int option = MyUtils.inInt("Choose what tyoe of employee: ");
         employeeType = (option == 1) ? "<Regular>" : "<Admin>";
 
-        String employeeName = Utils.inString("Write the employee name: ");
-        String password = Utils.inPassword("Write employee password: ");
+        String employeeName = MyUtils.inString("Write the employee name: ");
+        String password = MyUtils.inPassword("Write employee password: ");
 
         //TODO create employee
 

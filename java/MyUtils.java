@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class Utils{
+public class MyUtils{
 
      //Method to display the user's prompt string
     public static void printPrompt(String prompt) {
