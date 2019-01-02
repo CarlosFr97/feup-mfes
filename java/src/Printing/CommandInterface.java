@@ -4,7 +4,13 @@ import java.util.ArrayList;
 
 import Printing.PrintManager;
 import Printing.quotes.ClientQuote;
+import Printing.quotes.ColorsQuote;
+import Printing.quotes.LandscapeQuote;
+import Printing.quotes.PortraitQuote;
+import Printing.quotes.A3Quote;
+import Printing.quotes.A4Quote;
 import Printing.quotes.AdminQuote;
+import Printing.quotes.BlackWhiteQuote;
 
 public class CommandInterface {
 
@@ -167,6 +173,8 @@ public class CommandInterface {
 
         if(sure == 'Y') {
              //TODO ADD MONEY
+             Client user = (Client) manager.getCurrentUser();
+             user.depositMoney(money);
              System.out.println("Your money will be added to the account");
         }else {
             return;
@@ -175,36 +183,40 @@ public class CommandInterface {
 
     public void newDocMenu(){
         int option;
-        String size;
-        String type;
-        String color;
-        String date = LocalDateTime.now().toString();
+        Object size;
+        Object type;
+        Object color;
+        LocalDateTime currDate = LocalDateTime.now();
+        Date date = new Date(currDate.getDayOfMonth(),currDate.getMonth().getValue(),currDate.getYear());
         System.out.println("============================");
         System.out.println("|       NEW DOCUMENT       |");
         System.out.println("============================");
         //Choose size
         System.out.println("    1 - A4        2 - A3    ");
         option = MyUtils.inInt("Choose size option: ");
-        size = (option == 1) ? "<A4>" : "<A3>";
+        size = (option == 1) ? new A4Quote() : new A3Quote();
 
-        System.out.println("\nSize: " + size);
+        System.out.println("\nSize: " + size.toString());
         System.out.println();
         System.out.println(" 1 - Portrait 2 - Landscape ");
         option = MyUtils.inInt("Choose type option: ");
-        type = (option == 1) ? "<Portrait>" : "<Landscape>";
+        type = (option == 1) ? new PortraitQuote() : new LandscapeQuote();
 
-        System.out.println("\nType: " + type);
+        System.out.println("\nType: " + type.toString());
         System.out.println();
         System.out.println(" 1 - Black&White 2 - Colors ");
         option = MyUtils.inInt("Choose print color option: ");
-        color = (option == 1) ? "<BlackWhite>" : "<Colors>";
+        color = (option == 1) ? new BlackWhiteQuote() : new ColorsQuote();
 
-        System.out.println("\nColor: " + color);
+        System.out.println("\nColor: " + color.toString());
         System.out.println();
         String name = MyUtils.inString("What is the name of the Document? ");
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to save " + name + " as a Document of size " + size + " displayed in " + type + " printed in " + color + "? y/n"));
         if(confirm == 'Y'){
             //TODO CREATE DOCUMENT
+            Client user = (Client) manager.getCurrentUser();
+            user.addDocument(size,color,type,name,date);
+
         }
 
         
