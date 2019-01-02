@@ -1,5 +1,6 @@
 package Printing;
 import java.time.LocalDateTime;
+import Printing.Document.Date;
 import java.util.ArrayList;
 
 import Printing.PrintManager;
@@ -73,7 +74,7 @@ public class CommandInterface {
         
         
         // TODO DO LOG IN 
-        User log = manager.login(username,password)
+        User log = manager.login(username,password);
         if(log == null){
             System.out.println("Invalid credentials");
             return;
@@ -99,11 +100,6 @@ public class CommandInterface {
         double account = MyUtils.inDouble("Starting money: ");
 
         // TODO DO REGISTER 
-        if(manager.clientExists(username) || manager.employeeExists(username)){
-            System.out.println("User name already taken!")
-            return;
-        }
-
         manager.addClient(username,password,account);
 
         clientMenu();
@@ -153,7 +149,7 @@ public class CommandInterface {
                     break;
                 case 5:
                     System.out.println("Log Out");
-                    logOut();
+                    manager.logout();
                     running = false;
                     mainMenu();
                     break;
@@ -386,7 +382,7 @@ public class CommandInterface {
                     break;
                 case 5:
                     System.out.println("Log Out");
-                    logOut();
+                    manager.logout();
                     running = false;
                     mainMenu();
                     break;
@@ -443,7 +439,7 @@ public class CommandInterface {
                     break;
                 case 7:
                     System.out.println("Log Out");
-                    logOut();
+                    manager.logout();
                     running = false;
                     mainMenu();
                     break;

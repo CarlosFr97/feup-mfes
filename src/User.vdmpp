@@ -3,7 +3,7 @@ instance variables
   protected name:seq of (char) := [];
   protected password: seq of (char) := []; 
   protected birthDay:seq of (char) := [];
-  protected role: Role := nil;
+  protected role: Role;
 
 	inv len password >= 8;
   

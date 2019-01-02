@@ -39,14 +39,14 @@ public class PrintManager {
 
     Client cli = new Client(username, password, account);
     clients = SetUtil.union(Utils.copy(clients), SetUtil.set(cli));
-    return login(username, password);
+    return ((Client) login(username, password));
   }
 
   public Employee addEmployee(final String username, final String password, final Object role) {
 
     Employee emp = new Employee(username, password, ((Object) role));
     employees = SetUtil.union(Utils.copy(employees), SetUtil.set(emp));
-    return login(username, password);
+    return ((Employee) login(username, password));
   }
 
   public User login(final String username, final String password) {
