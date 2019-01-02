@@ -81,15 +81,15 @@ operations
 	private calculateSize: () ==> ()
 		calculateSize() ==
 			cases size: 
-				(<A3>) -> price := price + 0.2,
-				(<A4>) -> price := price + 0.1
+				<A3> -> price := price + 0.2,
+				<A4> -> price := price + 0.1
 			end;
 	
 	private calculateColor: () ==> ()
 		calculateColor() ==
 			cases color: 
-				(<BlackWhite>) -> price := price + 0.1,
-				(<Colors>) -> price := price + 0.25
+				<BlackWhite> -> price := price + 0.1,
+				<Colors> -> price := price + 0.25
 			end;		
 
 end Document
