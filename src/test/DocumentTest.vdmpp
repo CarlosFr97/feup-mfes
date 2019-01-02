@@ -15,7 +15,7 @@ operations
 	public createDocument: () ==> Document
 		createDocument() ==
 		(
-			dcl doc: Document := new Document(createClient(), <A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			dcl doc: Document := new Document(createClient(), <A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024), 2);
 			return doc;
 		);
 		
@@ -45,17 +45,27 @@ operations
  				assertEqual(doc.getColor(), <BlackWhite>);
  				assertEqual(doc.getSize(), <A4>);
  				assertEqual(doc.getClient().getName(), "utilizador");
- 				assertEqual(doc.getPrice(), 0.2);
+ 				assertEqual(doc.getPrice(), 0.06);
+ 				assertEqual(doc.getName(), "Teste");
+ 				assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
 		);
  		
  	public testPriceOtherOptions: () ==> ()
  		testPriceOtherOptions() ==
  		(
  			dcl doc:Document;
+ 			dcl doc2: Document;
+ 			dcl doc3: Document;
+ 			dcl cli: Client;
  			PrintManager`clearInstance();
- 			IO`print("Test Document - create (A3, Colors)\n");
- 			doc := new Document(createClient(), <A3>,<Colors>,<Portrait>,"Teste", mk_Document`Date(21,12,2021));
- 			assertEqual(doc.getPrice(), 0.45);
+ 			IO`print("Test Document - create (A3-Colors and A3-B&W and A4-Colors)\n");
+ 			cli := createClient();
+ 			doc := new Document(cli, <A3>,<Colors>,<Portrait>,"Teste", mk_Document`Date(21,12,2021), 2);
+ 			doc2 := new Document(cli, <A3>,<BlackWhite>,<Portrait>,"Teste2", mk_Document`Date(21,12,2021), 2);
+ 			doc3 := new Document(cli, <A4>,<Colors>,<Portrait>,"Test3", mk_Document`Date(21,12,2021), 2);
+ 			assertEqual(doc.getPrice(), 0.40);
+ 			assertEqual(doc2.getPrice(), 0.20);
+ 			assertEqual(doc3.getPrice(), 0.10);
  		);
  		
 	 public testAddQueue: () ==> ()
@@ -74,6 +84,10 @@ operations
 	 				doc.setQueue(queue);
 	 				assertEqual(doc.getQueue().getSize(), <A4>);
 	 				assertEqual(doc.getQueue().getColor(), <BlackWhite>);
+	 				PrintManager`getInstance().logout();
+	 				emp := PrintManager`getInstance().login("empregado","emp12345");
+	 				assertEqual(doc.getName(), "Teste");
+ 					assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
 			);
 		
 		 public testRemoveQueue: () ==> ()
@@ -91,7 +105,7 @@ operations
 	 				queue.addDocument(doc);
 	 				doc.setQueue(queue);
 	 				assertEqual(doc.getQueue().getSize(), <A4>);
-					doc.removeFromQueue();
+					queue := doc.removeFromQueue();
 	 				assertEqual(not doc in set doc.getQueue().getDocs(), true);	
 			);
 

@@ -1,14 +1,16 @@
 class Printer
 instance variables
   id:int := 0;
-  queues: set of (Queue) := {};
+  queues: map Queue to int := {|->};
   location:seq of (char) := [];
+  
 
 operations
-	public Printer: int * seq of (char) * set of (Queue) ==> Printer
+	public Printer: int * seq of (char) * set of Queue ==> Printer
 		Printer(identifier,local,lists) ==
 			(
-				queues := lists ;
+				for all queue in set lists do
+					queues := queues munion {queue |-> 0};
 				id := identifier;
 				location := local;
 				return self;
@@ -22,24 +24,24 @@ operations
 	public pure getLocation: () ==> seq of (char)
 		getLocation() ==
 			return location
-		pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+		pre PrintManager`getInstance().getCurrentUser() <> nil;
 			
   public queryPrintAsClient: ()  ==> set of Document
 	  queryPrintAsClient() ==
 	  (
 		   	dcl docs: set of Document := {};
-		   	for all queue in set queues do (
+		   	for all queue in set dom queues do (
 		   		docs := docs union queue.getClientDocs();
 		   	);
 		   	return docs;
 	  )
-	  pre PrintManager`getInstance().getCurrentUser() <> nil;
+	  pre PrintManager`getInstance().getCurrentUser() <> nil and PrintManager`getInstance().getCurrentUser().getRole() = <Client>;
 	  
 	public queryPrint: ()  ==> set of Document
 	  queryPrint() ==
 	  (
 		   	dcl docs: set of Document := {};
-		   	for all queue in set queues do (
+		   	for all queue in set dom queues do (
 		   		docs := docs union queue.getDocs();
 		   	);
 		   	return docs;
@@ -50,10 +52,16 @@ operations
 		print(doc) ==
 		(
 			dcl client: Client := doc.getClient();
+			dcl newQueue: Queue;
 			client.payDocument(doc);
-			doc.removeFromQueue();
+			newQueue := doc.removeFromQueue();
+			queues := queues ++ {newQueue |-> queues(newQueue)+1};
 		)
 		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs();
-	
+
+ public getNumPrintedDocs: () ==> map Queue to int
+		getNumPrintedDocs() ==
+			return queues;
+			
 
 end Printer

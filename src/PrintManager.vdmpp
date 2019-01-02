@@ -40,7 +40,7 @@ operations
 			(
 				dcl cli:Client := new Client(username,password,account);
 				clients := clients union {cli};
-				return login(username, password);
+				return narrow_(login(username, password), Client);
 			)
 			pre currentUser = nil and not clientExists(username)
 			post RESULT.getName() = username and RESULT.getAccount() = account;
@@ -51,7 +51,7 @@ operations
 			(
 				dcl emp: Employee := new Employee(username, password, role);
 			 	employees := employees union {emp};
-			 	return login(username, password);
+			 	return narrow_(login(username, password), Employee);
 			)
 			pre currentUser = nil and not employeeExists(username)
 			post RESULT.getName() = username and RESULT.getRole() = role;
@@ -127,8 +127,8 @@ operations
 
 	-- reporting
 	
-	public  reportPrinters : ()  ==> ?
-  	reportPrinters() ==
+	public  reportPrintedDocs: ()  ==> ()
+  	reportPrintedDocs() ==
     	is not yet specified
    	pre currentUser <> nil and currentUser in set employees;
    	
@@ -139,10 +139,9 @@ operations
    pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
    
 
-  public  reportEmployees : seq of (char)  ==> ?
-  reportEmployees(name) ==
+  public  reportEmployee : seq of (char)  ==> map Malfunction`malfunctionState to int
+  reportEmployee(name) ==
   (
-  	
   	dcl allMalfs :map Malfunction`malfunctionState to int := {<InRepair>|-> 0,<Fixed> |-> 0};
     dcl employee :Employee := getEmployee(name);
     for all malfunction in set employee.getMalfunctions() do (
@@ -192,8 +191,19 @@ operations
 			malfunctions := malfunctions union {malf}
 		pre currentUser <> nil;
 
-  -- is it necessary??  
-    
+ 	public getEmployees: () ==> set of Employee
+ 		getEmployees() ==
+ 			(
+ 				dcl emp: set of Employee := {};
+ 				for all employee in set employees do 
+ 				(
+ 					if employee.getRole() = <Regular> then
+ 						emp := emp union {employee}
+ 				);
+ 				return emp;
+ 			)
+ 			pre currentUser.getRole() <> <Admin>;  
+ 
   public getEmployee: seq of (char) ==> [Employee]
   	getEmployee(name) ==
   		(

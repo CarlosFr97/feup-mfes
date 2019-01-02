@@ -61,9 +61,46 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add employee\n");
-			emp := manager.addEmployee("emp", "emp123456778", <Regular>);
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
 			assertEqual(manager.getCurrentUser(), emp);
 		);
+		
+	public testAddQueue: () ==> ()
+		testAddQueue() ==
+		(
+			dcl manager: PrintManager;
+			dcl emp: Employee;
+			dcl queue: Queue;
+			dcl queue2: Queue;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - add queue\n");
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			queue2 := manager.addQueue(<A3>,<Colors>);
+			assertEqual(manager.getQueues(),{queue, queue2});
+		);
+		
+	public testAddPrinter: () ==> ()
+		testAddPrinter() ==
+		(
+			dcl manager: PrintManager;
+			dcl emp: Employee;
+			dcl queue: Queue;
+			dcl queue2: Queue;
+			dcl printer: Printer;
+			dcl printer2: Printer;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - add printer\n");
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			queue2 := manager.addQueue(<A3>,<Colors>);
+			printer := manager.addPrinter(0, "piso1", {queue});
+			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
+			assertEqual(manager.getPrinters(),{printer, printer2});
+		);
+	
 
 	public test: () ==> ()
 		test() ==
@@ -73,5 +110,7 @@ operations
 			testFailLogin();
 			testAddMultipleClient();
 			testAddEmployee();
+			testAddQueue();
+			testAddPrinter();
 		)
 end PrintManagerTest

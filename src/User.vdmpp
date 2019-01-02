@@ -25,10 +25,6 @@ operations
 		)
 		pre len pass >= 8
 		post name = username and password = pass;
-			
-	public addDocument: documentSize * documentType * documentColor ==> ?
-		addDocument(size,type,color) ==
-			is not yet specified;
 		
 	public pure getName: () ==> seq of (char)
 		getName() == 

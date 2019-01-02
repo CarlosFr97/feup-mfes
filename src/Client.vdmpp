@@ -37,10 +37,10 @@ operations
 
  --actions
  
-	public addDocument: Document`documentSize * Document`documentColor * Document`documentType * seq of (char) * Document`Date ==> [Document]
-		addDocument(size, color, type, name, date) == 
+	public addDocument: Document`documentSize * Document`documentColor * Document`documentType * seq of (char) * Document`Date * nat1 ==> [Document]
+		addDocument(size, color, type, name, date, numPages) == 
 		(
-			dcl newDoc :Document := new Document(self, size, color, type, name, date);
+			dcl newDoc :Document := new Document(self, size, color, type, name, date, numPages);
 			if PrintManager`getInstance().addDocumentToQueue(newDoc) then 
 				return newDoc	
 			else

@@ -4,6 +4,7 @@ instance variables
   size:documentSize := <A4>;
   color:documentColor := <BlackWhite>;
   type:documentType := <Portrait>;
+  numPages: nat1 := 1;
   price:real := 0;
   state: documentState := <ToPrint>;
   name: seq of (char);
@@ -25,8 +26,8 @@ types
 	
 operations
 
-	public Document : Client * documentSize * documentColor * documentType * seq of (char) * Date ==> Document
-		Document(cli,siz,col,ty, nam, dat) == 
+	public Document : Client * documentSize * documentColor * documentType * seq of (char) * Date * nat1 ==> Document
+		Document(cli,siz,col,ty, nam, dat, nPages) == 
 			(
 				client := cli;
 				size := siz;
@@ -34,6 +35,7 @@ operations
 				type := ty;
 				name := nam;
 				date := dat;
+				numPages := nPages;
 				calculatePrice();
 				return self;
 			)
@@ -45,9 +47,22 @@ operations
 		pre q in set PrintManager`getInstance().getQueues()
 		post queue = q;
 		
-	public removeFromQueue: () ==> ()
+	public getName: () ==> seq of (char)
+		getName() ==
+			return name
+		pre PrintManager`getInstance().getCurrentUser() = client or PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+		
+	public getDate: () ==> Date
+		getDate() ==
+			return date
+		pre PrintManager`getInstance().getCurrentUser() = client or PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+		
+	public removeFromQueue: () ==> Queue
 		removeFromQueue() ==
-			queue.removeDocument(self);	
+			(
+				queue.removeDocument(self);
+				return queue;
+			);
 
 	public pure getPrice: () ==> real
 		getPrice() ==
@@ -74,22 +89,13 @@ operations
 	private calculatePrice: () ==> ()
 		calculatePrice() ==
 			(
-				calculateSize();
-				calculateColor();
-			);
-		
-	private calculateSize: () ==> ()
-		calculateSize() ==
-			cases size: 
-				(<A3>) -> price := price + 0.2,
-				(<A4>) -> price := price + 0.1
-			end;
-	
-	private calculateColor: () ==> ()
-		calculateColor() ==
-			cases color: 
-				(<BlackWhite>) -> price := price + 0.1,
-				(<Colors>) -> price := price + 0.25
-			end;		
+				cases true:
+					(size = <A3> and color = <BlackWhite>) -> price := 0.1*numPages,
+					(size = <A3> and color = <Colors>) -> price := 0.20*numPages,
+					(size = <A4> and color = <BlackWhite>) -> price := 0.03*numPages,
+					(size = <A4> and color = <Colors>) -> price := 0.05*numPages
+				end;
+			)
+			pre numPages >=1;
 
 end Document

@@ -60,7 +60,7 @@ operations
 			PrintManager`getInstance().logout();
 			cli := createClient();
 			assertEqual(printer.queryPrintAsClient(), {});
-			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024), 2);
 			assertEqual(printer.queryPrintAsClient(), {doc});
 			
 		);
@@ -79,7 +79,7 @@ operations
 			PrintManager`getInstance().logout();
 			cli := createClient();
 			assertEqual(printer.queryPrintAsClient(), {});
-			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024), 2);
 			PrintManager`getInstance().logout();
 			emp := PrintManager`getInstance().login("empregado","emp12345");
 			assertEqual(printer.queryPrint(), {doc});	
@@ -93,6 +93,7 @@ operations
 			dcl cli: Client;
 			dcl doc: Document;
 			dcl acc: int;
+			dcl old_prints: int;
 			PrintManager`getInstance().clearInstance();
 			IO`print("Test printer - print document\n");
 			emp := createEmployee();
@@ -101,7 +102,7 @@ operations
 			cli := createClient();
 			acc := cli.getAccount();
 			assertEqual(printer.queryPrintAsClient(), {});
-			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024), 2);
 			printer.print(doc);
 			assertEqual(cli.getAccount(), acc-doc.getPrice());
 		);

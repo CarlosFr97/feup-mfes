@@ -56,7 +56,7 @@ operations
 		assignEmployee(emp) ==
 			(
 				assignedTo := emp;
-				assignedBy := PrintManager`getInstance().getCurrentUser();
+				assignedBy := narrow_(PrintManager`getInstance().getCurrentUser(), Employee);
 				changeState(<InRepair>);
 			)
 		pre assignedTo = nil and assignedBy = nil and state = <Waiting> and PrintManager`getInstance().getCurrentUser().getRole() = <Admin>
@@ -65,7 +65,7 @@ operations
 	public changeState: malfunctionState ==> ()
 		changeState(newState) ==
 			state := newState
-		pre state <> nil and state <> <Fixed> and (PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>)
+		pre assignedTo <> nil and assignedBy <> nil and state <> nil and state <> <Fixed> and (PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>)
 		post state <> nil and state <> <Waiting> ;
 		
 end Malfunction

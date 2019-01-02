@@ -61,7 +61,7 @@ operations
  				queue := createQueue();
 				PrintManager`getInstance().logout();
  				cli := createClient();
- 				assertNotEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014)), nil);
+ 				assertNotEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2), nil);
  			);
  			
  	 	public testCreateDocumentWithoutProperQueue: () ==> ()
@@ -71,7 +71,7 @@ operations
  				PrintManager`clearInstance();
  				IO`print("Test Client - create document without proper queue\n");
  				cli := createClient();
- 				assertEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014)), nil);
+ 				assertEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2), nil);
  			);
  			
  	public testPayDocument: () ==> ()
@@ -89,7 +89,7 @@ operations
 				PrintManager`getInstance().logout();
  				cli := createClient();
  				acc := cli.getAccount();
- 				doc := cli.addDocument(<A4>,<BlackWhite>, <Portrait>, "Teste", mk_Document`Date(21,12,2014));
+ 				doc := cli.addDocument(<A4>,<BlackWhite>, <Portrait>, "Teste", mk_Document`Date(21,12,2014), 2);
  				cli.payDocument(doc);
  				assertEqual(cli.getAccount(), acc - doc.getPrice());
  			);
