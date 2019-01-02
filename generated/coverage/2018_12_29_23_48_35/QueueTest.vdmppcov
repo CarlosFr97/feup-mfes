@@ -1,6 +1,0 @@
-class QueueTest is subclass of Test
-
-operations
--- TODO Define operations here
-
-end QueueTest
