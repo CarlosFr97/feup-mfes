@@ -1,6 +1,117 @@
 class EmployeeTest is subclass of Test
 
 operations
--- TODO Define operations here
 
+	public createClient: () ==> Client
+ 		createClient() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl cli:Client;
+ 			manager := PrintManager`getInstance();
+ 			cli := manager.addClient("utilizador","12345678",10.0);
+ 			return cli;
+ 		);
+
+
+	public createEmployee: () ==> Employee
+ 		createEmployee() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:Employee;
+ 			manager := PrintManager`getInstance();
+ 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			return emp;
+ 		);
+ 		
+	public createAdmin: () ==> Employee
+ 		createAdmin() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:Employee;
+ 			manager := PrintManager`getInstance();
+ 			emp := manager.addEmployee("manager","emp123456",<Admin>);
+ 			return emp;
+ 		);
+ 		
+ 	 	public createQueue: () ==> Queue
+	 		createQueue() ==
+	 		(
+	 				return PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
+	 		);
+ 				
+ 		
+ 	public createMalfunction: Printer ==> Malfunction
+ 		createMalfunction(printer) ==
+ 		(
+ 				dcl malf:Malfunction;
+ 				dcl cli: Client;
+ 				cli := createClient();
+				malf := cli.reportMalfunction(printer,<Paper>,"problema");		
+				PrintManager`getInstance().logout();
+				return malf;
+		);
+ 		
+ 	
+ 	public testEmployee: () ==> ()
+ 		testEmployee() ==
+ 		(
+ 			dcl emp: Employee; 
+ 			PrintManager`clearInstance();
+ 			IO`print("Test Employee - create\n");
+ 			emp := createEmployee();
+ 			assertEqual(emp.getRole(), <Regular>);
+ 		);
+ 		
+ 	public testAssignMalfunction: () ==> ()
+ 		testAssignMalfunction() ==
+ 		(
+ 			dcl emp: Employee;
+			dcl admin: Employee;
+			dcl malf: Malfunction;
+			dcl printer: Printer;
+			dcl queue: set of Queue := {}; 
+			PrintManager`clearInstance();
+			IO`print("Test Employee - assign malfunctions\n");
+			emp := createEmployee();
+			queue := queue union {createQueue()};
+	 		printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
+			PrintManager`getInstance().logout();
+			malf:= createMalfunction(printer);
+			admin :=  PrintManager`getInstance().addEmployee("admin","admin12345",<Admin>);
+			admin.assignMalfunction(malf, emp);
+ 			assertEqual(malf.getState(), <InRepair>);
+ 			assertTrue(malf in set emp.getMalfunctions());		
+ 		);
+ 		
+ 	public testGetAssignedMalfunctions: () ==> ()
+ 	 testGetAssignedMalfunctions() ==
+ 	 (
+ 	 	dcl emp: Employee;
+		dcl admin: Employee;
+		dcl malf: Malfunction;
+		dcl printer: Printer;
+		dcl queue: set of Queue := {}; 
+		PrintManager`clearInstance();
+		IO`print("Test Employee - get malfunctions\n");
+		emp := createEmployee();
+		queue := queue union {createQueue()};
+ 		printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
+		PrintManager`getInstance().logout();
+		malf:= createMalfunction(printer);
+		admin :=  PrintManager`getInstance().addEmployee("admin","admin12345",<Admin>);
+		admin.assignMalfunction(malf, emp);
+		PrintManager`getInstance().logout();
+		emp := PrintManager`getInstance().login("empregado","emp12345");
+		assertTrue(malf in set emp.getMalfunctions());
+ 	 );
+ 		
+	public test: () ==> ()
+		test() ==
+		(
+			testEmployee();
+			testAssignMalfunction();
+			testGetAssignedMalfunctions();
+		);
+
+ 
 end EmployeeTest

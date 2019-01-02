@@ -30,7 +30,6 @@ operations
  	public testClient: () ==> ()
  		testClient() ==
  			(
-
  				dcl cli:Client;
  				PrintManager`clearInstance();
  				IO`print("Test Client - create\n");
@@ -62,7 +61,7 @@ operations
  				queue := createQueue();
 				PrintManager`getInstance().logout();
  				cli := createClient();
- 				assertNotEqual(cli.addDocument(<A4>,<Portrait>,<BlackWhite>,"Teste", mk_Document`Date(21,12,2014)), nil);
+ 				assertNotEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014)), nil);
  			);
  			
  	 	public testCreateDocumentWithoutProperQueue: () ==> ()
@@ -72,7 +71,7 @@ operations
  				PrintManager`clearInstance();
  				IO`print("Test Client - create document without proper queue\n");
  				cli := createClient();
- 				assertEqual(cli.addDocument(<A4>,<Portrait>,<BlackWhite>,"Teste", mk_Document`Date(21,12,2014)), nil);
+ 				assertEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014)), nil);
  			);
  			
  	public testPayDocument: () ==> ()
@@ -90,31 +89,10 @@ operations
 				PrintManager`getInstance().logout();
  				cli := createClient();
  				acc := cli.getAccount();
- 				doc := cli.addDocument(<A4>,<Portrait>,<BlackWhite>, "Teste", mk_Document`Date(21,12,2014));
+ 				doc := cli.addDocument(<A4>,<BlackWhite>, <Portrait>, "Teste", mk_Document`Date(21,12,2014));
  				cli.payDocument(doc);
  				assertEqual(cli.getAccount(), acc - doc.getPrice());
  			);
-	
-	public testReportMalfunction: () ==> ()
-		testReportMalfunction() ==
-			(
-				dcl emp: Employee; 
- 				dcl queue: set of Queue := {}; 
- 				dcl cli:Client;
- 				dcl printer:Printer;
- 				dcl malf:Malfunction;
- 				PrintManager`clearInstance();
- 				IO`print("Test Client - report malfunction\n");
- 				emp := createEmployee();
- 				queue := queue union {createQueue()};
- 				printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
-				PrintManager`getInstance().logout();
- 				cli := createClient();
-				malf := cli.reportMalfunction(printer,<Paper>,"problema");
-				assertTrue(malf in set cli.getMalfunctions());
-				assertTrue(malf in set printer.getMalfunctions())
-				
-			);
 	
  	public test: () ==> ()
  		test() ==
@@ -123,7 +101,6 @@ operations
  				testAddMoney();
  				testCreateDocument();
  				testPayDocument();
- 				testReportMalfunction();
  			);
  		
 

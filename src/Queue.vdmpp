@@ -15,11 +15,11 @@ operations
 				return self;
 		);
 	
-	public getSize: () ==> Document`documentSize
+	public pure getSize: () ==> Document`documentSize
 		getSize() ==
 			return size;
 	
-	public getColor: () ==> Document`documentColor
+	public pure getColor: () ==> Document`documentColor
 		getColor() ==
 			return color;
 	

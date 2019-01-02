@@ -1,9 +1,6 @@
 class Employee is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
-  
-types
-		
 
 operations
 	
@@ -11,18 +8,30 @@ operations
 		Employee(username, password, newRole) ==
 			(
 				initUser(username, password, newRole);
-			);
-			
-	public pure getRole: () ==> Role
-		getRole() ==
-			return role;
-	
+			)
+			pre newRole <> <Client>;
+				
 	public addMalfunction: Malfunction ==> ()
-		addMalfunction(malf) == 
+		addMalfunction(malf) ==
+		( 
 			malfunctions := malfunctions union {malf}
+		)
 		post malf in set malfunctions;
 	
-	public getMalfunctions: () ==> set of (Malfunction)
+	public pure getMalfunctions: () ==> set of (Malfunction)
 		getMalfunctions() ==
-			return malfunctions;
+			return malfunctions
+		pre PrintManager`getInstance().getCurrentUser().getRole() = <Admin> or PrintManager`getInstance().getCurrentUser() = self;
+		
+	
+	-- only as an admin
+	public assignMalfunction: Malfunction * Employee ==> ()
+		assignMalfunction(malf, emp) ==
+		(
+			malf.assignEmployee(emp);
+			emp.addMalfunction(malf);
+		)
+		pre PrintManager`getInstance().getCurrentUser().getRole() = <Admin>
+		post malf in set emp.getMalfunctions();
+		
 end Employee

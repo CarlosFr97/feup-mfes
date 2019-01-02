@@ -1,6 +1,5 @@
 class Client is subclass of User
 instance variables
-  malfunctions:set of (Malfunction) := {};
   account:real := 0;
 
 	inv account >= 0
@@ -38,10 +37,10 @@ operations
 
  --actions
  
-	public addDocument: Document`documentSize * Document`documentType * Document`documentColor * seq of (char) * Document`Date ==> [Document]
-		addDocument(size,color, type, name, date) == 
+	public addDocument: Document`documentSize * Document`documentColor * Document`documentType * seq of (char) * Document`Date ==> [Document]
+		addDocument(size, color, type, name, date) == 
 		(
-			dcl newDoc :Document := new Document(self, size,type,color, name, date);
+			dcl newDoc :Document := new Document(self, size, color, type, name, date);
 			if PrintManager`getInstance().addDocumentToQueue(newDoc) then 
 				return newDoc	
 			else
@@ -49,27 +48,11 @@ operations
 		)
 		pre PrintManager`getInstance().getCurrentUser() = self;
 		
-	
-	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
-		reportMalfunction(printer,type,desc) ==
-		(
-			dcl malf :Malfunction := new Malfunction(self,printer,type,desc);
-			printer.addMalfunction(malf);
-			malfunctions := malfunctions union {malf};
-			return malf
-		)
-		pre printer in set PrintManager`getInstance().getPrinters() and PrintManager`getInstance().getCurrentUser() = self; 
-		
 	-- getters
 		
 	public pure getAccount: () ==> real
 		getAccount() ==
 			return account
-		pre PrintManager`getInstance().getCurrentUser() = self;
-		
-	public getMalfunctions: () ==> set of (Malfunction)
-		getMalfunctions() ==
-			return malfunctions
 		pre PrintManager`getInstance().getCurrentUser() = self;
 	
 end Client

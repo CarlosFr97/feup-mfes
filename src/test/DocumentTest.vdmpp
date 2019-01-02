@@ -1,6 +1,111 @@
 class DocumentTest is subclass of Test
 
 operations
--- TODO Define operations here
+
+	 	public createClient: () ==> Client
+ 		createClient() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl cli:Client;
+ 			manager := PrintManager`getInstance();
+ 			cli := manager.addClient("utilizador","12345678",10.0);
+ 			return cli;
+ 		);
+
+	public createDocument: () ==> Document
+		createDocument() ==
+		(
+			dcl doc: Document := new Document(createClient(), <A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			return doc;
+		);
+		
+	public createEmployee: () ==> Employee
+ 		createEmployee() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:Employee;
+ 			manager := PrintManager`getInstance();
+ 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			return emp;
+ 		);
+ 		
+ 	public createQueue: () ==> Queue
+ 		createQueue() ==
+ 		(
+ 				return PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
+ 		);
+	
+	public testDocument: () ==> ()
+		testDocument() ==
+		(
+			 	dcl doc:Document;
+ 				PrintManager`clearInstance();
+ 				IO`print("Test Document - create (A4, B&W)\n");
+ 				doc := createDocument();
+ 				assertEqual(doc.getColor(), <BlackWhite>);
+ 				assertEqual(doc.getSize(), <A4>);
+ 				assertEqual(doc.getClient().getName(), "utilizador");
+ 				assertEqual(doc.getPrice(), 0.2);
+		);
+ 		
+ 	public testPriceOtherOptions: () ==> ()
+ 		testPriceOtherOptions() ==
+ 		(
+ 			dcl doc:Document;
+ 			PrintManager`clearInstance();
+ 			IO`print("Test Document - create (A3, Colors)\n");
+ 			doc := new Document(createClient(), <A3>,<Colors>,<Portrait>,"Teste", mk_Document`Date(21,12,2021));
+ 			assertEqual(doc.getPrice(), 0.45);
+ 		);
+ 		
+	 public testAddQueue: () ==> ()
+			testAddQueue() ==
+			(
+				 	dcl doc:Document;
+				 	dcl emp: Employee;
+				 	dcl queue: Queue;
+	 				PrintManager`clearInstance();
+	 				IO`print("Test Document - add queue\n");
+	 				emp := createEmployee();
+	 				queue := createQueue();
+	 				PrintManager`getInstance().logout();
+	 				doc := createDocument();
+	 				queue.addDocument(doc);
+	 				doc.setQueue(queue);
+	 				assertEqual(doc.getQueue().getSize(), <A4>);
+	 				assertEqual(doc.getQueue().getColor(), <BlackWhite>);
+			);
+		
+		 public testRemoveQueue: () ==> ()
+			testRemoveQueue() ==
+			(
+				 	dcl doc:Document;
+				 	dcl emp: Employee;
+				 	dcl queue: Queue;
+	 				PrintManager`clearInstance();
+	 				IO`print("Test Document - remove queue");
+	 				emp := createEmployee();
+	 				queue := createQueue();
+	 				PrintManager`getInstance().logout();
+	 				doc := createDocument();
+	 				queue.addDocument(doc);
+	 				doc.setQueue(queue);
+	 				assertEqual(doc.getQueue().getSize(), <A4>);
+					doc.removeFromQueue();
+	 				assertEqual(not doc in set doc.getQueue().getDocs(), true);	
+			);
+
+			
+	
+	public test: () ==> ()
+ 		test() ==
+ 			(
+ 				testDocument();
+ 				testPriceOtherOptions();
+ 				testAddQueue();
+ 				testRemoveQueue();
+ 			);
+			
+	
 
 end DocumentTest

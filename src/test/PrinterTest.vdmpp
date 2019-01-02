@@ -1,6 +1,118 @@
 class PrinterTest is subclass of Test
 
 operations
--- TODO Define operations here
+
+	public createClient: () ==> Client
+ 		createClient() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl cli:Client;
+ 			manager := PrintManager`getInstance();
+ 			cli := manager.addClient("utilizador","12345678",10.0);
+ 			return cli;
+ 		);
+ 		
+	public createEmployee: () ==> Employee
+		createEmployee() ==
+		(
+			dcl manager:PrintManager;
+			dcl emp:Employee;
+			manager := PrintManager`getInstance();
+			emp := manager.addEmployee("empregado","emp12345",<Regular>);
+			return emp;
+		);	
+		
+	public createPrinterAndQueue: () ==> Printer
+		createPrinterAndQueue() ==
+		(
+				dcl queues: set of Queue := {};
+				dcl printer: Printer;
+				queues:= queues union {PrintManager`getInstance().addQueue(<A4>,<BlackWhite>)};
+				printer := PrintManager`getInstance().addPrinter(0,"trabalho", queues);
+				return printer;
+				
+		);
+
+	public testPrinter: () ==> ()
+		testPrinter() ==
+		(
+			dcl emp: Employee;
+			dcl printer: Printer;
+			PrintManager`getInstance().clearInstance();
+			IO`print("Test printer - create\n");
+			emp := createEmployee();
+			printer := createPrinterAndQueue();
+			assertEqual(printer.getId(), 0);
+			assertEqual(printer.getLocation(), "trabalho");
+		);
+		
+	public testQueryClient: () ==> ()
+		testQueryClient() == 
+		(
+			dcl emp: Employee;
+			dcl printer: Printer;
+			dcl cli: Client;
+			dcl doc: Document;
+			PrintManager`getInstance().clearInstance();
+			IO`print("Test printer - query as client\n");
+			emp := createEmployee();
+			printer := createPrinterAndQueue();
+			PrintManager`getInstance().logout();
+			cli := createClient();
+			assertEqual(printer.queryPrintAsClient(), {});
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			assertEqual(printer.queryPrintAsClient(), {doc});
+			
+		);
+		
+	public testQueryAllDocs: () ==> ()
+		testQueryAllDocs() == 
+		(
+			dcl emp: Employee;
+			dcl printer: Printer;
+			dcl cli: Client;
+			dcl doc: Document;
+			PrintManager`getInstance().clearInstance();
+			IO`print("Test printer - query all docs\n");
+			emp := createEmployee();
+			printer := createPrinterAndQueue();
+			PrintManager`getInstance().logout();
+			cli := createClient();
+			assertEqual(printer.queryPrintAsClient(), {});
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			PrintManager`getInstance().logout();
+			emp := PrintManager`getInstance().login("empregado","emp12345");
+			assertEqual(printer.queryPrint(), {doc});	
+		);
+		
+	public testPrint: () ==> ()
+		testPrint() ==
+		(
+			dcl emp: Employee;
+			dcl printer: Printer;
+			dcl cli: Client;
+			dcl doc: Document;
+			dcl acc: int;
+			PrintManager`getInstance().clearInstance();
+			IO`print("Test printer - print document\n");
+			emp := createEmployee();
+			printer := createPrinterAndQueue();
+			PrintManager`getInstance().logout();
+			cli := createClient();
+			acc := cli.getAccount();
+			assertEqual(printer.queryPrintAsClient(), {});
+			doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2024));
+			printer.print(doc);
+			assertEqual(cli.getAccount(), acc-doc.getPrice());
+		);
+
+	public test: () ==> ()
+		test() ==
+		(
+			testPrinter();
+			testQueryClient();
+			testQueryAllDocs();
+			testPrint();
+		)
 
 end PrinterTest

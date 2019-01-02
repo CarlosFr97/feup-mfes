@@ -1,20 +1,25 @@
 class Malfunction
 instance variables
-  client:Client;
-  employee:[Employee] := nil;
+  reportedBy:User;
+  assignedTo:[Employee] := nil;
+  assignedBy:[Employee] := nil;
   printer:Printer;
   state:malfunctionState := <Waiting>;
   description: seq of (char) := [];
   problem: problemType;
+  
+  inv assignedTo = nil or assignedTo.getRole() <> <Client>;
+  inv assignedBy = nil or assignedBy.getRole() = <Admin>;
+  
 types
 	public malfunctionState = <Waiting> | <InRepair> | <Fixed>; 
 	public problemType = <Toner> | <Paper> | <Other>;
 	
 operations
-	public Malfunction : Client  * Printer * problemType * seq of (char) ==> Malfunction
-		Malfunction(cli,print,type,desc) == 
+	public Malfunction : User  * Printer * problemType * seq of (char) ==> Malfunction
+		Malfunction(user,print,type,desc) == 
 			(
-				client := cli;
+				reportedBy := user;
 				printer := print;
 				description := desc;
 				problem := type;
@@ -23,21 +28,44 @@ operations
 			
 	public getState: () ==> malfunctionState
 		getState() == 
-			return state;
+			return state
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 			
+	public getReportedBy: () ==> User
+		getReportedBy() ==
+			return reportedBy
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
+	
+	
+	public getAssignedBy: () ==> Employee
+		getAssignedBy() ==
+			return assignedBy
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
+	
+	public getAssignedTo: () ==> Employee
+		getAssignedTo() ==
+			return assignedTo
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 			
-	public assignEmployee: Employee * Employee ==> ()
-		assignEmployee(adm,emp) ==
+	public getPrinter: () ==> Printer
+		getPrinter() ==
+			return printer
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
+			
+	public assignEmployee: Employee ==> ()
+		assignEmployee(emp) ==
 			(
-			employee:= emp;
-			changeState(emp,<InRepair>);
-			emp.addMalfunction(self);
+				assignedTo := emp;
+				assignedBy := PrintManager`getInstance().getCurrentUser();
+				changeState(<InRepair>);
 			)
-		pre employee = nil and state = <Waiting> and adm.getRole() = <Admin> and emp.getRole() = <Regular>;
+		pre assignedTo = nil and assignedBy = nil and state = <Waiting> and PrintManager`getInstance().getCurrentUser().getRole() = <Admin>
+		post assignedTo = emp and state = <InRepair> and assignedBy = PrintManager`getInstance().getCurrentUser();
 			
-	public changeState: Employee * malfunctionState ==> ()
-		changeState(emp,newState) ==
+	public changeState: malfunctionState ==> ()
+		changeState(newState) ==
 			state := newState
-		pre state <> nil and state <> <Fixed> and (emp = employee or emp.getRole() = <Admin>)
+		pre state <> nil and state <> <Fixed> and (PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>)
 		post state <> nil and state <> <Waiting> ;
+		
 end Malfunction

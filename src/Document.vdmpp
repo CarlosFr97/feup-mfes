@@ -8,7 +8,7 @@ instance variables
   state: documentState := <ToPrint>;
   name: seq of (char);
   date: Date;
-  queue: Queue;
+  queue: [Queue] := nil;
  
 types
 	public documentSize = <A3> | <A4>;
@@ -34,6 +34,7 @@ operations
 				type := ty;
 				name := nam;
 				date := dat;
+				calculatePrice();
 				return self;
 			)
 			pre PrintManager`getInstance().getCurrentUser() = cli;
@@ -44,17 +45,19 @@ operations
 		pre q in set PrintManager`getInstance().getQueues()
 		post queue = q;
 		
-	public remove: () ==> ()
-		remove() ==
+	public removeFromQueue: () ==> ()
+		removeFromQueue() ==
 			queue.removeDocument(self);	
 
 	public pure getPrice: () ==> real
 		getPrice() ==
-			return price;
+			return price
+		pre PrintManager`getInstance().getCurrentUser() = client;
 
 	public pure getClient: () ==> Client
 		getClient() ==
-			return client;
+			return client
+		pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client> or PrintManager`getInstance().getCurrentUser() = client;
 			
 	public getColor: () ==> documentColor
 		getColor() ==
@@ -64,19 +67,29 @@ operations
 		getSize() ==
 			return size;		
 	
-public pure getQueue: () ==> Queue
-	getQueue() ==
-		return queue;
+	public pure getQueue: () ==> [Queue]
+		getQueue() ==
+			return queue;
+			
+	private calculatePrice: () ==> ()
+		calculatePrice() ==
+			(
+				calculateSize();
+				calculateColor();
+			);
 		
-	public calculatePrice : () ==> ()
-	calculatePrice() ==
-		cases true: 
-			(size = <A3>) ->	 price := price + 0.2, 
-			(size = <A4>) ->  price := price + 0.1,
-			(color = <BlackWhite>) -> price := price + 0.1,
-			(color = <Colors>) -> price := price + 0.25,
-			others -> price := price
-		end;
-
+	private calculateSize: () ==> ()
+		calculateSize() ==
+			cases size: 
+				(<A3>) -> price := price + 0.2,
+				(<A4>) -> price := price + 0.1
+			end;
+	
+	private calculateColor: () ==> ()
+		calculateColor() ==
+			cases color: 
+				(<BlackWhite>) -> price := price + 0.1,
+				(<Colors>) -> price := price + 0.25
+			end;		
 
 end Document

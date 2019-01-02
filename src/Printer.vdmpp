@@ -3,7 +3,6 @@ instance variables
   id:int := 0;
   queues: set of (Queue) := {};
   location:seq of (char) := [];
-  malfunctions: set of (Malfunction) := {};
 
 operations
 	public Printer: int * seq of (char) * set of (Queue) ==> Printer
@@ -15,8 +14,18 @@ operations
 				return self;
 			);
 			
-  public queryPrint: ()  ==> set of (Document)
-	  queryPrint() ==
+	public pure getId: () ==> int
+		getId() ==
+			return id
+		pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+	
+	public pure getLocation: () ==> seq of (char)
+		getLocation() ==
+			return location
+		pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+			
+  public queryPrintAsClient: ()  ==> set of Document
+	  queryPrintAsClient() ==
 	  (
 		   	dcl docs: set of Document := {};
 		   	for all queue in set queues do (
@@ -25,25 +34,26 @@ operations
 		   	return docs;
 	  )
 	  pre PrintManager`getInstance().getCurrentUser() <> nil;
+	  
+	public queryPrint: ()  ==> set of Document
+	  queryPrint() ==
+	  (
+		   	dcl docs: set of Document := {};
+		   	for all queue in set queues do (
+		   		docs := docs union queue.getDocs();
+		   	);
+		   	return docs;
+	  )
+	  pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
    
  public print: Document ==> ()
 		print(doc) ==
 		(
 			dcl client: Client := doc.getClient();
 			client.payDocument(doc);
-			doc.remove();
+			doc.removeFromQueue();
 		)
 		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs();
-   	
-   public addMalfunction: Malfunction ==> ()
-   		addMalfunction(malf) ==
-   			malfunctions := malfunctions union {malf}
-   		post malf in set malfunctions;
-   	
-   public getMalfunctions: () ==> set of (Malfunction)
-   	getMalfunctions() == 
-   		return malfunctions;
-	
 	
 
 end Printer

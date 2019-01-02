@@ -4,6 +4,7 @@ instance variables
   employees:set of (Employee) := {};
   printers:set of Printer := {};
 	queues: set of (Queue) := {};
+	malfunctions: set of (Malfunction) := {};
 	currentUser: [User] := nil; 
 	private static printManager: PrintManager := new PrintManager();
 
@@ -23,15 +24,15 @@ operations
 			);
 			
 	private pure employeeExists: seq of (char)  ==> bool
-	employeeExists(name) ==
-		(
-			for all employee in set employees do
+		employeeExists(name) ==
 			(
-				if employee.getName() = name then
-					return true;
+				for all employee in set employees do
+				(
+					if employee.getName() = name then
+						return true;
+				);
+				return false;
 			);
-			return false;
-		);
 	
 
 	public addClient: seq of (char) * seq of (char) * real ==> [Client]
@@ -45,7 +46,7 @@ operations
 			post RESULT.getName() = username and RESULT.getAccount() = account;
 			
 				
-	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> Employee
+	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> [Employee]
 		addEmployee(username, password, role) ==
 			(
 				dcl emp: Employee := new Employee(username, password, role);
@@ -56,7 +57,7 @@ operations
 			post RESULT.getName() = username and RESULT.getRole() = role;
 			
 			
-	public login: seq of (char) * seq of (char) ==> User
+	public login: seq of (char) * seq of (char) ==> [User]
 		login(username, password) ==
 		(
 			dcl users: set of (User) := clients union employees;
@@ -89,16 +90,19 @@ operations
 				queues := queues union {queue};
 				return queue
 			)
-			pre currentUser <> nil and currentUser in set employees;
+			pre currentUser <> nil and currentUser in set employees and (forall queue in set queues & queue.getSize() <> size and queue.getColor() <> color)
+			post RESULT in set queues;
+			
 	
 	public addPrinter: int * seq of (char) * set of Queue ==> Printer
 		addPrinter(id,local,listofQueues) == 
 			(
-			dcl aux :Printer := new Printer(id,local,listofQueues);
-			printers := printers union { aux };
-			return aux
+				dcl aux :Printer := new Printer(id,local,listofQueues);
+				printers := printers union { aux };
+				return aux
 			)
-			pre currentUser <> nil and currentUser in set employees;
+			pre currentUser <> nil and currentUser in set employees and (forall printer in set printers & printer.getId() <> id)
+			post RESULT in set printers;
 			
 	
 	-- client interaction
@@ -117,15 +121,16 @@ operations
 			);
 			return false;
 		)
-		pre forall queue in set queues & doc not in set queue.getDocs() and currentUser <> nil and currentUser in set clients;
+		pre forall queue in set queues & doc not in set queue.getDocs() and currentUser <> nil and currentUser in set clients
+		post doc.getQueue() <> nil;
 
 
 	-- reporting
 	
 	public  reportPrinters : ()  ==> ?
-  reportPrinters() ==
-    is not yet specified
-   pre currentUser <> nil and currentUser in set employees;
+  	reportPrinters() ==
+    	is not yet specified
+   	pre currentUser <> nil and currentUser in set employees;
    	
 
   public  reportClients : ()  ==> ?
@@ -166,9 +171,7 @@ operations
 	public pure getCurrentUser: () ==> [User]	
 		getCurrentUser()==
 			return currentUser;
-			 
-			
-	
+			 	
 	public pure getPrinters: () ==> set of Printer
 		getPrinters() == 
 			return  printers
@@ -178,14 +181,25 @@ operations
 		getQueues() == 
 			return  queues
 		pre currentUser <> nil;
-  
+		
+	public getMalfunctions: () ==> set of Malfunction
+		getMalfunctions() ==
+			return malfunctions
+		pre currentUser <>nil and currentUser in set employees;
+		
+	public addMalfunction: Malfunction ==> ()
+		addMalfunction(malf) ==
+			malfunctions := malfunctions union {malf}
+		pre currentUser <> nil;
+
+  -- is it necessary??  
     
   public getEmployee: seq of (char) ==> [Employee]
   	getEmployee(name) ==
   		(
 	  		for all employee in set employees do 
 	  		(
-	  			if employee.getName() = name then 
+	  			if employee.getName() = name and employee.getRole() <> <Admin> then 
 	  			(
 	  				return employee
 	  			)

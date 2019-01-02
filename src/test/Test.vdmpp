@@ -32,6 +32,30 @@ operations
   			IO`println(")\n");
 			)
 			post expected <> actual;
+			
+		public test: () ==> ()
+			test() ==
+				(
+					dcl client: ClientTest := new ClientTest();
+					dcl document: DocumentTest := new DocumentTest();
+					dcl employee: EmployeeTest := new EmployeeTest();
+					dcl malfunction: MalfunctionTest := new MalfunctionTest();
+					dcl printer: PrinterTest := new PrinterTest();
+					dcl printmanager: PrintManagerTest := new PrintManagerTest();
+					
+					IO`print(" ***** TEST CLIENT ******* \n\n");
+					client.test();
+					IO`print("\n\n ***** TEST DOCUMENT ******* \n\n");
+					document.test();
+					IO`print("\n\n ***** TEST EMPLOYEE ******* \n\n");
+					employee.test();
+					IO`print("\n\n ***** TEST MALFUNCTION ******* \n\n");
+					malfunction.test();
+					IO`print("\n\n ***** TEST PRINTER ******* \n\n");
+					printer.test();
+					IO`print("\n\n ***** TEST PRINT MANAGER ******* \n\n");
+					printmanager.test();
+				)
 	
 	
 end Test
