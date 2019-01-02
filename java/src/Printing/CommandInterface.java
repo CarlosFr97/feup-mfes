@@ -7,11 +7,16 @@ import Printing.PrintManager;
 import Printing.quotes.ClientQuote;
 import Printing.quotes.ColorsQuote;
 import Printing.quotes.LandscapeQuote;
+import Printing.quotes.OtherQuote;
+import Printing.quotes.PaperQuote;
 import Printing.quotes.PortraitQuote;
+import Printing.quotes.TonerQuote;
 import Printing.quotes.A3Quote;
 import Printing.quotes.A4Quote;
 import Printing.quotes.AdminQuote;
 import Printing.quotes.BlackWhiteQuote;
+
+import org.overture.codegen.runtime.*;
 
 public class CommandInterface {
 
@@ -182,11 +187,15 @@ public class CommandInterface {
         Object size;
         Object type;
         Object color;
+        int pages;
         LocalDateTime currDate = LocalDateTime.now();
         Date date = new Date(currDate.getDayOfMonth(),currDate.getMonth().getValue(),currDate.getYear());
         System.out.println("============================");
         System.out.println("|       NEW DOCUMENT       |");
         System.out.println("============================");
+        
+        //number of pages
+        
         //Choose size
         System.out.println("    1 - A4        2 - A3    ");
         option = MyUtils.inInt("Choose size option: ");
@@ -207,6 +216,7 @@ public class CommandInterface {
         System.out.println("\nColor: " + color.toString());
         System.out.println();
         String name = MyUtils.inString("What is the name of the Document? ");
+        pages = MyUtils.inInt("Number of pages of the document");
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to save " + name + " as a Document of size " + size + " displayed in " + type + " printed in " + color + "? y/n"));
         if(confirm == 'Y'){
             //TODO CREATE DOCUMENT
@@ -224,54 +234,59 @@ public class CommandInterface {
 
         //TODO GET PRINTERS
 
-        //Temp printers;
-        ArrayList<String> printers = new ArrayList<>();
-        for(int i = 0; i < 5; i++)
-            printers.add("Printer " + i);
+       
+        ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
+        
+        if(printers.size() == 0)
+            return;
+        int i = 0;
 
         //TODO PRINTERS LIST SHOULD SHOW WHAT TYPE OF DOCUMENTS THEY CAN PRINT
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printers:                |");
-        for(int i = 0; i < printers.size(); i++){
-            System.out.println("|       " + i + " - " + printers.get(i) + "      |");
+        for(Object printer:printers){
+            System.out.println("|       " + i + " - " + ((Printer)printer).getLocation() + "      |");
+            i++;
         }
         System.out.println("============================");
 
         int choose = MyUtils.inInt("Please choose the printer option: ");
-        String choosenPrinter = printers.get(0);
+        Printer choosenPrinter = (Printer) printers.get(0);
         if(choose >= 0 && choose < printers.size()){
-            choosenPrinter = printers.get(choose);
+            choosenPrinter = (Printer) printers.get(choose);
         }
         
     
         
 
         //TODO GET DOCUMENTS
-        ArrayList<String> documents = new ArrayList<>();
-        //temporary documents
-        for(int i = 0; i < 10 ; i++){
-            documents.add("Doc " + i);
-        }
+        ArrayList<Object> documents = new ArrayList<>(choosenPrinter.queryPrintAsClient());
+        
+        if(documents.size() == 0)
+        	return;
+      
 
         //TODO DOCUMENTS LIST SHOULD SHOW CHARACTERISTICS OF EACH
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printer:                 |");
-        System.out.println("|        "  + choosenPrinter + "         |");
+        System.out.println("|        "  + choosenPrinter.getLocation() + "         |");
         
         System.out.println("| Documents:               |");
-        for(int i = 0; i < documents.size(); i++){
-            System.out.println("|          " + i + " - " + documents.get(i) + "       |");
-        }
+        i = 0;
+        for(Object doc:documents){
+            System.out.println("|          " + i + " - " + ((Document)doc).toString() + "       |");
+            i++;
+        }	
         System.out.println("============================");
-        ArrayList<String> choosenDocs = new ArrayList<>();
+        ArrayList<Document> choosenDocs = new ArrayList<>();
         String option[] = MyUtils.inString("Please choose the documents you wish to print (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
-        for(int i = 0; i < option.length; i++){
-            if(MyUtils.isNumeric(option[i])){
-                Integer number = new Integer(option[i]);
+        for(int a = 0; i < option.length; a++){
+            if(MyUtils.isNumeric(option[a])){
+                Integer number = new Integer(option[a]);
                 if(number >= 0 && number < documents.size()){
-                    choosenDocs.add(documents.get(number));
+                    choosenDocs.add((Document)documents.get(number));
                 }
             }
         }
@@ -283,14 +298,20 @@ public class CommandInterface {
         System.out.println("| Printer:                 |");
         System.out.println("|        "  + choosenPrinter + "         |");
         System.out.println("| Choosen:                 |");
-        for(int i = 0; i < choosenDocs.size(); i++){
-            System.out.println("|        "  + choosenDocs.get(i) + "             |");
+        double price = 0;
+        for(int a = 0; i < choosenDocs.size(); a++){
+            System.out.println("|        "  + choosenDocs.get(a).toString() + "             |");
+            price = price + (choosenDocs.get(a).getPrice()).doubleValue();
         }
+        
+        System.out.println("Total price: " + price);
 
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to print? y/n"));
 
         if(confirm == 'Y'){
-            //TODO PRINT
+            for(Document doc:choosenDocs) {
+            	choosenPrinter.print(doc);
+            }
         }
         
     }
@@ -300,35 +321,34 @@ public class CommandInterface {
         //TODO GET PRINTERS
 
         //Temp printers;
-        ArrayList<String> printers = new ArrayList<>();
-        for(int i = 0; i < 5; i++)
-            printers.add("Printer " + i);
-
+    	ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
+        
         if(printers.size() == 0)
             return;
-        
+        int index= 0;
         System.out.println("============================");
         System.out.println("|    REPORT MALFUNCTION    |");
         System.out.println("| Printers:                |");
-        for(int i = 0; i < printers.size(); i++){
-            System.out.println("|       " + i + " - " + printers.get(i) + "      |");
+        for(Object printer:printers){
+            System.out.println("|       " + index + " - " + ((Printer)printer).getLocation() + "      |");
+            index++;
         }
         System.out.println("============================");
         int choose = MyUtils.inInt("Please choose the printer option: ");
-        String choosenPrinter = printers.get(0);
+        Printer choosenPrinter = (Printer) printers.get(0);
         if(choose >= 0 && choose < printers.size()){
-            choosenPrinter = printers.get(choose);
+            choosenPrinter = (Printer) printers.get(choose);
         }
 
-        System.out.println("\nPrinter: " + choosenPrinter);
+        System.out.println("\nPrinter: " + choosenPrinter.getLocation());
         System.out.println();
         System.out.println("    1 - Toner  2 - Paper 3 - Other  ");
         choose = MyUtils.inInt("What is the problem: ");
-        String problemType = "<Other>";
+        Object problemType = new OtherQuote();
         if(choose == 1)
-            problemType = "<Toner>";
+            problemType = new TonerQuote();
         else if(choose == 2)
-            problemType = "<Paper>";
+            problemType = new PaperQuote();
         
         System.out.println("\nProblem type: " + problemType);
         System.out.println();
@@ -338,6 +358,8 @@ public class CommandInterface {
 
         if(confirm == 'Y'){
             //TODO CREATE REPORT
+        	User user = manager.getCurrentUser();
+        	user.reportMalfunction(choosenPrinter, problemType, description);
         }
         
 

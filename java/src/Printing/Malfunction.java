@@ -56,7 +56,7 @@ public class Malfunction {
   public void assignEmployee(final Employee emp) {
 
     assignedTo = emp;
-    assignedBy = PrintManager.getInstance().getCurrentUser();
+    assignedBy = (Employee) PrintManager.getInstance().getCurrentUser();
     changeState(Printing.quotes.InRepairQuote.getInstance());
   }
 
