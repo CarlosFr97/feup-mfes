@@ -45,7 +45,7 @@ operations
  				assertEqual(doc.getColor(), <BlackWhite>);
  				assertEqual(doc.getSize(), <A4>);
  				assertEqual(doc.getClient().getName(), "utilizador");
- 				assertEqual(doc.getPrice(), 0.06);
+ 				assertEqual(doc.getPrice(), 0.08);
  				assertEqual(doc.getName(), "Teste");
  				assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
 		);
@@ -63,9 +63,9 @@ operations
  			doc := new Document(cli, <A3>,<Colors>,<Portrait>,"Teste", mk_Document`Date(21,12,2021), 2);
  			doc2 := new Document(cli, <A3>,<BlackWhite>,<Portrait>,"Teste2", mk_Document`Date(21,12,2021), 2);
  			doc3 := new Document(cli, <A4>,<Colors>,<Portrait>,"Test3", mk_Document`Date(21,12,2021), 2);
- 			assertEqual(doc.getPrice(), 0.40);
- 			assertEqual(doc2.getPrice(), 0.20);
- 			assertEqual(doc3.getPrice(), 0.10);
+ 			assertEqual(doc.getPrice(), 0.18);
+ 			assertEqual(doc2.getPrice(), 0.14);
+ 			assertEqual(doc3.getPrice(), 0.12);
  		);
  		
 	 public testAddQueue: () ==> ()

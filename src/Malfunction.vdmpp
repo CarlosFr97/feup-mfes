@@ -36,6 +36,10 @@ operations
 			return reportedBy
 		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 	
+	public getProblem: () ==> problemType
+		getProblem() ==
+			return problem
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 	
 	public getAssignedBy: () ==> Employee
 		getAssignedBy() ==

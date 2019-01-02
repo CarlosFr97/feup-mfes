@@ -89,13 +89,24 @@ operations
 	private calculatePrice: () ==> ()
 		calculatePrice() ==
 			(
-				cases true:
-					(size = <A3> and color = <BlackWhite>) -> price := 0.1*numPages,
-					(size = <A3> and color = <Colors>) -> price := 0.20*numPages,
-					(size = <A4> and color = <BlackWhite>) -> price := 0.03*numPages,
-					(size = <A4> and color = <Colors>) -> price := 0.05*numPages
-				end;
+				calculateSize();
+				calculateColor();
+				price := price * numPages;
 			)
 			pre numPages >=1;
-
+		
+	private calculateSize: () ==> ()
+		calculateSize() ==
+			cases size: 
+				<A3> -> price := price + 0.05,
+				<A4> -> price := price + 0.02
+			end;
+	
+	private calculateColor: () ==> ()
+		calculateColor() ==
+			cases color: 
+				<BlackWhite> -> price := price + 0.02,
+				<Colors> -> price := price + 0.04
+			end;		
+			
 end Document
