@@ -56,6 +56,7 @@ operations
  				dcl queue: Queue; 
  				dcl cli:Client;
  				dcl doc: Document;
+ 				dcl tempDoc: [Document];
  				PrintManager`clearInstance();
  				IO`print("Test Client - create document\n");
  				cli := createClient();
@@ -68,6 +69,8 @@ operations
  				doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2);
  				assertNotEqual(doc, nil);
  				assertEqual(cli.getDocs(), {doc});
+ 				tempDoc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2);
+ 				assertEqual(tempDoc, nil);
  				PrintManager`getInstance().logout();
  				emp := PrintManager`getInstance().addEmployee("admin","emp12345",<Admin>);
  				assertEqual(cli.getDocs(), {doc});

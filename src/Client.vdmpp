@@ -41,7 +41,12 @@ operations
 	public addDocument: Document`documentSize * Document`documentColor * Document`documentType * seq of (char) * Document`Date * nat1 ==> [Document]
 		addDocument(size, color, type, name, date, numPages) == 
 		(
-			dcl newDoc :Document := new Document(self, size, color, type, name, date, numPages);
+			dcl newDoc :Document; 
+			for all doc in set documents do 
+				if name = doc.getName() then
+					return nil;
+					
+			newDoc := new Document(self, size, color, type, name, date, numPages);
 			if PrintManager`getInstance().addDocumentToQueue(newDoc) then
 			(
 				documents := documents union {newDoc}; 
@@ -50,7 +55,7 @@ operations
 			else
 				return nil;
 		)
-		pre PrintManager`getInstance().getCurrentUser() = self and forall doc in set documents & name <> doc.getName(); 
+		pre PrintManager`getInstance().getCurrentUser() = self;
 		
 	-- getters
 		
