@@ -134,12 +134,12 @@ public class CommandInterface {
             System.out.println("============================");
             System.out.println("|     PRINTING SYSTEM      |");
             System.out.println("============================");
-            System.out.println("| Moneu: " + ((Client) manager.getCurrentUser()).getAccount());
+            System.out.println("| Money: " + ((Client) manager.getCurrentUser()).getAccount());
             System.out.println("| Client Menu:             |");
             System.out.println("|        1. Deposit Money  |");
             System.out.println("|        2. New Document   |");
             System.out.println("|        3. Print          |");
-            System.out.println("|        4. Report         |");
+            System.out.println("|        4. New Malfunction|");
             System.out.println("|        5. Log Out        |");
             System.out.println("============================");
             option = MyUtils.inInt("Select Option: ");
@@ -393,8 +393,9 @@ public class CommandInterface {
             System.out.println("|        1. Add Printer    |");
             System.out.println("|        2. Add Queue      |");
             System.out.println("|        3. Malfunctions   |");
-            System.out.println("|        4. Printers Report|");
-            System.out.println("|        5. Log Out        |");
+            System.out.println("|        4. New Malfunction|");
+            System.out.println("|        5. Report Printer |");
+            System.out.println("|        6. Log Out        |");
             System.out.println("============================");
             option = MyUtils.inInt("Select Option: ");
 
@@ -413,10 +414,13 @@ public class CommandInterface {
                     solveMalfunction();
                     break;
                 case 4:
-                    System.out.println("Printers Report");
+                    System.out.println("New malfunction");
                     reportMalfunctionMenu();
                     break;
                 case 5:
+                    System.out.println("Report printers")
+                    break;
+                case 6:
                     System.out.println("Log Out");
                     manager.logout();
                     running = false;
