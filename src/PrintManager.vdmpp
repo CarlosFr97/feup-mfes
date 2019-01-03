@@ -173,11 +173,10 @@ operations
 	  pre currentUser <> nil and currentUser in set employees and (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
 	   
 
-  public  reportEmployee : seq of (char)  ==> map Malfunction`malfunctionState to int
-  reportEmployee(name) ==
+  public  reportEmployee : Employee  ==> map Malfunction`malfunctionState to int
+  reportEmployee(employee) ==
   (
   	dcl allMalfs :map Malfunction`malfunctionState to int := {<InRepair>|-> 0,<Fixed> |-> 0};
-    dcl employee :Employee := getEmployee(name);
     for all malfunction in set employee.getMalfunctions() do (
     	dcl pair :map Malfunction`malfunctionState to int := {malfunction.getState()} <: allMalfs;
   		dcl state :Malfunction`malfunctionState := malfunction.getState();

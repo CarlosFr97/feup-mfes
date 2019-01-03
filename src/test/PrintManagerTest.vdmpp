@@ -194,6 +194,39 @@ operations
 			
 		);
 		
+	public testReportEmployees: () ==> ()
+		testReportEmployees() ==
+		(
+			dcl manager: PrintManager;
+			dcl admin: Employee;
+			dcl cli1: Client;
+			dcl queue: Queue;
+			dcl queue2: Queue;
+			dcl printer: Printer;
+			dcl printer2: Printer;
+			dcl malf: Malfunction;
+			dcl report: map Malfunction`malfunctionState to int := {|->};
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - report employee\n");
+			admin := manager.login("admin", "admin");
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			queue2 := manager.addQueue(<A3>,<Colors>);
+			printer := manager.addPrinter(0, "piso1", {queue});
+			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
+			manager.logout();
+			cli1 := manager.addClient("utilizador", "utiliza123456", 10.0);
+			malf := cli1.reportMalfunction(printer, <Paper>, "problem");
+			manager.logout();
+			admin := manager.login("admin", "admin");
+			admin.assignMalfunction(malf, admin);
+			report := manager.reportEmployee(admin);
+			assertEqual({<InRepair> |-> 1, <Fixed> |-> 0}, report);
+			malf.changeState(<Fixed>);
+			report := manager.reportEmployee(admin);
+			assertEqual({<InRepair> |-> 0, <Fixed> |-> 1}, report);
+		);
+		
 	public testMalfunctions: () ==> ()
 		testMalfunctions() ==
 		(
@@ -260,6 +293,7 @@ operations
 			testAddPrinter();
 			testReportClients();
 			testReportPrintedDocs();
+			testReportEmployees();
 			testMalfunctions();
 			testGetRegularEmployees();
 			testGetSpecificEmployee();
