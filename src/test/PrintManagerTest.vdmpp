@@ -6,17 +6,22 @@ operations
 		testAddClient() ==
 		(	
 			dcl manager: PrintManager;
-			dcl cli: Client;
+			dcl cli: [Client];
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add client\n");
 			cli := manager.addClient("utilizador", "123456778", 10.0);
 			assertEqual(manager.getCurrentUser(), cli);
+			manager.logout();
+			cli := manager.addClient("utilizador", "123456778", 10.0);
+			assertEqual(cli, nil);
+			
 		);
 		
 	public testLogout: () ==> ()
 		testLogout() ==
 		(
+			dcl cli: [Client] := PrintManager`getInstance().login("utilizador", "123456778");
 			PrintManager`getInstance().logout();
 			assertEqual(PrintManager`getInstance().getCurrentUser(), nil);	
 		);
@@ -32,6 +37,8 @@ operations
 			cli := manager.addClient("utilizador", "123456778", 10.0);
 			assertEqual(manager.getCurrentUser(), cli);
 			PrintManager`getInstance().logout();
+			cli := PrintManager`getInstance().addClient("utilizador", "123456778", 10.0);
+			assertEqual(cli, nil);
 			cli := PrintManager`getInstance().login("utilizador", "1234567");
 			assertEqual(cli, nil);
 		);
@@ -51,18 +58,22 @@ operations
 			assertEqual(manager.getCurrentUser(), nil);
 			cli2 := manager.addClient("utilizador2", "utiliza123456", 10.0);
 			assertEqual(manager.getCurrentUser(), cli2);
+			
 		);
 		
 	public testAddEmployee: () ==> ()
 		testAddEmployee() ==
 		(	
 			dcl manager: PrintManager;
-			dcl emp: Employee;
+			dcl emp: [Employee];
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add employee\n");
 			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
 			assertEqual(manager.getCurrentUser(), emp);
+			manager.logout();
+			emp := manager.addEmployee("empregado", "123456778", <Regular>);
+			assertEqual(emp, nil);
 		);
 		
 	public testAddQueue: () ==> ()

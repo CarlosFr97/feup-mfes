@@ -42,11 +42,12 @@ operations
 				( 
 					dcl cli:Client := new Client(username,password,account);
 					clients := clients union {cli};
+					return narrow_(login(username, password), Client);
 				);
-				return narrow_(login(username, password), Client);
+				return nil;
 			)
 			pre currentUser = nil
-			post RESULT.getName() = username and RESULT.getAccount() = account;
+			post RESULT = nil or (RESULT.getName() = username and RESULT.getAccount() = account);
 			
 				
 	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> [Employee]
@@ -56,11 +57,12 @@ operations
 				( 
 					dcl emp: Employee := new Employee(username, password, role);
 				 	employees := employees union {emp};
+				 	return narrow_(login(username, password), Employee);
 				);
-			 	return narrow_(login(username, password), Employee);
+			 	return nil;
 			)
 			pre currentUser = nil
-			post RESULT.getName() = username and RESULT.getRole() = role;
+			post RESULT = nil or (RESULT.getName() = username and RESULT.getRole() = role);
 			
 			
 	public login: seq of (char) * seq of (char) ==> [User]
