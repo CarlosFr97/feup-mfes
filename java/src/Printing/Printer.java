@@ -11,8 +11,8 @@ public class Printer {
 
   public void cg_init_Printer_1(final Number identifier, final String local, final VDMSet lists) {
 
-    for (Iterator iterator_11 = lists.iterator(); iterator_11.hasNext(); ) {
-      Queue queue = (Queue) iterator_11.next();
+    for (Iterator iterator_16 = lists.iterator(); iterator_16.hasNext(); ) {
+      Queue queue = (Queue) iterator_16.next();
       queues = MapUtil.munion(Utils.copy(queues), MapUtil.map(new Maplet(queue, 0L)));
     }
     id = identifier;
@@ -38,10 +38,10 @@ public class Printer {
   public VDMSet queryPrintAsClient() {
 
     VDMSet docs = SetUtil.set();
-    for (Iterator iterator_12 = MapUtil.dom(Utils.copy(queues)).iterator();
-        iterator_12.hasNext();
+    for (Iterator iterator_17 = MapUtil.dom(Utils.copy(queues)).iterator();
+        iterator_17.hasNext();
         ) {
-      Queue queue = (Queue) iterator_12.next();
+      Queue queue = (Queue) iterator_17.next();
       docs = SetUtil.union(Utils.copy(docs), queue.getClientDocs());
     }
     return Utils.copy(docs);
@@ -50,10 +50,10 @@ public class Printer {
   public VDMSet queryPrint() {
 
     VDMSet docs = SetUtil.set();
-    for (Iterator iterator_13 = MapUtil.dom(Utils.copy(queues)).iterator();
-        iterator_13.hasNext();
+    for (Iterator iterator_18 = MapUtil.dom(Utils.copy(queues)).iterator();
+        iterator_18.hasNext();
         ) {
-      Queue queue = (Queue) iterator_13.next();
+      Queue queue = (Queue) iterator_18.next();
       docs = SetUtil.union(Utils.copy(docs), queue.getDocs());
     }
     return Utils.copy(docs);

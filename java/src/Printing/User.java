@@ -37,15 +37,15 @@ public class User {
 
   public Boolean isLoginCorrected(final String username, final String pass) {
 
-    Boolean andResult_49 = false;
+    Boolean andResult_52 = false;
 
     if (Utils.equals(name, username)) {
       if (Utils.equals(password, pass)) {
-        andResult_49 = true;
+        andResult_52 = true;
       }
     }
 
-    if (andResult_49) {
+    if (andResult_52) {
       return true;
     }
 

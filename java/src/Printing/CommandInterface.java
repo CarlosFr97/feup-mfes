@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Printing.PrintManager;
 import Printing.quotes.ClientQuote;
 import Printing.quotes.ColorsQuote;
+import Printing.quotes.FixedQuote;
 import Printing.quotes.LandscapeQuote;
 import Printing.quotes.OtherQuote;
 import Printing.quotes.PaperQuote;
@@ -114,9 +115,8 @@ public class CommandInterface {
         double account = MyUtils.inDouble("Starting money: ");
 
         // TODO DO REGISTER 
-        manager.addClient(username,password,account);
-
-        clientMenu();
+        if(manager.addClient(username,password,account) != null);
+            clientMenu();
 
     }
 
@@ -402,15 +402,19 @@ public class CommandInterface {
             switch (option) {
                 case 1:
                     System.out.println("Add Printer");
+                    addPrinterMenu();
                     break;
                 case 2:
                     System.out.println("Add Queue");
+                    addQueueMenu();
                     break;
                 case 3:
                     System.out.println("Handle Malfunctions");
+                    solveMalfunction();
                     break;
                 case 4:
                     System.out.println("Printers Report");
+                    reportMalfunctionMenu();
                     break;
                 case 5:
                     System.out.println("Log Out");
@@ -457,9 +461,11 @@ public class CommandInterface {
                     break;
                 case 2:
                     System.out.println("Assign Employee to malfunction");
+                    assignEmployeeMenu();
                     break;
                 case 3:
                     System.out.println("Handle Malfunctions");
+                    solveMalfunction();
                     break;
                 case 4:
                 	System.out.println("Create new Malfunction");
@@ -488,6 +494,8 @@ public class CommandInterface {
     }
 
     public void addEmployeeMenu(){
+
+        MyUtils.clearScreen();
         System.out.println("============================");
         System.out.println("|       NEW EMPLOYEE       |");
         System.out.println("============================");
@@ -506,9 +514,10 @@ public class CommandInterface {
     
     
     public void assignEmployeeMenu() {
-    	
+        
+        MyUtils.clearScreen();
     	 Object Employee;
-         ArrayList<Object> employees = new ArrayList<>(manager.getEmployees());
+         ArrayList<Object> employees = new ArrayList<>(manager.getRegularEmployees());
          
          employees.add(manager.getCurrentUser());
          int index = 0;
@@ -582,6 +591,7 @@ public class CommandInterface {
 
     public void addPrinterMenu(){
 
+        MyUtils.clearScreen();
         ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
         System.out.println("============================");
         System.out.println("|       NEW PRINTER        |");
@@ -607,6 +617,7 @@ public class CommandInterface {
         int index = 0;
         for(Object queue: queues){
             System.out.println("     "+ index + " - Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize());
+            index++;
         }
         ArrayList<Object> chooseenQueues = new ArrayList<>();
         String option[] = MyUtils.inString("Please choose the queues you wish to add to the printer (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
@@ -632,6 +643,102 @@ public class CommandInterface {
 
         
         
+
+    }
+
+    public void addQueueMenu(){
+
+        MyUtils.clearScreen();
+        ArrayList<Object> queues = new ArrayList<>(manager.getQueues());
+        System.out.println("============================");
+        System.out.println("|         NEW QUEUE        |");
+        System.out.println("|Existing Queues:          |");
+        if(queues.size() == 0)
+            System.out.println("|     There are no queues available  |");
+        else{
+            for(Object queue: queues){
+                System.out.println("|        Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize() + "|");
+            }
+        }
+        Object size;
+        Object color;
+        int option;
+        System.out.println("    1 - A4        2 - A3    ");
+        option = MyUtils.inInt("Choose size option: ");
+        size = (option == 1) ? new A4Quote() : new A3Quote();
+
+        System.out.println("\nSize: " + size.toString());
+        System.out.println();
+
+        System.out.println(" 1 - Black&White 2 - Colors ");
+        option = MyUtils.inInt("Choose print color option: ");
+        color = (option == 1) ? new BlackWhiteQuote() : new ColorsQuote();
+
+        System.out.println("\nColor: " + color.toString());
+        System.out.println();
+
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to add the queue of size " + size + " and color " + color  + "? y/n"));
+        if(confirm == 'Y'){
+            if(!queues.contains(new Queue(size,color))){
+                manager.addQueue(size, color);
+            }
+
+        }
+
+        
+    }
+
+
+    public void solveMalfunction(){
+        Employee employee = (Employee) manager.getCurrentUser();
+        ArrayList<Object>  malfs= new ArrayList<>(employee.getMalfunctions());
+        System.out.println("============================");
+        System.out.println("|         NEW QUEUE        |");
+        System.out.println("|Your Malfunctions:        |");
+        int index = 0;
+        if(malfs.size() == 0)
+            System.out.print("|     You have no malfunctions   |");
+        else{
+            for(Object malfunction : malfs){
+                System.out.println("   " + index + " - Printer " + ((Malfunction)malfunction).getPrinter().getLocation() + " Problem: " + ((Malfunction)malfunction).getPrinter() + " Assign by: " 
+                + ((Malfunction)malfunction).getAssignedBy().getName() + "\nDescription " + ((Malfunction)malfunction).getDescription());
+                index++;
+            }
+        }
+
+        ArrayList<Malfunction> choosenMalfunctions = new ArrayList<>();
+        String option[] = MyUtils.inString("Please choose the malfunctions you wish to mark as resolved (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
+        for(int a = 0; a < option.length; a++){
+            if(MyUtils.isNumeric(option[a])){
+                Integer number = new Integer(option[a]);
+                if(number >= 0 && number < malfs.size()){
+                    if(!choosenMalfunctions.contains((Malfunction) malfs.get(number)))
+                        choosenMalfunctions.add((Malfunction) malfs.get(number));
+                }
+            }
+        }
+
+        MyUtils.clearScreen();
+
+        System.out.println("Chosen malfunctions: ");
+        for(Malfunction malfunction: choosenMalfunctions){
+            System.out.println("   Printer " + ((Malfunction)malfunction).getPrinter().getLocation() + " Problem: " + ((Malfunction)malfunction).getPrinter() + " Assign by: " 
+                + ((Malfunction)malfunction).getAssignedBy().getName() + "\nDescription " + ((Malfunction)malfunction).getDescription());
+                
+        }
+
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to mark them as solved? y/n"));
+
+         if(confirm == 'Y'){
+             for(Malfunction malfunction: choosenMalfunctions){
+                 malfunction.changeState(new FixedQuote());
+             }
+        	 
+         }
+            
+        
+
+
 
     }
 
