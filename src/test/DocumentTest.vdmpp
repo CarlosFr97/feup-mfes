@@ -55,6 +55,7 @@ operations
  				assertEqual(doc.getPrice(), 0.08);
  				assertEqual(doc.getName(), "Teste");
  				assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
+ 				assertEqual(doc.getPrinted(), <ToPrint>);
 		);
  		
  	public testPriceOtherOptions: () ==> ()

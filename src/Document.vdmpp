@@ -20,7 +20,7 @@ types
 								month: nat1
 								year: nat1
 								
-	inv date == if date.year mod 400 = 0 or (date.year mod 100 <> 0 and date.year mod 4 <> 0)
+	inv date == if date.year mod 400 = 0 or (date.year mod 100 <> 0 and date.year mod 4 = 0)
 				then date.month <= 12 and date.day <= [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31](date.month)
 				else date.month <= 12 and date.day <= [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31](date.month);
 	
@@ -46,6 +46,20 @@ operations
 			queue := q
 		pre q in set PrintManager`getInstance().getQueues()
 		post queue = q;
+	
+	public print: () ==> ()
+		print() ==
+			state := <Printed>
+		post state = <Printed>;
+	
+	public delete: () ==> ()
+		delete() ==
+			queue.removeDocument(self)
+		pre state = <ToPrint> and PrintManager`getInstance().getCurrentUser() = client;
+		
+	public pure getPrinted: () ==> documentState
+		getPrinted() ==
+			return state;
 		
 	public pure getName: () ==> seq of (char)
 		getName() ==

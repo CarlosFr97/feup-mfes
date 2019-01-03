@@ -56,8 +56,11 @@ operations
 			client.payDocument(doc);
 			newQueue := doc.removeFromQueue();
 			queues := queues ++ {newQueue |-> queues(newQueue)+1};
+			doc.print();
 		)
-		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs() and doc in set queryPrintAsClient();
+		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs() and doc in set queryPrintAsClient() and doc.getPrinted() = <ToPrint>
+		post doc.getPrinted() = <Printed>;
+		
 
  public getNumPrintedDocs: () ==> map Queue to int
 		getNumPrintedDocs() ==

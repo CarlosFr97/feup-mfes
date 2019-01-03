@@ -141,7 +141,7 @@ operations
 
 	-- reporting
 	
-	public  reportPrintedDocs: ()  ==> map Queue to int
+	public reportPrintedDocs: ()  ==> map Queue to int
   	reportPrintedDocs() ==
     (
     	dcl statistics: map Queue to int := {|->};

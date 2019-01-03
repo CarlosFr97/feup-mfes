@@ -55,8 +55,8 @@ operations
  				assertEqual(cli.getAccount(),15.0);
  			);
  			
- 	public testCreateDocument: () ==> ()
- 		testCreateDocument() ==
+ 	public testCreateAndDeleteDocument: () ==> ()
+ 		testCreateAndDeleteDocument() ==
  			(
  				dcl emp: Employee;
  				dcl queue: Queue; 
@@ -80,6 +80,10 @@ operations
  				PrintManager`getInstance().logout();
  				emp := PrintManager`getInstance().login("admin","admin");
  				assertEqual(cli.getDocs(), {doc});
+ 				PrintManager`getInstance().logout();
+ 				cli := PrintManager`getInstance().login("utilizador","12345678");
+ 				cli.deleteDoc(doc);
+ 				assertEqual(cli.getDocs(), {});
  			);
  			
  	 	public testCreateDocumentWithoutProperQueue: () ==> ()
@@ -117,7 +121,7 @@ operations
  			(
  				testClient();
  				testAddMoney();
- 				testCreateDocument();
+ 				testCreateAndDeleteDocument();
  				testPayDocument();
  			);
  		

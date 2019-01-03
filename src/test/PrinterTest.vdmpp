@@ -115,6 +115,7 @@ operations
 			printer.print(doc);
 			assertEqual(printer.getNumPrintedDocs(), {queue |-> 1});
 			assertEqual(cli.getAccount(), acc-doc.getPrice());
+			assertEqual(doc.getPrinted(), <Printed>);
 		);
 
 	public test: () ==> ()

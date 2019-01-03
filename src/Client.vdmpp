@@ -68,5 +68,14 @@ operations
 		getDocs() ==
 			return documents
 		pre PrintManager`getInstance().getCurrentUser() = self or (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>);
+		
+	public deleteDoc: Document ==> ()
+		deleteDoc(doc) ==
+		(
+			documents := documents \ {doc};
+			doc.delete();
+		)
+		pre doc.getPrinted() = <ToPrint> and PrintManager`getInstance().getCurrentUser() = self
+		post doc not in set documents;
 	
 end Client
