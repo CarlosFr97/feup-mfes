@@ -26,7 +26,7 @@ operations
 			return location
 		pre PrintManager`getInstance().getCurrentUser() <> nil;
 			
-  public queryPrintAsClient: ()  ==> set of Document
+  public pure queryPrintAsClient: ()  ==> set of Document
 	  queryPrintAsClient() ==
 	  (
 		   	dcl docs: set of Document := {};
@@ -57,7 +57,7 @@ operations
 			newQueue := doc.removeFromQueue();
 			queues := queues ++ {newQueue |-> queues(newQueue)+1};
 		)
-		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs();
+		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs() and doc in set queryPrintAsClient();
 
  public getNumPrintedDocs: () ==> map Queue to int
 		getNumPrintedDocs() ==

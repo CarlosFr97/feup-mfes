@@ -121,23 +121,42 @@ operations
 			);
 			return false;
 		)
-		pre forall queue in set queues & doc not in set queue.getDocs() and currentUser <> nil and currentUser in set clients
-		post doc.getQueue() <> nil;
+		pre forall queue in set queues & doc not in set queue.getDocs() and currentUser <> nil and currentUser in set clients;
 
 
 	-- reporting
 	
-	public  reportPrintedDocs: ()  ==> ()
+	public  reportPrintedDocs: ()  ==> map Queue to int
   	reportPrintedDocs() ==
-    	is not yet specified
-   	pre currentUser <> nil and currentUser in set employees;
+    (
+    	dcl statistics: map Queue to int := {|->};
+    	dcl temp: map Queue to int;
+    	for all queue in set queues do 
+    	(
+    		statistics := statistics ++ {queue |-> 0};
+    	);
+    	for all printer in set printers do
+    	(
+    		temp := printer.getNumPrintedDocs();
+    		for all queue in set dom temp do
+    			statistics := statistics ++ {queue |-> temp(queue) + statistics(queue)}
+    	);
+    	return statistics;	
+    )	
+   	pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
    	
 
-  public  reportClients : ()  ==> ?
-  reportClients() ==
-    is not yet specified
-   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
-   
+  public  reportClients : ()  ==> map seq of (char) to set of Document
+	  reportClients() ==
+	  (
+	    dcl allClients: map seq of (char) to set of Document := {|->};
+	    for all client in set clients do
+	    	allClients := allClients ++ {client.getName() |-> client.getDocs()};
+	    
+	    return allClients;
+	  )
+	  pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+	   
 
   public  reportEmployee : seq of (char)  ==> map Malfunction`malfunctionState to int
   reportEmployee(name) ==
@@ -191,8 +210,8 @@ operations
 			malfunctions := malfunctions union {malf}
 		pre currentUser <> nil;
 
- 	public getEmployees: () ==> set of Employee
- 		getEmployees() ==
+ 	public getRegularEmployees: () ==> set of Employee
+ 		getRegularEmployees() ==
  			(
  				dcl emp: set of Employee := {};
  				for all employee in set employees do 
@@ -202,7 +221,7 @@ operations
  				);
  				return emp;
  			)
- 			pre currentUser.getRole() <> <Admin>;  
+ 			pre currentUser.getRole() = <Admin>;  
  
   public getEmployee: seq of (char) ==> [Employee]
   	getEmployee(name) ==

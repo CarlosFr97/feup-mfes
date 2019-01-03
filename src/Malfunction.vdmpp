@@ -40,6 +40,11 @@ operations
 		getProblem() ==
 			return problem
 		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
+		
+	public getDescription: () ==> seq of (char)
+		getDescription() ==
+			return description
+		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 	
 	public getAssignedBy: () ==> Employee
 		getAssignedBy() ==

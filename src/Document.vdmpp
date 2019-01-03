@@ -47,7 +47,7 @@ operations
 		pre q in set PrintManager`getInstance().getQueues()
 		post queue = q;
 		
-	public getName: () ==> seq of (char)
+	public pure getName: () ==> seq of (char)
 		getName() ==
 			return name
 		pre PrintManager`getInstance().getCurrentUser() = client or PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;

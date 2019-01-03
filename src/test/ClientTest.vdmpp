@@ -55,13 +55,22 @@ operations
  				dcl emp: Employee; 
  				dcl queue: Queue; 
  				dcl cli:Client;
+ 				dcl doc: Document;
  				PrintManager`clearInstance();
  				IO`print("Test Client - create document\n");
+ 				cli := createClient();
+ 				assertEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2), nil);
+ 				PrintManager`getInstance().logout();
  				emp := createEmployee();
  				queue := createQueue();
 				PrintManager`getInstance().logout();
- 				cli := createClient();
- 				assertNotEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2), nil);
+ 				cli := PrintManager`getInstance().login("utilizador","12345678");
+ 				doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2);
+ 				assertNotEqual(doc, nil);
+ 				assertEqual(cli.getDocs(), {doc});
+ 				PrintManager`getInstance().logout();
+ 				emp := PrintManager`getInstance().addEmployee("admin","emp12345",<Admin>);
+ 				assertEqual(cli.getDocs(), {doc});
  			);
  			
  	 	public testCreateDocumentWithoutProperQueue: () ==> ()
