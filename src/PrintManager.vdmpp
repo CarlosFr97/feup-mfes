@@ -212,20 +212,14 @@ operations
 			return  queues
 		pre currentUser <> nil;
 		
-	public getMalfunctions: () ==> set of Malfunction
+	public getMalfunctions: () ==> map Printer to set of Malfunction
 		getMalfunctions() ==
-		(
-			dcl malfs: set of Malfunction := {}; 
-			for all printer in set dom printers do
-			(
-				malfs := malfs union printers(printer)
-			);
-			return malfs;
-		)
+				return printers
 		pre currentUser <>nil and currentUser in set employees;
 		
 	public addMalfunction: Malfunction*Printer ==> ()
 		addMalfunction(malf, printer) ==
+		
 			printers := printers ++ {printer |-> printers(printer) union {malf}}
 		pre currentUser <> nil;
 

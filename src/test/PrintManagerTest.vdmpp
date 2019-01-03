@@ -242,7 +242,7 @@ operations
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			printer := manager.addPrinter(0, "piso1", {queue});
 			malf := emp.reportMalfunction(printer, <Paper>, "problem");
-			assertEqual(manager.getMalfunctions(), {malf});
+			assertEqual(manager.getMalfunctions(), {printer |-> {malf}});
 		
 		);
 		
