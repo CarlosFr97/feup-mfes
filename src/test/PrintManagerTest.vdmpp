@@ -177,13 +177,13 @@ operations
 			IO`print("Test PrintManager - report printed docs\n");
 			admin := manager.login("admin", "admin");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
-			queue2 := manager.addQueue(<A3>,<Colors>);
+			queue2 := manager.addQueue(<A4>,<Colors>);
 			printer := manager.addPrinter(0, "piso1", {queue});
 			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
 			manager.logout();
 			cli1 := manager.addClient("utilizador", "utiliza123456", 10.0);
 			doc1 := cli1.addDocument(<A4>, <BlackWhite>, <Portrait>, "trabalho1", mk_Document`Date(21,12,2014), 2);
-			doc2 := cli1.addDocument(<A3>, <Colors>, <Portrait>, "trabalho2", mk_Document`Date(21,12,2014), 2);
+			doc2 := cli1.addDocument(<A4>, <Colors>, <Portrait>, "trabalho2", mk_Document`Date(21,12,2014), 2);
 			doc3 := cli1.addDocument(<A4>, <BlackWhite>, <Landscape>, "trabalho3", mk_Document`Date(21,12,2014), 3);
 			printer.print(doc1);
 			printer2.print(doc2);
