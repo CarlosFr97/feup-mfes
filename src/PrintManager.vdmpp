@@ -38,22 +38,28 @@ operations
 	public addClient: seq of (char) * seq of (char) * real ==> [Client]
 		addClient(username,password,account) ==
 			(
-				dcl cli:Client := new Client(username,password,account);
-				clients := clients union {cli};
+				if not clientExists(username) then
+				( 
+					dcl cli:Client := new Client(username,password,account);
+					clients := clients union {cli};
+				);
 				return narrow_(login(username, password), Client);
 			)
-			pre currentUser = nil and not clientExists(username)
+			pre currentUser = nil
 			post RESULT.getName() = username and RESULT.getAccount() = account;
 			
 				
 	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> [Employee]
 		addEmployee(username, password, role) ==
 			(
-				dcl emp: Employee := new Employee(username, password, role);
-			 	employees := employees union {emp};
+				if not employeeExists(username) then
+				( 
+					dcl emp: Employee := new Employee(username, password, role);
+				 	employees := employees union {emp};
+				);
 			 	return narrow_(login(username, password), Employee);
 			)
-			pre currentUser = nil and not employeeExists(username)
+			pre currentUser = nil
 			post RESULT.getName() = username and RESULT.getRole() = role;
 			
 			
@@ -172,7 +178,6 @@ operations
     return allMalfs;
    )
   pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
-
 
 
  -- general functions
