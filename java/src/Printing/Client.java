@@ -6,6 +6,7 @@ import org.overture.codegen.runtime.*;
 @SuppressWarnings("all")
 public class Client extends User {
   private Number account = 0L;
+  private VDMSet documents = SetUtil.set();
 
   public void cg_init_Client_1(final String username, final String pass, final Number acc) {
 
@@ -47,6 +48,7 @@ public class Client extends User {
             Utils.copy(date),
             numPages);
     if (PrintManager.getInstance().addDocumentToQueue(newDoc)) {
+      documents = SetUtil.union(Utils.copy(documents), SetUtil.set(newDoc));
       return newDoc;
 
     } else {
@@ -59,10 +61,20 @@ public class Client extends User {
     return account;
   }
 
+  public VDMSet getDocs() {
+
+    return Utils.copy(documents);
+  }
+
   public Client() {}
 
   public String toString() {
 
-    return "Client{" + "account := " + Utils.toString(account) + "}";
+    return "Client{"
+        + "account := "
+        + Utils.toString(account)
+        + ", documents := "
+        + Utils.toString(documents)
+        + "}";
   }
 }

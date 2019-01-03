@@ -43,6 +43,11 @@ public class Malfunction {
     return problem;
   }
 
+  public String getDescription() {
+
+    return description;
+  }
+
   public Employee getAssignedBy() {
 
     return assignedBy;
