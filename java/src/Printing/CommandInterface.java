@@ -580,6 +580,62 @@ public class CommandInterface {
     }
 
 
+    public void addPrinterMenu(){
+
+        ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
+        System.out.println("============================");
+        System.out.println("|       NEW PRINTER        |");
+        System.out.println("|Existing Printers:        |");
+        if(printers.size() == 0)
+            System.out.println("|Currently there are no printers        |");
+        else{
+            for(Object printer:printers){
+                System.out.println("| Id:" + ((Printer)printer).getId() + " Location: " + ((Printer)printer).getLocation());
+            }
+        }
+        System.out.println("============================");
+        ArrayList<Object> queues = new ArrayList<>(manager.getQueues());
+        if(queues.size() == 0){
+            System.out.println("There are no queues available,make sure you create queues first");
+            return;
+        }
+
+        int new_id = printers.size() + 1;
+        String location = MyUtils.inString("Where is the printer located: ");
+
+        System.out.println("Availabe queues: ");
+        int index = 0;
+        for(Object queue: queues){
+            System.out.println("     "+ index + " - Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize());
+        }
+        ArrayList<Object> chooseenQueues = new ArrayList<>();
+        String option[] = MyUtils.inString("Please choose the queues you wish to add to the printer (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
+        for(int a = 0; a < option.length; a++){
+            if(MyUtils.isNumeric(option[a])){
+                Integer number = new Integer(option[a]);
+                if(number >= 0 && number < queues.size()){
+                    if(!chooseenQueues.contains(queues.get(number)))
+                        chooseenQueues.add(queues.get(number));
+                }
+            }
+        }
+
+
+        char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to create the printer? y/n"));
+
+         if(confirm == 'Y'){
+             VDMSet setQueues = new VDMSet();
+             setQueues.addAll(chooseenQueues);
+             manager.addPrinter(new_id, location,setQueues);
+        	 
+         }
+
+        
+        
+
+    }
+
+
 
 
 }
