@@ -68,6 +68,8 @@ operations
 				assertEqual(malf.getState(), <Waiting>);
 				assertEqual(malf.getReportedBy(),cli);
 				assertEqual(malf.getPrinter(), printer);
+				assertEqual(malf.getProblem(), <Paper>);
+				assertEqual(malf.getDescription(), "problema");
 			);
 			
 		public testAssignEmployee: () ==> ()
@@ -93,12 +95,16 @@ operations
 				assertEqual(malf.getState(), <InRepair>);
 				assertEqual(malf.getReportedBy(), cli);
 				assertEqual(malf.getPrinter(), printer);
+				assertEqual(malf.getProblem(), <Paper>);
+				assertEqual(malf.getDescription(), "problema");
 				PrintManager`getInstance().logout();
 				emp:=PrintManager`getInstance().login("empregado","emp12345");
 				assertEqual(malf.getAssignedBy(), admin);
 				assertEqual(malf.getAssignedTo(), emp);
 				assertEqual(malf.getReportedBy(), cli);
 				assertEqual(malf.getPrinter(), printer);
+				assertEqual(malf.getProblem(), <Paper>);
+				assertEqual(malf.getDescription(), "problema");
 				
 			);	
 			

@@ -1,6 +1,7 @@
 class Client is subclass of User
 instance variables
   account:real := 0;
+	documents: set of Document := {};
 
 	inv account >= 0
 operations
@@ -41,12 +42,15 @@ operations
 		addDocument(size, color, type, name, date, numPages) == 
 		(
 			dcl newDoc :Document := new Document(self, size, color, type, name, date, numPages);
-			if PrintManager`getInstance().addDocumentToQueue(newDoc) then 
-				return newDoc	
+			if PrintManager`getInstance().addDocumentToQueue(newDoc) then
+			(
+				documents := documents union {newDoc}; 
+				return newDoc;
+			)	
 			else
 				return nil;
 		)
-		pre PrintManager`getInstance().getCurrentUser() = self;
+		pre PrintManager`getInstance().getCurrentUser() = self and forall doc in set documents & name <> doc.getName(); 
 		
 	-- getters
 		
@@ -54,5 +58,10 @@ operations
 		getAccount() ==
 			return account
 		pre PrintManager`getInstance().getCurrentUser() = self;
+	
+	public getDocs: () ==> set of Document
+		getDocs() ==
+			return documents
+		pre PrintManager`getInstance().getCurrentUser() = self or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
 	
 end Client

@@ -100,6 +100,125 @@ operations
 			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
 			assertEqual(manager.getPrinters(),{printer, printer2});
 		);
+		
+	public testReportClients: () ==> ()
+		testReportClients() ==
+		(
+			dcl manager: PrintManager;
+			dcl emp: Employee;
+			dcl admin: Employee;
+			dcl cli1: Client;
+			dcl cli2: Client;
+			dcl doc1: Document;
+			dcl doc2: Document;
+			dcl doc3: Document;
+			dcl queue: Queue;
+			dcl queue2: Queue;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - report clients\n");
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			queue2 := manager.addQueue(<A3>,<Colors>);
+			PrintManager`getInstance().logout();
+			cli1 := manager.addClient("client1", "12345678", 10.0);
+			doc1 := cli1.addDocument(<A4>, <BlackWhite>, <Portrait>, "trabalho1", mk_Document`Date(21,12,2014), 2);
+			doc2 := cli1.addDocument(<A3>, <Colors>, <Portrait>, "trabalho2", mk_Document`Date(21,12,2014), 2);
+			PrintManager`getInstance().logout();
+			cli2 := manager.addClient("client2", "12345678", 10.0);
+			doc3 := cli2.addDocument(<A4>, <BlackWhite>, <Landscape>, "trabalho3", mk_Document`Date(21,12,2014), 3);
+			PrintManager`getInstance().logout();
+			admin := manager.addEmployee("admin", "emp123456778", <Admin>);
+			assertEqual(manager.reportClients(), {"client1" |-> {doc1, doc2}, "client2" |-> {doc3}});
+		);
+		
+	public testReportPrintedDocs: () ==> ()
+		testReportPrintedDocs() ==
+		(
+			dcl manager: PrintManager;
+			dcl admin: Employee;
+			dcl cli1: Client;
+			dcl queue: Queue;
+			dcl queue2: Queue;
+			dcl printer: Printer;
+			dcl printer2: Printer;
+			dcl doc1: Document;
+			dcl doc2: Document;
+			dcl doc3: Document;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - report printed docs\n");
+			admin := manager.addEmployee("admin", "emp123456778", <Admin>);
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			queue2 := manager.addQueue(<A3>,<Colors>);
+			printer := manager.addPrinter(0, "piso1", {queue});
+			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
+			manager.logout();
+			cli1 := manager.addClient("utilizador", "utiliza123456", 10.0);
+			doc1 := cli1.addDocument(<A4>, <BlackWhite>, <Portrait>, "trabalho1", mk_Document`Date(21,12,2014), 2);
+			doc2 := cli1.addDocument(<A3>, <Colors>, <Portrait>, "trabalho2", mk_Document`Date(21,12,2014), 2);
+			doc3 := cli1.addDocument(<A4>, <BlackWhite>, <Landscape>, "trabalho3", mk_Document`Date(21,12,2014), 3);
+			printer.print(doc1);
+			printer2.print(doc2);
+			printer2.print(doc3);
+			manager.logout();
+			admin := manager.login("admin", "emp123456778");
+			assertEqual(manager.reportPrintedDocs(), {queue |-> 2, queue2 |-> 1});
+			
+		);
+		
+	public testMalfunctions: () ==> ()
+		testMalfunctions() ==
+		(
+			dcl manager: PrintManager;
+			dcl emp: Employee;
+			dcl malf: Malfunction;
+			dcl queue: Queue;
+			dcl printer: Printer;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - get malfunctions\n");
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			queue := manager.addQueue(<A4>,<BlackWhite>);
+			printer := manager.addPrinter(0, "piso1", {queue});
+			malf := emp.reportMalfunction(printer, <Paper>, "problem");
+			assertEqual(manager.getMalfunctions(), {malf});
+		
+		);
+		
+	public testGetRegularEmployees: () ==> ()
+			testGetRegularEmployees() ==
+			(
+				dcl manager: PrintManager;
+				dcl emp: Employee;
+				dcl emp2: Employee;
+				dcl admin: Employee;
+				PrintManager`clearInstance();
+				manager := PrintManager`getInstance();
+				IO`print("Test PrintManager - get regular employees\n");
+				emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+				PrintManager`getInstance().logout();
+				emp2 := manager.addEmployee("empregado2", "emp1234567782", <Regular>);
+				PrintManager`getInstance().logout();
+				admin := manager.addEmployee("admin", "admin1234567", <Admin>);
+				assertEqual(manager.getRegularEmployees(), {emp, emp2});
+			);
+			
+	public testGetSpecificEmployee: () ==> ()
+		testGetSpecificEmployee() ==
+		(
+			dcl manager: PrintManager;
+			dcl emp: Employee;
+			dcl admin: Employee;
+			PrintManager`clearInstance();
+			manager := PrintManager`getInstance();
+			IO`print("Test PrintManager - get specific employee\n");
+			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			PrintManager`getInstance().logout();
+			admin := manager.addEmployee("admin", "admin1234567", <Admin>);
+			assertEqual(manager.getEmployee("manuel"), nil);
+			assertEqual(manager.getEmployee("empregado"), emp);
+		);
 	
 
 	public test: () ==> ()
@@ -112,5 +231,10 @@ operations
 			testAddEmployee();
 			testAddQueue();
 			testAddPrinter();
+			testReportClients();
+			testReportPrintedDocs();
+			testMalfunctions();
+			testGetRegularEmployees();
+			testGetSpecificEmployee();
 		)
 end PrintManagerTest
