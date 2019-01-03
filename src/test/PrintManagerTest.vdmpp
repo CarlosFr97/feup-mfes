@@ -2,6 +2,22 @@ class PrintManagerTest is subclass of Test
 
 operations
 
+
+	 	public createEmployee: seq of (char)*seq of (char) ==> [Employee]
+ 		createEmployee(username, password) ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:[Employee];
+ 			dcl empCreated: bool;
+ 			dcl admin: Employee;
+ 			manager := PrintManager`getInstance();
+ 			admin := manager.login("admin", "admin");
+ 			empCreated := manager.addEmployee(username,password,<Regular>);
+ 			PrintManager`getInstance().logout();
+ 			emp := manager.login(username, password);
+ 			return emp;
+ 		);
+
 	public testAddClient: () ==> ()
 		testAddClient() ==
 		(	
@@ -69,10 +85,10 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add employee\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			assertEqual(manager.getCurrentUser(), emp);
 			manager.logout();
-			emp := manager.addEmployee("empregado", "123456778", <Regular>);
+			emp := createEmployee("empregado", "123456778");
 			assertEqual(emp, nil);
 		);
 		
@@ -86,7 +102,7 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add queue\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			queue2 := manager.addQueue(<A3>,<Colors>);
 			assertEqual(manager.getQueues(),{queue, queue2});
@@ -104,7 +120,7 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - add printer\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			queue2 := manager.addQueue(<A3>,<Colors>);
 			printer := manager.addPrinter(0, "piso1", {queue});
@@ -128,7 +144,7 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - report clients\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			queue2 := manager.addQueue(<A3>,<Colors>);
 			PrintManager`getInstance().logout();
@@ -139,7 +155,7 @@ operations
 			cli2 := manager.addClient("client2", "12345678", 10.0);
 			doc3 := cli2.addDocument(<A4>, <BlackWhite>, <Landscape>, "trabalho3", mk_Document`Date(21,12,2014), 3);
 			PrintManager`getInstance().logout();
-			admin := manager.addEmployee("admin", "emp123456778", <Admin>);
+			admin := manager.login("admin", "admin");
 			assertEqual(manager.reportClients(), {"client1" |-> {doc1, doc2}, "client2" |-> {doc3}});
 		);
 		
@@ -159,7 +175,7 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - report printed docs\n");
-			admin := manager.addEmployee("admin", "emp123456778", <Admin>);
+			admin := manager.login("admin", "admin");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			queue2 := manager.addQueue(<A3>,<Colors>);
 			printer := manager.addPrinter(0, "piso1", {queue});
@@ -173,7 +189,7 @@ operations
 			printer2.print(doc2);
 			printer2.print(doc3);
 			manager.logout();
-			admin := manager.login("admin", "emp123456778");
+			admin := manager.login("admin", "admin");
 			assertEqual(manager.reportPrintedDocs(), {queue |-> 2, queue2 |-> 1});
 			
 		);
@@ -189,7 +205,7 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - get malfunctions\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			queue := manager.addQueue(<A4>,<BlackWhite>);
 			printer := manager.addPrinter(0, "piso1", {queue});
 			malf := emp.reportMalfunction(printer, <Paper>, "problem");
@@ -207,11 +223,11 @@ operations
 				PrintManager`clearInstance();
 				manager := PrintManager`getInstance();
 				IO`print("Test PrintManager - get regular employees\n");
-				emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+				emp := createEmployee("empregado", "emp123456778");
 				PrintManager`getInstance().logout();
-				emp2 := manager.addEmployee("empregado2", "emp1234567782", <Regular>);
+				emp2 := createEmployee("empregado2", "emp1234567782");
 				PrintManager`getInstance().logout();
-				admin := manager.addEmployee("admin", "admin1234567", <Admin>);
+				admin := manager.login("admin", "admin");
 				assertEqual(manager.getRegularEmployees(), {emp, emp2});
 			);
 			
@@ -224,9 +240,9 @@ operations
 			PrintManager`clearInstance();
 			manager := PrintManager`getInstance();
 			IO`print("Test PrintManager - get specific employee\n");
-			emp := manager.addEmployee("empregado", "emp123456778", <Regular>);
+			emp := createEmployee("empregado", "emp123456778");
 			PrintManager`getInstance().logout();
-			admin := manager.addEmployee("admin", "admin1234567", <Admin>);
+			admin := manager.login("admin", "admin");
 			assertEqual(manager.getEmployee("manuel"), nil);
 			assertEqual(manager.getEmployee("empregado"), emp);
 		);

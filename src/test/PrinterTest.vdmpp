@@ -12,15 +12,22 @@ operations
  			return cli;
  		);
  		
-	public createEmployee: () ==> Employee
-		createEmployee() ==
-		(
-			dcl manager:PrintManager;
-			dcl emp:Employee;
-			manager := PrintManager`getInstance();
-			emp := manager.addEmployee("empregado","emp12345",<Regular>);
-			return emp;
-		);	
+ 	public createEmployee: () ==> Employee
+ 		createEmployee() ==
+ 		(
+ 			dcl manager:PrintManager;
+ 			dcl emp:Employee;
+ 			dcl empCreated: bool;
+ 			dcl admin: Employee;
+ 			manager := PrintManager`getInstance();
+ 			admin := manager.login("admin", "admin");
+ 			empCreated := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			assertTrue(empCreated);
+ 			PrintManager`getInstance().logout();
+ 			emp := manager.login("empregado", "emp12345");
+ 			return emp;
+ 		);
+ 		
 		
 	public createPrinterAndQueue: () ==> Printer
 		createPrinterAndQueue() ==

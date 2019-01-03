@@ -13,23 +13,19 @@ operations
  		);
 
 
-	public createEmployee: () ==> Employee
+ 	public createEmployee: () ==> Employee
  		createEmployee() ==
  		(
  			dcl manager:PrintManager;
  			dcl emp:Employee;
+ 			dcl empCreated: bool;
+ 			dcl admin: Employee;
  			manager := PrintManager`getInstance();
- 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
- 			return emp;
- 		);
- 		
-	public createAdmin: () ==> Employee
- 		createAdmin() ==
- 		(
- 			dcl manager:PrintManager;
- 			dcl emp:Employee;
- 			manager := PrintManager`getInstance();
- 			emp := manager.addEmployee("manager","emp123456",<Admin>);
+ 			admin := manager.login("admin", "admin");
+ 			empCreated := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			assertTrue(empCreated);
+ 			PrintManager`getInstance().logout();
+ 			emp := manager.login("empregado", "emp12345");
  			return emp;
  		);
  		
@@ -77,7 +73,7 @@ operations
 	 		printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
 			PrintManager`getInstance().logout();
 			malf:= createMalfunction(printer);
-			admin :=  PrintManager`getInstance().addEmployee("admin","admin12345",<Admin>);
+			admin :=  PrintManager`getInstance().login("admin","admin");
 			admin.assignMalfunction(malf, emp);
  			assertEqual(malf.getState(), <InRepair>);
  			assertTrue(malf in set emp.getMalfunctions());		
@@ -98,7 +94,7 @@ operations
  		printer := PrintManager`getInstance().addPrinter(0,"local1",queue);
 		PrintManager`getInstance().logout();
 		malf:= createMalfunction(printer);
-		admin :=  PrintManager`getInstance().addEmployee("admin","admin12345",<Admin>);
+		admin :=  PrintManager`getInstance().login("admin","admin");
 		admin.assignMalfunction(malf, emp);
 		PrintManager`getInstance().logout();
 		emp := PrintManager`getInstance().login("empregado","emp12345");

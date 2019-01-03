@@ -16,8 +16,14 @@ operations
  		(
  			dcl manager:PrintManager;
  			dcl emp:Employee;
+ 			dcl empCreated: bool;
+ 			dcl admin: Employee;
  			manager := PrintManager`getInstance();
- 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			admin := manager.login("admin", "admin");
+ 			empCreated := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			assertTrue(empCreated);
+ 			PrintManager`getInstance().logout();
+ 			emp := manager.login("empregado", "emp12345");
  			return emp;
  		);
  		
@@ -52,7 +58,9 @@ operations
  	public testCreateDocument: () ==> ()
  		testCreateDocument() ==
  			(
- 				dcl emp: Employee; 
+ 				dcl emp: Employee;
+ 				dcl empCreated: bool;
+ 				dcl admin: Employee; 
  				dcl queue: Queue; 
  				dcl cli:Client;
  				dcl doc: Document;
@@ -72,7 +80,7 @@ operations
  				tempDoc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2);
  				assertEqual(tempDoc, nil);
  				PrintManager`getInstance().logout();
- 				emp := PrintManager`getInstance().addEmployee("admin","emp12345",<Admin>);
+ 				emp := PrintManager`getInstance().login("admin","admin");
  				assertEqual(cli.getDocs(), {doc});
  			);
  			

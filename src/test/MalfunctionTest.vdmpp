@@ -20,23 +20,19 @@ operations
  		);
  		
  		
-		public createEmployee: () ==> Employee
+ 	public createEmployee: () ==> Employee
  		createEmployee() ==
  		(
  			dcl manager:PrintManager;
  			dcl emp:Employee;
+ 			dcl empCreated: bool;
+ 			dcl admin: Employee;
  			manager := PrintManager`getInstance();
- 			emp := manager.addEmployee("empregado","emp12345",<Regular>);
- 			return emp;
- 		);
- 		
-	public createAdmin: () ==> Employee
- 		createAdmin() ==
- 		(
- 			dcl manager:PrintManager;
- 			dcl emp:Employee;
- 			manager := PrintManager`getInstance();
- 			emp := manager.addEmployee("manager","emp123456",<Admin>);
+ 			admin := manager.login("admin", "admin");
+ 			empCreated := manager.addEmployee("empregado","emp12345",<Regular>);
+ 			assertTrue(empCreated);
+ 			PrintManager`getInstance().logout();
+ 			emp := manager.login("empregado", "emp12345");
  			return emp;
  		);
  		
@@ -88,7 +84,7 @@ operations
 				cli := createClient();
 				malf := createMalfunction(cli, printer);
 				PrintManager`getInstance().logout();
-				admin := PrintManager`getInstance().addEmployee("admin","admin12345",<Admin>);
+				admin := PrintManager`getInstance().login("admin","admin");
 				malf.assignEmployee(emp);
 				assertEqual(malf.getAssignedBy(), admin);
 				assertEqual(malf.getAssignedTo(), emp);

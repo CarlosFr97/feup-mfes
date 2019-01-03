@@ -5,12 +5,9 @@ instance variables
   protected birthDay:seq of (char) := [];
   protected role: Role;
 
-	inv len password >= 8;
+	inv len password >= 5;
   
 types
-	public documentSize = <A3> | <A4>;
-	public documentColor = <BlackWhite> | <Colors>;
-	public documentType = <Portrait> | <Landscape>;
 	public Role = <Regular> | <Admin> | <Client>; 
 	
 	
@@ -23,7 +20,7 @@ operations
 			password := pass;
 			role := rol;
 		)
-		pre len pass >= 8
+		pre len pass >= 5 and len username > 3
 		post name = username and password = pass;
 		
 	public pure getName: () ==> seq of (char)

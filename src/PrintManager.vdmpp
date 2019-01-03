@@ -10,6 +10,14 @@ instance variables
 
 operations
 
+	public PrintManager: () ==> PrintManager
+		PrintManager() ==
+		(
+				dcl emp: Employee := new Employee("admin", "admin", <Admin>);
+				employees := employees union {emp};
+				return self;
+		);
+
 	-- User authentication
 
 	private pure clientExists: seq of (char)  ==> bool
@@ -50,19 +58,18 @@ operations
 			post RESULT = nil or (RESULT.getName() = username and RESULT.getAccount() = account);
 			
 				
-	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> [Employee]
+	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> bool
 		addEmployee(username, password, role) ==
 			(
 				if not employeeExists(username) then
 				( 
 					dcl emp: Employee := new Employee(username, password, role);
 				 	employees := employees union {emp};
-				 	return narrow_(login(username, password), Employee);
+				 	return true;
 				);
-			 	return nil;
+			 	return false;
 			)
-			pre currentUser = nil
-			post RESULT = nil or (RESULT.getName() = username and RESULT.getRole() = role);
+			pre currentUser.getRole() = <Admin>;
 			
 			
 	public login: seq of (char) * seq of (char) ==> [User]
@@ -79,7 +86,7 @@ operations
 			);
 			return currentUser;
 		)
-		pre len password > 5 and len username > 3 and currentUser = nil;
+		pre len password >= 5 and len username > 3 and currentUser = nil;
 		
 	
 	public logout: () ==> ()
@@ -109,7 +116,7 @@ operations
 				printers := printers union { aux };
 				return aux
 			)
-			pre currentUser <> nil and currentUser in set employees and (forall printer in set printers & printer.getId() <> id)
+			pre currentUser <> nil and currentUser in set employees and (forall printer in set printers & printer.getId() <> id) and listofQueues <> {}
 			post RESULT in set printers;
 			
 	
