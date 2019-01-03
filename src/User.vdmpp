@@ -25,8 +25,8 @@ operations
 	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
 		reportMalfunction(printer,type,desc) ==
 		(
-			dcl malf :Malfunction := new Malfunction(self,printer,type,desc);
-			PrintManager`getInstance().addMalfunction(malf);
+			dcl malf :Malfunction := new Malfunction(self,type,desc);
+			PrintManager`getInstance().addMalfunction(malf, printer);
 			return malf;
 		)
 		pre printer in set PrintManager`getInstance().getPrinters() and PrintManager`getInstance().getCurrentUser() = self;

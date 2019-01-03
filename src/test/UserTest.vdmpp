@@ -19,7 +19,6 @@ operations
  				-- cli := createClient();
 				malf := cli.reportMalfunction(printer,<Paper>,"problema");
 				assertEqual(malf.getReportedBy(), cli);
-				assertEqual(malf.getPrinter(), printer);
 				assertEqual(malf.getState(), <Waiting>);
 				PrintManager`getInstance().logout();
 				emp := PrintManager`getInstance().login("empregado","emp12345");

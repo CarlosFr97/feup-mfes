@@ -3,7 +3,6 @@ instance variables
   reportedBy:User;
   assignedTo:[Employee] := nil;
   assignedBy:[Employee] := nil;
-  printer:Printer;
   state:malfunctionState := <Waiting>;
   description: seq of (char) := [];
   problem: problemType;
@@ -16,11 +15,10 @@ types
 	public problemType = <Toner> | <Paper> | <Other>;
 	
 operations
-	public Malfunction : User  * Printer * problemType * seq of (char) ==> Malfunction
-		Malfunction(user,print,type,desc) == 
+	public Malfunction : User  * problemType * seq of (char) ==> Malfunction
+		Malfunction(user,type,desc) == 
 			(
 				reportedBy := user;
-				printer := print;
 				description := desc;
 				problem := type;
 				return self;
@@ -54,11 +52,6 @@ operations
 	public getAssignedTo: () ==> Employee
 		getAssignedTo() ==
 			return assignedTo
-		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>);
-			
-	public getPrinter: () ==> Printer
-		getPrinter() ==
-			return printer
 		pre PrintManager`getInstance().getCurrentUser() = reportedBy or PrintManager`getInstance().getCurrentUser() = assignedTo or (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>);
 			
 	public assignEmployee: Employee ==> ()

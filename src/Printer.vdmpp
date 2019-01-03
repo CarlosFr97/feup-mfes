@@ -55,10 +55,11 @@ operations
 			dcl newQueue: Queue;
 			client.payDocument(doc);
 			newQueue := doc.removeFromQueue();
+			newQueue := doc.getQueue();
 			queues := queues ++ {newQueue |-> queues(newQueue)+1};
 			doc.print();
 		)
-		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs() and doc in set queryPrintAsClient() and doc.getPrinted() = <ToPrint>
+		pre doc.getClient() = PrintManager`getInstance().getCurrentUser() and doc in set doc.getQueue().getClientDocs() and doc.getPrinted() = <ToPrint> and doc.getQueue() in set dom queues
 		post doc.getPrinted() = <Printed>;
 		
 
