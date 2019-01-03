@@ -1,15 +1,23 @@
 class Employee is subclass of User
 instance variables
   malfunctions:set of (Malfunction) := {};
+ 	role: Role;
+ 	
+types
+	public Role = <Regular> | <Admin>; 
 
 operations
 	
 	public Employee: seq of (char) * seq of (char) * Role ==> Employee
 		Employee(username, password, newRole) ==
 			(
-				initUser(username, password, newRole);
-			)
-			pre newRole <> <Client>;
+				initUser(username, password);
+				role := newRole;
+			);
+			
+	public pure getRole: () ==> Role
+		getRole() ==
+			return role;
 				
 	public addMalfunction: Malfunction ==> ()
 		addMalfunction(malf) ==
@@ -17,11 +25,12 @@ operations
 			malfunctions := malfunctions union {malf}
 		)
 		post malf in set malfunctions;
+		
 	
 	public pure getMalfunctions: () ==> set of (Malfunction)
 		getMalfunctions() ==
 			return malfunctions
-		pre PrintManager`getInstance().getCurrentUser().getRole() = <Admin> or PrintManager`getInstance().getCurrentUser() = self;
+		pre (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>) or PrintManager`getInstance().getCurrentUser() = self;
 		
 	
 	-- only as an admin
@@ -31,7 +40,7 @@ operations
 			malf.assignEmployee(emp);
 			emp.addMalfunction(malf);
 		)
-		pre PrintManager`getInstance().getCurrentUser().getRole() = <Admin>
+		pre isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>
 		post malf in set emp.getMalfunctions();
 		
 end Employee

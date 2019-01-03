@@ -47,7 +47,7 @@ operations
 			);
 			return allDocs;
 		)
-		pre PrintManager`getInstance().getCurrentUser() <> nil and PrintManager`getInstance().getCurrentUser().getRole() = <Client>;
+		pre PrintManager`getInstance().getCurrentUser() <> nil and isofclass(Client, PrintManager`getInstance().getCurrentUser());
 	
 	public pure getDocs: () ==> set of (Document)
 		getDocs() ==

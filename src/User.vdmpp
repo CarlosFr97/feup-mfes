@@ -3,22 +3,17 @@ instance variables
   protected name:seq of (char) := [];
   protected password: seq of (char) := []; 
   protected birthDay:seq of (char) := [];
-  protected role: Role;
+
 
 	inv len password >= 5;
-  
-types
-	public Role = <Regular> | <Admin> | <Client>; 
-	
 	
 operations
 
-	protected initUser: seq of (char) * seq of (char) * Role ==> ()
-		initUser(username,pass, rol) ==
+	protected initUser: seq of (char) * seq of (char) ==> ()
+		initUser(username,pass) ==
 		(
 			name := username;
 			password := pass;
-			role := rol;
 		)
 		pre len pass >= 5 and len username > 3
 		post name = username and password = pass;
@@ -26,10 +21,6 @@ operations
 	public pure getName: () ==> seq of (char)
 		getName() == 
 			return name;
-			
-	public pure getRole: () ==> Role
-		getRole() ==
-			return role;
 			
 	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
 		reportMalfunction(printer,type,desc) ==

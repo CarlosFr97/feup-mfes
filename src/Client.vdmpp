@@ -9,7 +9,7 @@ operations
 	public Client:seq of (char) * seq of (char) * real ==> Client
 		Client(username,pass,acc) == 
 			(
-				initUser(username, pass, <Client>);
+				initUser(username, pass);
 				account := acc;
 				return self;
 			)
@@ -67,6 +67,6 @@ operations
 	public getDocs: () ==> set of Document
 		getDocs() ==
 			return documents
-		pre PrintManager`getInstance().getCurrentUser() = self or PrintManager`getInstance().getCurrentUser().getRole() = <Admin>;
+		pre PrintManager`getInstance().getCurrentUser() = self or (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>);
 	
 end Client

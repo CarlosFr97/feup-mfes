@@ -59,8 +59,6 @@ operations
  		testCreateDocument() ==
  			(
  				dcl emp: Employee;
- 				dcl empCreated: bool;
- 				dcl admin: Employee; 
  				dcl queue: Queue; 
  				dcl cli:Client;
  				dcl doc: Document;

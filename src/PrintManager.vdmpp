@@ -69,7 +69,7 @@ operations
 				);
 			 	return false;
 			)
-			pre currentUser.getRole() = <Admin>;
+			pre (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
 			
 			
 	public login: seq of (char) * seq of (char) ==> [User]
@@ -158,7 +158,7 @@ operations
     	);
     	return statistics;	
     )	
-   	pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+   	pre currentUser <> nil and currentUser in set employees and (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
    	
 
   public  reportClients : ()  ==> map seq of (char) to set of Document
@@ -170,7 +170,7 @@ operations
 	    
 	    return allClients;
 	  )
-	  pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+	  pre currentUser <> nil and currentUser in set employees and (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
 	   
 
   public  reportEmployee : seq of (char)  ==> map Malfunction`malfunctionState to int
@@ -186,7 +186,7 @@ operations
     );
     return allMalfs;
    )
-  pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+  pre currentUser <> nil and currentUser in set employees and (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
 
 
  -- general functions
@@ -235,7 +235,7 @@ operations
  				);
  				return emp;
  			)
- 			pre currentUser.getRole() = <Admin>;  
+ 			pre (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);  
  
   public getEmployee: seq of (char) ==> [Employee]
   	getEmployee(name) ==
@@ -249,7 +249,7 @@ operations
 	  		);
 	  		return nil
   		)
-  	pre currentUser <> nil and currentUser in set employees and currentUser.getRole() = <Admin>;
+  	pre currentUser <> nil and currentUser in set employees and (isofclass(Employee, currentUser) and narrow_(currentUser, Employee).getRole() = <Admin>);
 
 
 end PrintManager

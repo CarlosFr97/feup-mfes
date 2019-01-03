@@ -50,12 +50,12 @@ operations
 	public pure getName: () ==> seq of (char)
 		getName() ==
 			return name
-		pre PrintManager`getInstance().getCurrentUser() = client or PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+		pre PrintManager`getInstance().getCurrentUser() = client or isofclass(Employee, PrintManager`getInstance().getCurrentUser());
 		
 	public getDate: () ==> Date
 		getDate() ==
 			return date
-		pre PrintManager`getInstance().getCurrentUser() = client or PrintManager`getInstance().getCurrentUser().getRole() <> <Client>;
+		pre PrintManager`getInstance().getCurrentUser() = client or isofclass(Employee, PrintManager`getInstance().getCurrentUser());
 		
 	public removeFromQueue: () ==> Queue
 		removeFromQueue() ==
@@ -72,7 +72,7 @@ operations
 	public pure getClient: () ==> Client
 		getClient() ==
 			return client
-		pre PrintManager`getInstance().getCurrentUser().getRole() <> <Client> or PrintManager`getInstance().getCurrentUser() = client;
+		pre isofclass(Employee, PrintManager`getInstance().getCurrentUser()) or PrintManager`getInstance().getCurrentUser() = client;
 			
 	public getColor: () ==> documentColor
 		getColor() ==
