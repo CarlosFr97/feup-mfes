@@ -9,6 +9,7 @@ public class Document {
   private Object size = Printing.quotes.A4Quote.getInstance();
   private Object color = Printing.quotes.BlackWhiteQuote.getInstance();
   private Object type = Printing.quotes.PortraitQuote.getInstance();
+  private Number numPages = 1L;
   private Number price = 0L;
   private Object state = Printing.quotes.ToPrintQuote.getInstance();
   private String name;
@@ -21,7 +22,8 @@ public class Document {
       final Object col,
       final Object ty,
       final String nam,
-      final Date dat) {
+      final Date dat,
+      final Number nPages) {
 
     client = cli;
     size = siz;
@@ -29,6 +31,7 @@ public class Document {
     type = ty;
     name = nam;
     date = Utils.copy(dat);
+    numPages = nPages;
     calculatePrice();
     return;
   }
@@ -39,9 +42,10 @@ public class Document {
       final Object col,
       final Object ty,
       final String nam,
-      final Date dat) {
+      final Date dat,
+      final Number nPages) {
 
-    cg_init_Document_1(cli, siz, col, ty, nam, Utils.copy(dat));
+    cg_init_Document_1(cli, siz, col, ty, nam, Utils.copy(dat), nPages);
   }
 
   public void setQueue(final Queue q) {
@@ -49,9 +53,20 @@ public class Document {
     queue = q;
   }
 
-  public void removeFromQueue() {
+  public String getName() {
+
+    return name;
+  }
+
+  public Date getDate() {
+
+    return Utils.copy(date);
+  }
+
+  public Queue removeFromQueue() {
 
     queue.removeDocument(this);
+    return queue;
   }
 
   public Number getPrice() {
@@ -83,6 +98,7 @@ public class Document {
 
     calculateSize();
     calculateColor();
+    price = price.doubleValue() * numPages.longValue();
   }
 
   private void calculateSize() {
@@ -95,11 +111,11 @@ public class Document {
       success_1 = Utils.equals(quotePattern_2, Printing.quotes.A4Quote.getInstance());
 
       if (success_1) {
-        price = price.doubleValue() + 0.1;
+        price = price.doubleValue() + 0.02;
       }
 
     } else {
-      price = price.doubleValue() + 0.2;
+      price = price.doubleValue() + 0.05;
     }
   }
 
@@ -113,11 +129,11 @@ public class Document {
       success_2 = Utils.equals(quotePattern_4, Printing.quotes.ColorsQuote.getInstance());
 
       if (success_2) {
-        price = price.doubleValue() + 0.25;
+        price = price.doubleValue() + 0.04;
       }
 
     } else {
-      price = price.doubleValue() + 0.1;
+      price = price.doubleValue() + 0.02;
     }
   }
 
@@ -134,6 +150,8 @@ public class Document {
         + Utils.toString(color)
         + ", type := "
         + Utils.toString(type)
+        + ", numPages := "
+        + Utils.toString(numPages)
         + ", price := "
         + Utils.toString(price)
         + ", state := "
@@ -190,24 +208,24 @@ public class Document {
 
   public static Boolean inv_Date(final Date date) {
 
-    Boolean orResult_2 = false;
+    Boolean orResult_4 = false;
 
     if (Utils.equals(Utils.mod(date.year.longValue(), 400L), 0L)) {
-      orResult_2 = true;
+      orResult_4 = true;
     } else {
-      Boolean andResult_1 = false;
+      Boolean andResult_5 = false;
 
       if (!(Utils.equals(Utils.mod(date.year.longValue(), 100L), 0L))) {
         if (!(Utils.equals(Utils.mod(date.year.longValue(), 4L), 0L))) {
-          andResult_1 = true;
+          andResult_5 = true;
         }
       }
 
-      orResult_2 = andResult_1;
+      orResult_4 = andResult_5;
     }
 
-    if (orResult_2) {
-      Boolean andResult_2 = false;
+    if (orResult_4) {
+      Boolean andResult_6 = false;
 
       if (date.month.longValue() <= 12L) {
         if (date.day.longValue()
@@ -216,14 +234,14 @@ public class Document {
                         SeqUtil.seq(31L, 29L, 31L, 30L, 31L, 30L, 31L, 31L, 30L, 31L, 30L, 31L),
                         date.month))
                 .longValue()) {
-          andResult_2 = true;
+          andResult_6 = true;
         }
       }
 
-      return andResult_2;
+      return andResult_6;
 
     } else {
-      Boolean andResult_3 = false;
+      Boolean andResult_7 = false;
 
       if (date.month.longValue() <= 12L) {
         if (date.day.longValue()
@@ -232,11 +250,11 @@ public class Document {
                         SeqUtil.seq(31L, 28L, 31L, 30L, 31L, 30L, 31L, 31L, 30L, 31L, 30L, 31L),
                         date.month))
                 .longValue()) {
-          andResult_3 = true;
+          andResult_7 = true;
         }
       }
 
-      return andResult_3;
+      return andResult_7;
     }
   }
 }

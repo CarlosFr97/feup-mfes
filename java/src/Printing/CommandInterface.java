@@ -19,7 +19,6 @@ import Printing.quotes.BlackWhiteQuote;
 
 import org.overture.codegen.runtime.*;
 
-import com.sun.xml.internal.bind.v2.model.util.ArrayInfoUtil;
 
 public class CommandInterface {
 
@@ -135,6 +134,7 @@ public class CommandInterface {
             System.out.println("============================");
             System.out.println("|     PRINTING SYSTEM      |");
             System.out.println("============================");
+            System.out.println("| Moneu: " + ((Client) manager.getCurrentUser()).getAccount());
             System.out.println("| Client Menu:             |");
             System.out.println("|        1. Deposit Money  |");
             System.out.println("|        2. New Document   |");
@@ -231,7 +231,7 @@ public class CommandInterface {
         if(confirm == 'Y'){
             //TODO CREATE DOCUMENT
             Client user = (Client) manager.getCurrentUser();
-            user.addDocument(size,color,type,name,date);
+            user.addDocument(size,color,type,name,date,pages);
 
         }
 
@@ -286,7 +286,7 @@ public class CommandInterface {
         System.out.println("| Documents:               |");
         i = 0;
         for(Object doc:documents){
-            System.out.println("|          " + i + " - " + ((Document)doc).toString() + "       |");
+            System.out.println("|          " + i + " - " + ((Document)doc).getName() + ":" + ((Document)doc).getDate().toString() +":" + ((Document)doc).getPrice()+ "|");
             i++;
         }	
         System.out.println("============================");
@@ -310,7 +310,7 @@ public class CommandInterface {
         System.out.println("| Choosen:                 |");
         double price = 0;
         for(int a = 0; i < choosenDocs.size(); a++){
-            System.out.println("|        "  + choosenDocs.get(a).toString() + "             |");
+            System.out.println("|        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice() + "|");
             price = price + (choosenDocs.get(a).getPrice()).doubleValue();
         }
         
@@ -515,7 +515,7 @@ public class CommandInterface {
     	 System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
          for(Object employee:employees){
-             System.out.println("|       " + index + " - " + ((Employee)employees).getName() + "      |");
+             System.out.println("|       " + index + " - " + ((Employee)employee).getName() + "      |");
              index++;
          }
          System.out.println("============================");
@@ -540,7 +540,7 @@ public class CommandInterface {
          for(Object malfunction:malfunctions){
         	 if(((Malfunction)malfunction).getAssignedTo() != null) {
         		filteredMalfunctions.add((Malfunction)malfunction);
-        		System.out.println("|       " + index + " - " + ((Malfunction)malfunction).toString() + "      |");
+        		System.out.println("|       " + index + " - " + ((Malfunction)malfunction).getProblem().toString() + ":" + ((Malfunction)malfunction).getPrinter().getLocation() + "|");
               	index++;
         	 }
         		
@@ -566,7 +566,7 @@ public class CommandInterface {
          
          System.out.println("| Malfunctions:               |");
          for(Malfunction malfunction:choosenMalfunctions){
-        		System.out.println("|       "+ (malfunction).toString() + "      |");	
+        		System.out.println("|       "+ (malfunction).getProblem() + ":" + malfunction.getPrinter().getLocation() + "|");	
          }
          
          char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to assign? y/n"));

@@ -34,11 +34,18 @@ public class Client extends User {
       final Object color,
       final Object type,
       final String name_1,
-      final Document.Date date) {
+      final Document.Date date,
+      final Number numPages) {
 
     Document newDoc =
         new Document(
-            this, ((Object) size), ((Object) color), ((Object) type), name_1, Utils.copy(date));
+            this,
+            ((Object) size),
+            ((Object) color),
+            ((Object) type),
+            name_1,
+            Utils.copy(date),
+            numPages);
     if (PrintManager.getInstance().addDocumentToQueue(newDoc)) {
       return newDoc;
 

@@ -45,8 +45,8 @@ public class Queue {
 
     VDMSet allDocs = SetUtil.set();
     User client = PrintManager.getInstance().getCurrentUser();
-    for (Iterator iterator_4 = documents.iterator(); iterator_4.hasNext(); ) {
-      Document document = (Document) iterator_4.next();
+    for (Iterator iterator_14 = documents.iterator(); iterator_14.hasNext(); ) {
+      Document document = (Document) iterator_14.next();
       if (Utils.equals(document.getClient(), client)) {
         allDocs = SetUtil.union(Utils.copy(allDocs), SetUtil.set(document));
       }
