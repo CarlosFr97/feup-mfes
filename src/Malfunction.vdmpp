@@ -24,7 +24,8 @@ operations
 				description := desc;
 				problem := type;
 				return self;
-			);
+			)
+			post reportedBy = user and printer = print and description = desc and problem = type;
 			
 	public getState: () ==> malfunctionState
 		getState() == 
@@ -64,9 +65,11 @@ operations
 	public assignEmployee: Employee ==> ()
 		assignEmployee(emp) ==
 			(
-				assignedTo := emp;
-				assignedBy := narrow_(PrintManager`getInstance().getCurrentUser(), Employee);
-				changeState(<InRepair>);
+				atomic (
+					assignedTo := emp;
+					assignedBy := narrow_(PrintManager`getInstance().getCurrentUser(), Employee);
+					state := <InRepair>;
+				);
 			)
 		pre assignedTo = nil and assignedBy = nil and state = <Waiting> and (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>)
 		post assignedTo = emp and state = <InRepair> and assignedBy = PrintManager`getInstance().getCurrentUser();

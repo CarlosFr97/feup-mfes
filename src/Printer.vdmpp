@@ -1,22 +1,21 @@
 class Printer
 instance variables
-  id:int := 0;
-  queues: map Queue to int := {|->};
+  id:nat := 0;
+  queues: map Queue to nat := {|->};
   location:seq of (char) := [];
   
 
 operations
-	public Printer: int * seq of (char) * set of Queue ==> Printer
+	public Printer: nat * seq of (char) * set of Queue ==> Printer
 		Printer(identifier,local,lists) ==
 			(
-				for all queue in set lists do
-					queues := queues munion {queue |-> 0};
+				queues := queues munion {queue |-> 0 | queue in set lists};
 				id := identifier;
 				location := local;
 				return self;
 			);
 			
-	public pure getId: () ==> int
+	public pure getId: () ==> nat
 		getId() ==
 			return id
 		pre isofclass(Employee, PrintManager`getInstance().getCurrentUser());

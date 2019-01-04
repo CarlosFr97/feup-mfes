@@ -1,21 +1,24 @@
 class User
 instance variables
   protected name:seq of (char) := [];
-  protected password: seq of (char) := []; 
+  protected password:seq of (char) := []; 
   protected birthDay:seq of (char) := [];
 
-	inv len password >= 5;
+
+	inv len (password) >= 5 and len (name) > 3;
 	
 operations
 
-	protected initUser: seq of (char) * seq of (char) ==> ()
+	 protected initUser: seq of (char) * seq of (char) ==> ()
 		initUser(username,pass) ==
 		(
-			name := username;
-			password := pass;
+			atomic (
+				password := pass;
+				name := username;
+			)
 		)
 		pre len pass >= 5 and len username > 3
-		post name = username and password = pass;
+		post name = username and password = pass and len name > 3 and len password >=5;
 		
 	public pure getName: () ==> seq of (char)
 		getName() == 
@@ -36,6 +39,7 @@ operations
 				if name = username and password = pass then
 					return true;
 				return false;
-			);
+			)
+			pre len username > 3 and len pass >= 5;
 			
 end User
