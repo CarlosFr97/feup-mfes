@@ -76,6 +76,7 @@ operations
 				dcl admin: Employee;
 				dcl printer:Printer;
 				dcl malf: Malfunction;
+				dcl malf2: Malfunction;
 				PrintManager`clearInstance();
 				IO`print("Test Malfunction - assign Employee\n");
 				emp := createEmployee();
@@ -83,9 +84,11 @@ operations
 				PrintManager`getInstance().logout();
 				cli := createClient();
 				malf := createMalfunction(cli, printer);
+				malf2 := cli.reportMalfunction(printer,<Toner>,"toner empty");		
 				PrintManager`getInstance().logout();
 				admin := PrintManager`getInstance().login("admin","admin");
 				malf.assignEmployee(emp);
+				malf2.assignEmployee(emp);
 				assertEqual(malf.getAssignedBy(), admin);
 				assertEqual(malf.getAssignedTo(), emp);
 				assertEqual(malf.getState(), <InRepair>);
@@ -93,6 +96,8 @@ operations
 				assertEqual(malf.getPrinter(), printer);
 				assertEqual(malf.getProblem(), <Paper>);
 				assertEqual(malf.getDescription(), "problema");
+				malf2.changeState(<Fixed>);
+				assertEqual(malf2.getState(), <Fixed>);
 				PrintManager`getInstance().logout();
 				emp:=PrintManager`getInstance().login("empregado","emp12345");
 				assertEqual(malf.getAssignedBy(), admin);

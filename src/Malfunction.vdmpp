@@ -72,7 +72,7 @@ operations
 				);
 			)
 		pre assignedTo = nil and assignedBy = nil and state = <Waiting> and (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>)
-		post assignedTo = emp and state = <InRepair> and assignedBy = PrintManager`getInstance().getCurrentUser();
+		post assignedTo = emp and state = <InRepair> and assignedBy = PrintManager`getInstance().getCurrentUser() and (isofclass(Employee, PrintManager`getInstance().getCurrentUser()) and narrow_(PrintManager`getInstance().getCurrentUser(), Employee).getRole() = <Admin>);
 			
 	public changeState: malfunctionState ==> ()
 		changeState(newState) ==
