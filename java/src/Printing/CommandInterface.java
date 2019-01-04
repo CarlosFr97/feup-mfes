@@ -400,8 +400,7 @@ public class CommandInterface {
             System.out.println("|        2. Add Queue      |");
             System.out.println("|        3. Malfunctions   |");
             System.out.println("|        4. New Malfunction|");
-            System.out.println("|        5. Report Printer |");
-            System.out.println("|        6. Log Out        |");
+            System.out.println("|        5. Log Out        |");
             System.out.println("============================");
             option = MyUtils.inInt("Select Option: ");
 
@@ -424,9 +423,6 @@ public class CommandInterface {
                     reportMalfunctionMenu();
                     break;
                 case 5:
-                    System.out.println("Report printers");
-                    break;
-                case 6:
                     System.out.println("Log Out");
                     manager.logout();
                     running = false;
@@ -471,7 +467,7 @@ public class CommandInterface {
                     break;
                 case 2:
                     System.out.println("Assign Employee to malfunction");
-                    u();
+                    assignMalfunctionMenu();
                     break;
                 case 3:
                     System.out.println("Handle Malfunctions");
@@ -526,7 +522,7 @@ public class CommandInterface {
     }
     
     
-    public void u() {
+    public void assignMalfunctionMenu() {
         
         MyUtils.clearScreen();
     	 Object Employee;
