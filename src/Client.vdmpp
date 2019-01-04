@@ -55,7 +55,8 @@ operations
 			else
 				return nil;
 		)
-		pre PrintManager`getInstance().getCurrentUser() = self;
+		pre PrintManager`getInstance().getCurrentUser() = self
+		post RESULT = nil or RESULT in set documents;
 		
 	-- getters
 		
