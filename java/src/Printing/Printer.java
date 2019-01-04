@@ -11,10 +11,14 @@ public class Printer {
 
   public void cg_init_Printer_1(final Number identifier, final String local, final VDMSet lists) {
 
-    for (Iterator iterator_16 = lists.iterator(); iterator_16.hasNext(); ) {
-      Queue queue = (Queue) iterator_16.next();
-      queues = MapUtil.munion(Utils.copy(queues), MapUtil.map(new Maplet(queue, 0L)));
+    VDMMap mapCompResult_4 = MapUtil.map();
+    VDMSet set_7 = Utils.copy(lists);
+    for (Iterator iterator_7 = set_7.iterator(); iterator_7.hasNext(); ) {
+      Queue queue = ((Queue) iterator_7.next());
+      MapUtil.mapAdd(mapCompResult_4, new Maplet(queue, 0L));
     }
+    queues = MapUtil.munion(Utils.copy(queues), Utils.copy(mapCompResult_4));
+
     id = identifier;
     location = local;
     return;

@@ -11,8 +11,13 @@ public class User {
 
   protected void initUser(final String username, final String pass) {
 
-    name = username;
-    password = pass;
+    String atomicTmp_4 = pass;
+    String atomicTmp_5 = username;
+    {
+        /* Start of atomic statement */
+      password = atomicTmp_4;
+      name = atomicTmp_5;
+    } /* End of atomic statement */
   }
 
   public String getName() {
@@ -30,15 +35,15 @@ public class User {
 
   public Boolean isLoginCorrected(final String username, final String pass) {
 
-    Boolean andResult_72 = false;
+    Boolean andResult_77 = false;
 
     if (Utils.equals(name, username)) {
       if (Utils.equals(password, pass)) {
-        andResult_72 = true;
+        andResult_77 = true;
       }
     }
 
-    if (andResult_72) {
+    if (andResult_77) {
       return true;
     }
 

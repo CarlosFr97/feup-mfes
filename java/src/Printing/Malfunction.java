@@ -65,9 +65,15 @@ public class Malfunction {
 
   public void assignEmployee(final Employee emp) {
 
-    assignedTo = emp;
-    assignedBy = ((Employee) PrintManager.getInstance().getCurrentUser());
-    changeState(Printing.quotes.InRepairQuote.getInstance());
+    Employee atomicTmp_1 = emp;
+    Employee atomicTmp_2 = ((Employee) PrintManager.getInstance().getCurrentUser());
+    Object atomicTmp_3 = Printing.quotes.InRepairQuote.getInstance();
+    {
+        /* Start of atomic statement */
+      assignedTo = atomicTmp_1;
+      assignedBy = atomicTmp_2;
+      state = atomicTmp_3;
+    } /* End of atomic statement */
   }
 
   public void changeState(final Object newState) {
