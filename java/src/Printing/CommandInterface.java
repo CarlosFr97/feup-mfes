@@ -471,7 +471,7 @@ public class CommandInterface {
                     break;
                 case 2:
                     System.out.println("Assign Employee to malfunction");
-                    assignEmployeeMenu();
+                    u();
                     break;
                 case 3:
                     System.out.println("Handle Malfunctions");
@@ -483,12 +483,15 @@ public class CommandInterface {
                 	break;
                 case 5:
                     System.out.println("Printers Report");
+                    printersReport();
                     break;
                 case 6:
                     System.out.println("Client Report");
+                    clientsReport();
                     break;
                 case 7:
                     System.out.println("Employees Report");
+                    employeesReport();
                     break;
                 case 8:
                     System.out.println("Log Out");
@@ -523,7 +526,7 @@ public class CommandInterface {
     }
     
     
-    public void assignEmployeeMenu() {
+    public void u() {
         
         MyUtils.clearScreen();
     	 Object Employee;
@@ -773,7 +776,104 @@ public class CommandInterface {
     }
 
 
+    public void clientsReport(){
+        MyUtils.clearScreen();
 
+        System.out.println("=============================");
+        System.out.println("      CLIENTS REPORT          ");
+        HashMap<String,VDMSet> clientsInfo = new HashMap<>(manager.reportClients());
+        if(clientsInfo.isEmpty()){
+            MyUtils.inString("Nothing to show.Press enter to go back: ");
+            return;
+        }
+        for(String name: clientsInfo.keySet()){
+            System.out.println("Client: " + name);
+            System.out.println("   Documents: ");
+            ArrayList<Object> docs = new ArrayList<>(clientsInfo.get(name));
+            if(docs.isEmpty()){
+                System.out.println("     There are no documents available!");
+                continue;
+            }
+            for(Object doc : docs){
+                System.out.println("     Document: " + ((Document)doc).getName() + " Created at: " + ((Document)doc).getDate() +
+                " Cost: " + ((Document)doc).getPrice() + " Status: " + ((Document)doc).getPrinted());
+            }
+            System.out.println();
+        }
+
+        MyUtils.inString("Press Enter to go back: ");
+
+
+    }
+
+    public void employeesReport(){
+        MyUtils.clearScreen();
+        System.out.println("=============================");
+        System.out.println("      EMPLOYEES REPORT       ");
+
+        ArrayList<Object> employees = new ArrayList<>(manager.getRegularEmployees());
+        if(employees.isEmpty()){
+            MyUtils.inString("There is no regular employees in the system. Press enter to go back: ");
+            return;
+        }
+        for(Object employee: employees){
+            HashMap<Object,Object> employeeMalfunction = new HashMap<>(manager.reportEmployee((Employee)employee));
+            System.out.println("Employee Name: " + ((Employee)employee).getName());
+            System.out.println("   Overall: " );
+            for(Object state: employeeMalfunction.keySet()){
+                System.out.println( "     " + state + "->" + employeeMalfunction.get(state));
+            }
+            System.out.println("   All assigned malfunctions");
+            ArrayList<Object> malfunctions = new ArrayList<>(((Employee)employee).getMalfunctions());
+            if(malfunctions.isEmpty()){
+                System.out.println("    Employee has no malfunctions assigned!");
+                continue;
+            }
+            for(Object malfunction: malfunctions){
+                System.out.println("      Printer:"  + ((Malfunction)malfunction).getPrinter() + "  Problem: " + ((Malfunction)malfunction).getProblem() 
+                + "  Description: " + ((Malfunction)malfunction).getDescription() + " AssignBy: " + ((Malfunction)malfunction).getAssignedBy().getName() +
+                " State: " + ((Malfunction)malfunction).getState());
+            }
+            System.out.println();
+        }
+
+
+        MyUtils.inString("Press enter to go back: ");
+
+    }
+
+
+    public void printersReport(){
+
+        MyUtils.clearScreen();
+        System.out.println("=============================");
+        System.out.println("      PRINTERS  REPORT       ");
+
+
+        HashMap<Object,Object> reportedPrintedDocs = new HashMap<>(manager.reportPrintedDocs());
+        
+        if(reportedPrintedDocs.isEmpty()){
+            MyUtils.inString("There is no available info. Press Enter to go back: ");
+            return;
+        }
+        System.out.println(" Queues:");
+        for(Object queue: reportedPrintedDocs.keySet()){
+            System.out.println("    Color: " + ((Queue)queue).getColor() + " Type: " + ((Queue)queue).getSize());
+            System.out.println("    Number of printed documents: " + reportedPrintedDocs.get(queue));
+            System.out.println("    Documents still in queue: ");
+            ArrayList<Object> docs= new ArrayList<>(((Queue)queue).getDocs());
+            if(docs.isEmpty()){
+                System.out.println("There are no documents in queue!");
+                continue;
+            }
+            for(Object doc: docs){
+                System.out.println("     Document: " + ((Document)doc).getName() + " Created at: " + ((Document)doc).getDate() + " By: " + ((Document)doc).getClient() +
+                " Cost: " + ((Document)doc).getPrice() + " Status: " + ((Document)doc).getPrinted());
+            }
+            System.out.println();
+        }
+
+    }
 
 }
 
