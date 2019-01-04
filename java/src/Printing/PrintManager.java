@@ -13,6 +13,18 @@ public class PrintManager {
   private User currentUser = null;
   private static PrintManager printManager = new PrintManager();
 
+  public void cg_init_PrintManager_1() {
+
+    Employee emp = new Employee("admin", "admin", Printing.quotes.AdminQuote.getInstance());
+    employees = SetUtil.union(Utils.copy(employees), SetUtil.set(emp));
+    return;
+  }
+
+  public PrintManager() {
+
+    cg_init_PrintManager_1();
+  }
+
   private Boolean clientExists(final String name) {
 
     for (Iterator iterator_5 = clients.iterator(); iterator_5.hasNext(); ) {
@@ -37,16 +49,24 @@ public class PrintManager {
 
   public Client addClient(final String username, final String password, final Number account) {
 
-    Client cli = new Client(username, password, account);
-    clients = SetUtil.union(Utils.copy(clients), SetUtil.set(cli));
-    return ((Client) login(username, password));
+    if (!(clientExists(username))) {
+      Client cli = new Client(username, password, account);
+      clients = SetUtil.union(Utils.copy(clients), SetUtil.set(cli));
+      return ((Client) login(username, password));
+    }
+
+    return null;
   }
 
-  public Employee addEmployee(final String username, final String password, final Object role) {
+  public Boolean addEmployee(final String username, final String password, final Object role) {
 
-    Employee emp = new Employee(username, password, ((Object) role));
-    employees = SetUtil.union(Utils.copy(employees), SetUtil.set(emp));
-    return ((Employee) login(username, password));
+    if (!(employeeExists(username))) {
+      Employee emp = new Employee(username, password, ((Object) role));
+      employees = SetUtil.union(Utils.copy(employees), SetUtil.set(emp));
+      return true;
+    }
+
+    return false;
   }
 
   public User login(final String username, final String password) {
@@ -85,15 +105,15 @@ public class PrintManager {
 
     for (Iterator iterator_8 = queues.iterator(); iterator_8.hasNext(); ) {
       Queue queue = (Queue) iterator_8.next();
-      Boolean andResult_35 = false;
+      Boolean andResult_48 = false;
 
       if (Utils.equals(queue.getColor(), doc.getColor())) {
         if (Utils.equals(queue.getSize(), doc.getSize())) {
-          andResult_35 = true;
+          andResult_48 = true;
         }
       }
 
-      if (andResult_35) {
+      if (andResult_48) {
         queue.addDocument(doc);
         doc.setQueue(queue);
         return true;
@@ -142,13 +162,12 @@ public class PrintManager {
     return Utils.copy(allClients);
   }
 
-  public VDMMap reportEmployee(final String name) {
+  public VDMMap reportEmployee(final Employee employee) {
 
     VDMMap allMalfs =
         MapUtil.map(
             new Maplet(Printing.quotes.InRepairQuote.getInstance(), 0L),
             new Maplet(Printing.quotes.FixedQuote.getInstance(), 0L));
-    Employee employee = getEmployee(name);
     for (Iterator iterator_13 = employee.getMalfunctions().iterator(); iterator_13.hasNext(); ) {
       Malfunction malfunction = (Malfunction) iterator_13.next();
       VDMMap pair = MapUtil.domResTo(SetUtil.set(malfunction.getState()), Utils.copy(allMalfs));
@@ -211,22 +230,20 @@ public class PrintManager {
 
     for (Iterator iterator_15 = employees.iterator(); iterator_15.hasNext(); ) {
       Employee employee = (Employee) iterator_15.next();
-      Boolean andResult_45 = false;
+      Boolean andResult_63 = false;
 
       if (Utils.equals(employee.getName(), name)) {
         if (!(Utils.equals(employee.getRole(), Printing.quotes.AdminQuote.getInstance()))) {
-          andResult_45 = true;
+          andResult_63 = true;
         }
       }
 
-      if (andResult_45) {
+      if (andResult_63) {
         return employee;
       }
     }
     return null;
   }
-
-  public PrintManager() {}
 
   public String toString() {
 

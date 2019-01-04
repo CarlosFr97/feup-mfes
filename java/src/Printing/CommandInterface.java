@@ -2,17 +2,21 @@ package Printing;
 import java.time.LocalDateTime;
 import Printing.Document.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.AbstractMap.SimpleEntry;
 
 import Printing.PrintManager;
 import Printing.quotes.ClientQuote;
 import Printing.quotes.ColorsQuote;
 import Printing.quotes.FixedQuote;
+import Printing.quotes.InRepairQuote;
 import Printing.quotes.LandscapeQuote;
 import Printing.quotes.OtherQuote;
 import Printing.quotes.PaperQuote;
 import Printing.quotes.PortraitQuote;
 import Printing.quotes.RegularQuote;
 import Printing.quotes.TonerQuote;
+import Printing.quotes.WaitingQuote;
 import Printing.quotes.A3Quote;
 import Printing.quotes.A4Quote;
 import Printing.quotes.AdminQuote;
@@ -25,12 +29,9 @@ public class CommandInterface {
 
 	
 	
-    private PrintManager manager = new PrintManager();
+    private PrintManager manager = PrintManager.getInstance();
     
-    
-    public CommandInterface() {
-    	manager.addEmployee("admin", "admin", new AdminQuote());
-    }
+  
     public static void main(String[] args){
         CommandInterface gui = new CommandInterface();
         gui.mainMenu();
@@ -92,11 +93,11 @@ public class CommandInterface {
         User log = manager.login(username,password);
         if(log == null){
             System.out.println("Invalid credentials");
-            return;
+            
         }else{
-            if(log.getRole().equals(ClientQuote.getInstance())){
+            if(log instanceof Client){
                 clientMenu();
-            }else if(log.getRole().equals(AdminQuote.getInstance())){
+            }else if(((Employee)log).getRole().equals(AdminQuote.getInstance())){
                 adminMenu();
             }else{
                 employeeMenu();
@@ -256,7 +257,7 @@ public class CommandInterface {
         System.out.println("|          PRINT           |");
         System.out.println("| Printers:                |");
         for(Object printer:printers){
-            System.out.println("|       " + i + " - " + ((Printer)printer).getLocation() + "      |");
+            System.out.println("|       " + i + " - " + ((Printer)printer).getLocation() + "      ");
             i++;
         }
         System.out.println("============================");
@@ -281,12 +282,12 @@ public class CommandInterface {
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printer:                 |");
-        System.out.println("|        "  + choosenPrinter.getLocation() + "         |");
+        System.out.println("|        "  + choosenPrinter.getLocation() + "         ");
         
         System.out.println("| Documents:               |");
         i = 0;
         for(Object doc:documents){
-            System.out.println("|          " + i + " - " + ((Document)doc).getName() + ":" + ((Document)doc).getDate().toString() +":" + ((Document)doc).getPrice()+ "|");
+            System.out.println("|          " + i + " - " + ((Document)doc).getName() + ":" + ((Document)doc).getDate().toString() +":" + ((Document)doc).getPrice());
             i++;
         }	
         System.out.println("============================");
@@ -301,16 +302,19 @@ public class CommandInterface {
             }
         }
 
+        if(choosenDocs.isEmpty())
+            return;
+
         MyUtils.clearScreen();
 
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printer:                 |");
-        System.out.println("|        "  + choosenPrinter + "         |");
+        System.out.println("|        "  + choosenPrinter + "         ");
         System.out.println("| Choosen:                 |");
         double price = 0;
         for(int a = 0; i < choosenDocs.size(); a++){
-            System.out.println("|        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice() + "|");
+            System.out.println("|        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice());
             price = price + (choosenDocs.get(a).getPrice()).doubleValue();
         }
         
@@ -340,7 +344,7 @@ public class CommandInterface {
         System.out.println("|    REPORT MALFUNCTION    |");
         System.out.println("| Printers:                |");
         for(Object printer:printers){
-            System.out.println("|       " + index + " - " + ((Printer)printer).getLocation() + "      |");
+            System.out.println("|       " + index + " - " + ((Printer)printer).getLocation() + "      ");
             index++;
         }
         System.out.println("============================");
@@ -368,8 +372,10 @@ public class CommandInterface {
 
         if(confirm == 'Y'){
             //TODO CREATE REPORT
-        	User user = manager.getCurrentUser();
-        	user.reportMalfunction(choosenPrinter, problemType, description);
+            User user = manager.getCurrentUser();
+            Malfunction malf = user.reportMalfunction(choosenPrinter, problemType, description);
+            
+          
         }
         
 
@@ -418,7 +424,7 @@ public class CommandInterface {
                     reportMalfunctionMenu();
                     break;
                 case 5:
-                    System.out.println("Report printers")
+                    System.out.println("Report printers");
                     break;
                 case 6:
                     System.out.println("Log Out");
@@ -505,7 +511,7 @@ public class CommandInterface {
         System.out.println("============================");
         Object employeeType;
         System.out.println("    1 - Regular        2 - Admin    ");
-        int option = MyUtils.inInt("Choose what tyoe of employee: ");
+        int option = MyUtils.inInt("Choose what type of employee: ");
         employeeType = (option == 1) ? new RegularQuote() : new AdminQuote();
 
         String employeeName = MyUtils.inString("Write the employee name: ");
@@ -528,7 +534,7 @@ public class CommandInterface {
     	 System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
          for(Object employee:employees){
-             System.out.println("|       " + index + " - " + ((Employee)employee).getName() + "      |");
+             System.out.println("|       " + index + " - " + ((Employee)employee).getName() + "      ");
              index++;
          }
          System.out.println("============================");
@@ -541,19 +547,22 @@ public class CommandInterface {
          MyUtils.clearScreen();
          
          ArrayList<Object> malfunctions = new ArrayList<>(manager.getMalfunctions());
+
+         if(malfunctions.isEmpty())
+            return;
          
          System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
          System.out.println("| Employee:                 |");
-         System.out.println("|        "  + choosenEmployee.getName() + "         |");
+         System.out.println("|        "  + choosenEmployee.getName() + "         ");
          
          System.out.println("| Malfunctions:               |");
          index = 0;
          ArrayList<Malfunction> filteredMalfunctions = new ArrayList<>();
          for(Object malfunction:malfunctions){
-        	 if(((Malfunction)malfunction).getAssignedTo() != null) {
+        	 if(((Malfunction)malfunction).getAssignedTo() == null) {
         		filteredMalfunctions.add((Malfunction)malfunction);
-        		System.out.println("|       " + index + " - " + ((Malfunction)malfunction).getProblem().toString() + ":" + ((Malfunction)malfunction).getPrinter().getLocation() + "|");
+        		System.out.println("|       " + index + " - " + ((Malfunction)malfunction).getProblem().toString() + ":" + ((Malfunction)malfunction).getPrinter().getLocation() + ":"+ ((Malfunction)malfunction).getDescription());
               	index++;
         	 }
         		
@@ -568,6 +577,9 @@ public class CommandInterface {
                  }
              }
          }
+
+         if(choosenMalfunctions.isEmpty())
+            return;
          
          
          MyUtils.clearScreen();
@@ -575,21 +587,22 @@ public class CommandInterface {
          System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
          System.out.println("| Employee:                 |");
-         System.out.println("|        "  + choosenEmployee.getName() + "         |");
+         System.out.println("|        "  + choosenEmployee.getName() + "         ");
          
          System.out.println("| Malfunctions:               |");
          for(Malfunction malfunction:choosenMalfunctions){
-        		System.out.println("|       "+ (malfunction).getProblem() + ":" + malfunction.getPrinter().getLocation() + "|");	
+        		System.out.println("|       "+ (malfunction).getProblem() + ":" + malfunction.getPrinter().getLocation() + ":" + malfunction.getDescription());	
          }
          
          char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to assign? y/n"));
 
          if(confirm == 'Y'){
         	 for(Malfunction malfunction:choosenMalfunctions) {
-        		 malfunction.assignEmployee(choosenEmployee);
+                 Employee currUser = (Employee) manager.getCurrentUser();
+        		 currUser.assignMalfunction(malfunction,choosenEmployee);
         	 }
          }
-         
+        
     }
 
 
@@ -601,7 +614,7 @@ public class CommandInterface {
         System.out.println("|       NEW PRINTER        |");
         System.out.println("|Existing Printers:        |");
         if(printers.size() == 0)
-            System.out.println("|Currently there are no printers        |");
+            System.out.println("|  Currently there are no printers        ");
         else{
             for(Object printer:printers){
                 System.out.println("| Id:" + ((Printer)printer).getId() + " Location: " + ((Printer)printer).getLocation());
@@ -696,19 +709,29 @@ public class CommandInterface {
     public void solveMalfunction(){
         Employee employee = (Employee) manager.getCurrentUser();
         ArrayList<Object>  malfs= new ArrayList<>(employee.getMalfunctions());
+        ArrayList<Object> filteredMalfunctions = new ArrayList<>();
         System.out.println("============================");
         System.out.println("|         NEW QUEUE        |");
         System.out.println("|Your Malfunctions:        |");
         int index = 0;
-        if(malfs.size() == 0)
+        if(malfs.size() == 0){
             System.out.print("|     You have no malfunctions   |");
+            return;
+        }
         else{
+            
             for(Object malfunction : malfs){
-                System.out.println("   " + index + " - Printer " + ((Malfunction)malfunction).getPrinter().getLocation() + " Problem: " + ((Malfunction)malfunction).getPrinter() + " Assign by: " 
-                + ((Malfunction)malfunction).getAssignedBy().getName() + "\nDescription " + ((Malfunction)malfunction).getDescription());
-                index++;
+                if(((Malfunction)malfunction).getState().equals(InRepairQuote.getInstance())){
+                    System.out.println("   " + index + " - Problem: " + ((Malfunction)malfunction).getProblem() + " Assign by: " 
+                    + ((Malfunction)malfunction).getAssignedBy().getName() + "\nDescription " + ((Malfunction)malfunction).getDescription());
+                    filteredMalfunctions.add(malfunction);
+                    index++;
+                }
+                
             }
         }
+        if(filteredMalfunctions.isEmpty())
+            return;
 
         ArrayList<Malfunction> choosenMalfunctions = new ArrayList<>();
         String option[] = MyUtils.inString("Please choose the malfunctions you wish to mark as resolved (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
@@ -716,17 +739,20 @@ public class CommandInterface {
             if(MyUtils.isNumeric(option[a])){
                 Integer number = new Integer(option[a]);
                 if(number >= 0 && number < malfs.size()){
-                    if(!choosenMalfunctions.contains((Malfunction) malfs.get(number)))
-                        choosenMalfunctions.add((Malfunction) malfs.get(number));
+                    if(!choosenMalfunctions.contains((Malfunction) filteredMalfunctions.get(number)))
+                        choosenMalfunctions.add((Malfunction) filteredMalfunctions.get(number));
                 }
             }
         }
+
+        if(choosenMalfunctions.isEmpty())
+            return;
 
         MyUtils.clearScreen();
 
         System.out.println("Chosen malfunctions: ");
         for(Malfunction malfunction: choosenMalfunctions){
-            System.out.println("   Printer " + ((Malfunction)malfunction).getPrinter().getLocation() + " Problem: " + ((Malfunction)malfunction).getPrinter() + " Assign by: " 
+            System.out.println("  Problem: " + ((Malfunction)malfunction).getProblem() + " Assign by: " 
                 + ((Malfunction)malfunction).getAssignedBy().getName() + "\nDescription " + ((Malfunction)malfunction).getDescription());
                 
         }

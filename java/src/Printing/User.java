@@ -8,23 +8,16 @@ public class User {
   protected String name = SeqUtil.toStr(SeqUtil.seq());
   protected String password = SeqUtil.toStr(SeqUtil.seq());
   protected String birthDay = SeqUtil.toStr(SeqUtil.seq());
-  protected Object role;
 
-  protected void initUser(final String username, final String pass, final Object rol) {
+  protected void initUser(final String username, final String pass) {
 
     name = username;
     password = pass;
-    role = rol;
   }
 
   public String getName() {
 
     return name;
-  }
-
-  public Object getRole() {
-
-    return role;
   }
 
   public Malfunction reportMalfunction(
@@ -37,15 +30,15 @@ public class User {
 
   public Boolean isLoginCorrected(final String username, final String pass) {
 
-    Boolean andResult_52 = false;
+    Boolean andResult_72 = false;
 
     if (Utils.equals(name, username)) {
       if (Utils.equals(password, pass)) {
-        andResult_52 = true;
+        andResult_72 = true;
       }
     }
 
-    if (andResult_52) {
+    if (andResult_72) {
       return true;
     }
 
@@ -63,8 +56,6 @@ public class User {
         + Utils.toString(password)
         + ", birthDay := "
         + Utils.toString(birthDay)
-        + ", role := "
-        + Utils.toString(role)
         + "}";
   }
 }

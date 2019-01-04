@@ -97,19 +97,15 @@ operations
 		(
 			dcl emp: Employee;
 			dcl printer: Printer;
-			dcl printer2: Printer;
 			dcl cli: Client;
 			dcl doc: Document;
 			dcl acc: int;
 			dcl queue: Queue;
-			dcl queue2: Queue;
 			PrintManager`getInstance().clearInstance();
 			IO`print("Test printer - print document\n");
 			emp := createEmployee();
 			queue:= PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
-			queue2:= PrintManager`getInstance().addQueue(<A3>,<BlackWhite>);
 			printer := PrintManager`getInstance().addPrinter(0,"trabalho", {queue});
-			printer2 := PrintManager`getInstance().addPrinter(1,"teste", {queue2});
 			assertEqual(printer.getNumPrintedDocs(), {queue |-> 0});
 			PrintManager`getInstance().logout();
 			cli := createClient();

@@ -4,7 +4,6 @@ instance variables
   protected password: seq of (char) := []; 
   protected birthDay:seq of (char) := [];
 
-
 	inv len password >= 5;
 	
 operations
@@ -25,8 +24,8 @@ operations
 	public reportMalfunction: Printer * Malfunction`problemType * [seq of (char)] ==> Malfunction
 		reportMalfunction(printer,type,desc) ==
 		(
-			dcl malf :Malfunction := new Malfunction(self,type,desc);
-			PrintManager`getInstance().addMalfunction(malf, printer);
+			dcl malf :Malfunction := new Malfunction(self,printer,type,desc);
+			PrintManager`getInstance().addMalfunction(malf);
 			return malf;
 		)
 		pre printer in set PrintManager`getInstance().getPrinters() and PrintManager`getInstance().getCurrentUser() = self;

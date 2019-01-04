@@ -53,6 +53,21 @@ public class Document {
     queue = q;
   }
 
+  public void print() {
+
+    state = Printing.quotes.PrintedQuote.getInstance();
+  }
+
+  public void delete() {
+
+    queue.removeDocument(this);
+  }
+
+  public Object getPrinted() {
+
+    return state;
+  }
+
   public String getName() {
 
     return name;
@@ -213,19 +228,19 @@ public class Document {
     if (Utils.equals(Utils.mod(date.year.longValue(), 400L), 0L)) {
       orResult_5 = true;
     } else {
-      Boolean andResult_6 = false;
+      Boolean andResult_9 = false;
 
       if (!(Utils.equals(Utils.mod(date.year.longValue(), 100L), 0L))) {
-        if (!(Utils.equals(Utils.mod(date.year.longValue(), 4L), 0L))) {
-          andResult_6 = true;
+        if (Utils.equals(Utils.mod(date.year.longValue(), 4L), 0L)) {
+          andResult_9 = true;
         }
       }
 
-      orResult_5 = andResult_6;
+      orResult_5 = andResult_9;
     }
 
     if (orResult_5) {
-      Boolean andResult_7 = false;
+      Boolean andResult_10 = false;
 
       if (date.month.longValue() <= 12L) {
         if (date.day.longValue()
@@ -234,14 +249,14 @@ public class Document {
                         SeqUtil.seq(31L, 29L, 31L, 30L, 31L, 30L, 31L, 31L, 30L, 31L, 30L, 31L),
                         date.month))
                 .longValue()) {
-          andResult_7 = true;
+          andResult_10 = true;
         }
       }
 
-      return andResult_7;
+      return andResult_10;
 
     } else {
-      Boolean andResult_8 = false;
+      Boolean andResult_11 = false;
 
       if (date.month.longValue() <= 12L) {
         if (date.day.longValue()
@@ -250,11 +265,11 @@ public class Document {
                         SeqUtil.seq(31L, 28L, 31L, 30L, 31L, 30L, 31L, 31L, 30L, 31L, 30L, 31L),
                         date.month))
                 .longValue()) {
-          andResult_8 = true;
+          andResult_11 = true;
         }
       }
 
-      return andResult_8;
+      return andResult_11;
     }
   }
 }

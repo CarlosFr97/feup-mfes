@@ -70,6 +70,7 @@ public class Printer {
             Utils.copy(queues),
             MapUtil.map(
                 new Maplet(newQueue, ((Number) Utils.get(queues, newQueue)).longValue() + 1L)));
+    doc.print();
   }
 
   public VDMMap getNumPrintedDocs() {

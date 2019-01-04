@@ -1,9 +1,10 @@
 class PrintManager
 instance variables
-  clients:set of (Client) := {};
-  employees:set of (Employee) := {};
-  printers: map Printer to set of Malfunction := {|->};
-	queues: set of (Queue) := {};
+  clients:set of Client := {};
+  employees:set of Employee := {};
+  printers:set of Printer := {};
+	queues: set of Queue := {};
+	malfunctions: set of Malfunction := {};
 	currentUser: [User] := nil; 
 	private static printManager: PrintManager := new PrintManager();
 
@@ -112,11 +113,11 @@ operations
 		addPrinter(id,local,listofQueues) == 
 			(
 				dcl aux :Printer := new Printer(id,local,listofQueues);
-				printers := printers munion { aux |-> {} };
+				printers := printers union { aux };
 				return aux
 			)
-			pre currentUser <> nil and currentUser in set employees and (forall printer in set dom printers & printer.getId() <> id) and listofQueues <> {}
-			post RESULT in set dom printers;
+			pre currentUser <> nil and currentUser in set employees and (forall printer in set printers & printer.getId() <> id) and listofQueues <> {}
+			post RESULT in set printers;
 			
 	
 	-- client interaction
@@ -149,7 +150,7 @@ operations
     	(
     		statistics := statistics ++ {queue |-> 0};
     	);
-    	for all printer in set dom printers do
+    	for all printer in set printers do
     	(
     		temp := printer.getNumPrintedDocs();
     		for all queue in set dom temp do
@@ -204,7 +205,7 @@ operations
 			 	
 	public pure getPrinters: () ==> set of Printer
 		getPrinters() == 
-			return dom printers
+			return  printers
 		pre currentUser <> nil;
 		
 	public pure getQueues: () ==> set of Queue
@@ -212,15 +213,14 @@ operations
 			return  queues
 		pre currentUser <> nil;
 		
-	public getMalfunctions: () ==> map Printer to set of Malfunction
+	public getMalfunctions: () ==> set of Malfunction
 		getMalfunctions() ==
-				return printers
+			return malfunctions
 		pre currentUser <>nil and currentUser in set employees;
 		
-	public addMalfunction: Malfunction*Printer ==> ()
-		addMalfunction(malf, printer) ==
-		
-			printers := printers ++ {printer |-> printers(printer) union {malf}}
+	public addMalfunction: Malfunction ==> ()
+		addMalfunction(malf) ==
+			malfunctions := malfunctions union {malf}
 		pre currentUser <> nil;
 
  	public getRegularEmployees: () ==> set of Employee

@@ -63,6 +63,7 @@ operations
 				malf := createMalfunction(cli, printer);
 				assertEqual(malf.getState(), <Waiting>);
 				assertEqual(malf.getReportedBy(),cli);
+				assertEqual(malf.getPrinter(), printer);
 				assertEqual(malf.getProblem(), <Paper>);
 				assertEqual(malf.getDescription(), "problema");
 			);
@@ -89,6 +90,7 @@ operations
 				assertEqual(malf.getAssignedTo(), emp);
 				assertEqual(malf.getState(), <InRepair>);
 				assertEqual(malf.getReportedBy(), cli);
+				assertEqual(malf.getPrinter(), printer);
 				assertEqual(malf.getProblem(), <Paper>);
 				assertEqual(malf.getDescription(), "problema");
 				PrintManager`getInstance().logout();
@@ -96,6 +98,7 @@ operations
 				assertEqual(malf.getAssignedBy(), admin);
 				assertEqual(malf.getAssignedTo(), emp);
 				assertEqual(malf.getReportedBy(), cli);
+				assertEqual(malf.getPrinter(), printer);
 				assertEqual(malf.getProblem(), <Paper>);
 				assertEqual(malf.getDescription(), "problema");
 				

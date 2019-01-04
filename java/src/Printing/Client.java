@@ -10,7 +10,7 @@ public class Client extends User {
 
   public void cg_init_Client_1(final String username, final String pass, final Number acc) {
 
-    initUser(username, pass, Printing.quotes.ClientQuote.getInstance());
+    initUser(username, pass);
     account = acc;
     return;
   }
@@ -38,7 +38,22 @@ public class Client extends User {
       final Document.Date date,
       final Number numPages) {
 
-    Document newDoc =
+    Document newDoc = null;
+    for (Iterator iterator_4 = documents.iterator(); iterator_4.hasNext(); ) {
+      Document doc = (Document) iterator_4.next();
+      Boolean andResult_5 = false;
+
+      if (Utils.equals(name_1, doc.getName())) {
+        if (Utils.equals(date, doc.getDate())) {
+          andResult_5 = true;
+        }
+      }
+
+      if (andResult_5) {
+        return null;
+      }
+    }
+    newDoc =
         new Document(
             this,
             ((Object) size),
@@ -64,6 +79,12 @@ public class Client extends User {
   public VDMSet getDocs() {
 
     return Utils.copy(documents);
+  }
+
+  public void deleteDoc(final Document doc) {
+
+    documents = SetUtil.diff(Utils.copy(documents), SetUtil.set(doc));
+    doc.delete();
   }
 
   public Client() {}
