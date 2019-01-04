@@ -44,7 +44,7 @@ operations
 				return nil;
 			)
 			pre currentUser = nil
-			post RESULT = nil or (RESULT.getName() = username and RESULT.getAccount() = account);
+			post RESULT = nil or (RESULT.getName() = username and RESULT.getAccount() = account) and RESULT in set clients;
 			
 				
 	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> bool
