@@ -27,8 +27,8 @@ public class PrintManager {
 
   private Boolean clientExists(final String name) {
 
-    for (Iterator iterator_5 = clients.iterator(); iterator_5.hasNext(); ) {
-      Client client = (Client) iterator_5.next();
+    for (Iterator iterator_9 = clients.iterator(); iterator_9.hasNext(); ) {
+      Client client = (Client) iterator_9.next();
       if (Utils.equals(client.getName(), name)) {
         return true;
       }
@@ -38,8 +38,8 @@ public class PrintManager {
 
   private Boolean employeeExists(final String name) {
 
-    for (Iterator iterator_6 = employees.iterator(); iterator_6.hasNext(); ) {
-      Employee employee = (Employee) iterator_6.next();
+    for (Iterator iterator_10 = employees.iterator(); iterator_10.hasNext(); ) {
+      Employee employee = (Employee) iterator_10.next();
       if (Utils.equals(employee.getName(), name)) {
         return true;
       }
@@ -72,8 +72,8 @@ public class PrintManager {
   public User login(final String username, final String password) {
 
     VDMSet users = SetUtil.union(Utils.copy(clients), Utils.copy(employees));
-    for (Iterator iterator_7 = users.iterator(); iterator_7.hasNext(); ) {
-      User user = (User) iterator_7.next();
+    for (Iterator iterator_11 = users.iterator(); iterator_11.hasNext(); ) {
+      User user = (User) iterator_11.next();
       if (user.isLoginCorrected(username, password)) {
         currentUser = user;
         return currentUser;
@@ -103,17 +103,17 @@ public class PrintManager {
 
   public Boolean addDocumentToQueue(final Document doc) {
 
-    for (Iterator iterator_8 = queues.iterator(); iterator_8.hasNext(); ) {
-      Queue queue = (Queue) iterator_8.next();
-      Boolean andResult_48 = false;
+    for (Iterator iterator_12 = queues.iterator(); iterator_12.hasNext(); ) {
+      Queue queue = (Queue) iterator_12.next();
+      Boolean andResult_50 = false;
 
       if (Utils.equals(queue.getColor(), doc.getColor())) {
         if (Utils.equals(queue.getSize(), doc.getSize())) {
-          andResult_48 = true;
+          andResult_50 = true;
         }
       }
 
-      if (andResult_48) {
+      if (andResult_50) {
         queue.addDocument(doc);
         doc.setQueue(queue);
         return true;
@@ -125,27 +125,32 @@ public class PrintManager {
   public VDMMap reportPrintedDocs() {
 
     VDMMap statistics = MapUtil.map();
-    VDMMap temp = null;
-    for (Iterator iterator_9 = queues.iterator(); iterator_9.hasNext(); ) {
-      Queue queue = (Queue) iterator_9.next();
-      statistics = MapUtil.override(Utils.copy(statistics), MapUtil.map(new Maplet(queue, 0L)));
+    VDMMap docs = null;
+    VDMMap mapCompResult_1 = MapUtil.map();
+    VDMSet set_4 = Utils.copy(queues);
+    for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext(); ) {
+      Queue queue = ((Queue) iterator_4.next());
+      MapUtil.mapAdd(mapCompResult_1, new Maplet(queue, 0L));
     }
-    for (Iterator iterator_10 = printers.iterator(); iterator_10.hasNext(); ) {
-      Printer printer = (Printer) iterator_10.next();
-      temp = printer.getNumPrintedDocs();
-      for (Iterator iterator_11 = MapUtil.dom(Utils.copy(temp)).iterator();
-          iterator_11.hasNext();
-          ) {
-        Queue queue = (Queue) iterator_11.next();
-        statistics =
-            MapUtil.override(
-                Utils.copy(statistics),
-                MapUtil.map(
-                    new Maplet(
-                        queue,
-                        ((Number) Utils.get(temp, queue)).longValue()
-                            + ((Number) Utils.get(statistics, queue)).longValue())));
+    statistics = MapUtil.override(Utils.copy(statistics), Utils.copy(mapCompResult_1));
+
+    for (Iterator iterator_13 = printers.iterator(); iterator_13.hasNext(); ) {
+      Printer printer = (Printer) iterator_13.next();
+      docs = printer.getNumPrintedDocs();
+      VDMMap mapCompResult_2 = MapUtil.map();
+      VDMSet set_5 = MapUtil.dom(Utils.copy(docs));
+      for (Iterator iterator_5 = set_5.iterator(); iterator_5.hasNext(); ) {
+        Queue queue = ((Queue) iterator_5.next());
+        if (SetUtil.inSet(queue, queues)) {
+          MapUtil.mapAdd(
+              mapCompResult_2,
+              new Maplet(
+                  queue,
+                  ((Number) Utils.get(docs, queue)).longValue()
+                      + ((Number) Utils.get(statistics, queue)).longValue()));
+        }
       }
+      statistics = MapUtil.override(Utils.copy(statistics), Utils.copy(mapCompResult_2));
     }
     return Utils.copy(statistics);
   }
@@ -153,12 +158,14 @@ public class PrintManager {
   public VDMMap reportClients() {
 
     VDMMap allClients = MapUtil.map();
-    for (Iterator iterator_12 = clients.iterator(); iterator_12.hasNext(); ) {
-      Client client = (Client) iterator_12.next();
-      allClients =
-          MapUtil.override(
-              Utils.copy(allClients), MapUtil.map(new Maplet(client.getName(), client.getDocs())));
+    VDMMap mapCompResult_3 = MapUtil.map();
+    VDMSet set_6 = Utils.copy(clients);
+    for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext(); ) {
+      Client client = ((Client) iterator_6.next());
+      MapUtil.mapAdd(mapCompResult_3, new Maplet(client.getName(), client.getDocs()));
     }
+    allClients = MapUtil.override(Utils.copy(allClients), Utils.copy(mapCompResult_3));
+
     return Utils.copy(allClients);
   }
 
@@ -168,8 +175,8 @@ public class PrintManager {
         MapUtil.map(
             new Maplet(Printing.quotes.InRepairQuote.getInstance(), 0L),
             new Maplet(Printing.quotes.FixedQuote.getInstance(), 0L));
-    for (Iterator iterator_13 = employee.getMalfunctions().iterator(); iterator_13.hasNext(); ) {
-      Malfunction malfunction = (Malfunction) iterator_13.next();
+    for (Iterator iterator_14 = employee.getMalfunctions().iterator(); iterator_14.hasNext(); ) {
+      Malfunction malfunction = (Malfunction) iterator_14.next();
       VDMMap pair = MapUtil.domResTo(SetUtil.set(malfunction.getState()), Utils.copy(allMalfs));
       Object state = malfunction.getState();
       VDMMap newPair =
@@ -217,8 +224,8 @@ public class PrintManager {
   public VDMSet getRegularEmployees() {
 
     VDMSet emp = SetUtil.set();
-    for (Iterator iterator_14 = employees.iterator(); iterator_14.hasNext(); ) {
-      Employee employee = (Employee) iterator_14.next();
+    for (Iterator iterator_15 = employees.iterator(); iterator_15.hasNext(); ) {
+      Employee employee = (Employee) iterator_15.next();
       if (Utils.equals(employee.getRole(), Printing.quotes.RegularQuote.getInstance())) {
         emp = SetUtil.union(Utils.copy(emp), SetUtil.set(employee));
       }
@@ -228,17 +235,17 @@ public class PrintManager {
 
   public Employee getEmployee(final String name) {
 
-    for (Iterator iterator_15 = employees.iterator(); iterator_15.hasNext(); ) {
-      Employee employee = (Employee) iterator_15.next();
-      Boolean andResult_63 = false;
+    for (Iterator iterator_16 = employees.iterator(); iterator_16.hasNext(); ) {
+      Employee employee = (Employee) iterator_16.next();
+      Boolean andResult_65 = false;
 
       if (Utils.equals(employee.getName(), name)) {
         if (!(Utils.equals(employee.getRole(), Printing.quotes.AdminQuote.getInstance()))) {
-          andResult_63 = true;
+          andResult_65 = true;
         }
       }
 
-      if (andResult_63) {
+      if (andResult_65) {
         return employee;
       }
     }

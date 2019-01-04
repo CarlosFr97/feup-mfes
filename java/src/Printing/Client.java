@@ -39,8 +39,8 @@ public class Client extends User {
       final Number numPages) {
 
     Document newDoc = null;
-    for (Iterator iterator_4 = documents.iterator(); iterator_4.hasNext(); ) {
-      Document doc = (Document) iterator_4.next();
+    for (Iterator iterator_8 = documents.iterator(); iterator_8.hasNext(); ) {
+      Document doc = (Document) iterator_8.next();
       Boolean andResult_5 = false;
 
       if (Utils.equals(name_1, doc.getName())) {
