@@ -195,6 +195,8 @@ public class CommandInterface {
     }
 
     public void newDocMenu(){
+
+        MyUtils.clearScreen();
         int option;
         Object size;
         Object type;
@@ -315,7 +317,7 @@ public class CommandInterface {
         System.out.println("       "  + choosenPrinter.getId() + ":" + choosenPrinter.getLocation() + "         ");
         System.out.println("| Choosen:                 |");
         double price = 0;
-        for(int a = 0; i < choosenDocs.size(); a++){
+        for(int a = 0; a < choosenDocs.size(); a++){
             System.out.println("        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice() 
             + "€:" + choosenDocs.get(a).getSize()+"/" + choosenDocs.get(a).getColor());
             price = price + (choosenDocs.get(a).getPrice()).doubleValue();
