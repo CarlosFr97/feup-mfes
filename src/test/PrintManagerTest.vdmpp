@@ -17,7 +17,9 @@ operations
  			emp := manager.login(username, password);
  			return emp;
  		);
-
+ 		
+	-- Normal scenario for creating a client
+	-- as described in section 1.2 of the report, covering requirement R14.	
 	public testAddClient: () ==> ()
 		testAddClient() ==
 		(	
@@ -33,7 +35,9 @@ operations
 			assertEqual(cli, nil);
 			
 		);
-		
+	
+	-- Normal scenario for logging out
+	-- as described in section 1.2 of the report, covering requirement R15.		
 	public testLogout: () ==> ()
 		testLogout() ==
 		(
@@ -42,6 +46,7 @@ operations
 			assertEqual(PrintManager`getInstance().getCurrentUser(), nil);	
 		);
 	
+	-- Exceptional scenario for error logging in
 	public testFailLogin: () ==> ()
 		testFailLogin() ==
 		(
@@ -58,7 +63,8 @@ operations
 			cli := PrintManager`getInstance().login("utilizador", "1234567");
 			assertEqual(cli, nil);
 		);
-		
+	
+	-- Normal scenario for adding multiple clients in order to test is clients exists verification is properly working
 	public testAddMultipleClient: () ==> ()
 		testAddMultipleClient() ==
 		(	
@@ -77,6 +83,8 @@ operations
 			
 		);
 		
+	-- Normal scenario for ladding an employee
+	-- as described in section 1.2 of the report, covering requirement R13.			
 	public testAddEmployee: () ==> ()
 		testAddEmployee() ==
 		(	
@@ -91,7 +99,10 @@ operations
 			emp := createEmployee("empregado", "123456778");
 			assertEqual(emp, nil);
 		);
+	
 		
+	-- Normal scenario for adding a printing queue
+	-- as described in section 1.2 of the report, covering requirement R1.			
 	public testAddQueue: () ==> ()
 		testAddQueue() ==
 		(
@@ -107,7 +118,9 @@ operations
 			queue2 := manager.addQueue(<A3>,<Colors>);
 			assertEqual(manager.getQueues(),{queue, queue2});
 		);
-		
+	
+	-- Normal scenario for adding a printer
+	-- as described in section 1.2 of the report, covering requirement R2.		
 	public testAddPrinter: () ==> ()
 		testAddPrinter() ==
 		(
@@ -127,7 +140,9 @@ operations
 			printer2 := manager.addPrinter(1,"piso2", {queue2, queue});
 			assertEqual(manager.getPrinters(),{printer, printer2});
 		);
-		
+	
+	-- Normal scenario for getting a report of all clients
+	-- as described in section 1.2 of the report, covering requirement R11.		
 	public testReportClients: () ==> ()
 		testReportClients() ==
 		(
@@ -159,6 +174,8 @@ operations
 			assertEqual(manager.reportClients(), {"client1" |-> {doc1, doc2}, "client2" |-> {doc3}});
 		);
 		
+	-- Normal scenario for getting a report of the number of printed documents by queue
+	-- as described in section 1.2 of the report, covering requirement R9.			
 	public testReportPrintedDocs: () ==> ()
 		testReportPrintedDocs() ==
 		(
@@ -193,7 +210,8 @@ operations
 			assertEqual(manager.reportPrintedDocs(), {queue |-> 2, queue2 |-> 1});
 			
 );
-		
+	-- Normal scenario for getting a report of an employee work
+	-- as described in section 1.2 of the report, covering requirement R10.		
 	public testReportEmployees: () ==> ()
 		testReportEmployees() ==
 		(
@@ -226,7 +244,9 @@ operations
 			report := manager.reportEmployee(admin);
 			assertEqual({<InRepair> |-> 0, <Fixed> |-> 1}, report);
 		);
-		
+	
+	-- Normal scenario for getting all the existing malfunctions
+	-- as described in section 1.2 of the report, covering requirement R8.			
 	public testMalfunctions: () ==> ()
 		testMalfunctions() ==
 		(
@@ -246,6 +266,7 @@ operations
 		
 		);
 		
+	-- Normal scenario for getting all the regular employees
 	public testGetRegularEmployees: () ==> ()
 			testGetRegularEmployees() ==
 			(
@@ -263,7 +284,8 @@ operations
 				admin := manager.login("admin", "admin");
 				assertEqual(manager.getRegularEmployees(), {emp, emp2});
 			);
-			
+	
+	-- Normal scenario for getting a specific employee
 	public testGetSpecificEmployee: () ==> ()
 		testGetSpecificEmployee() ==
 		(

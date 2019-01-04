@@ -42,6 +42,9 @@ operations
  				return PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
  		);
 	
+	
+	-- Normal scenario for loading (adding) a document
+	-- as described in section 1.2 of the report, covering requirement R3.	
 	public testDocument: () ==> ()
 		testDocument() ==
 		(
@@ -57,7 +60,8 @@ operations
  				assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
  				assertEqual(doc.getPrinted(), <ToPrint>);
 		);
- 		
+ 	
+ 	-- Normal scenario for loading (adding) a document with alternative size and/or color
  	public testPriceOtherOptions: () ==> ()
  		testPriceOtherOptions() ==
  		(
@@ -76,8 +80,9 @@ operations
  			assertEqual(doc3.getPrice(), 0.12);
  		);
  		
-	 public testAddQueue: () ==> ()
-			testAddQueue() ==
+ 	 -- Normal scenario for adding the current document to a printing queue
+	 public testAddtoQueue: () ==> ()
+			testAddtoQueue() ==
 			(
 				 	dcl doc:Document;
 				 	dcl emp: Employee;
@@ -98,8 +103,9 @@ operations
  					assertEqual(doc.getDate(), mk_Document`Date(21,12,2024));
 			);
 		
-		 public testRemoveQueue: () ==> ()
-			testRemoveQueue() ==
+		-- Normal scenario for removing the current document from the printing queue
+		 public testRemovefromQueue: () ==> ()
+			testRemovefromQueue() ==
 			(
 				 	dcl doc:Document;
 				 	dcl emp: Employee;
@@ -124,8 +130,8 @@ operations
  			(
  				testDocument();
  				testPriceOtherOptions();
- 				testAddQueue();
- 				testRemoveQueue();
+ 				testAddtoQueue();
+ 				testRemovefromQueue();
  			);
 			
 	

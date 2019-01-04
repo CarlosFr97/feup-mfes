@@ -46,7 +46,8 @@ operations
 	 				return printer;
 	 				
 	 		);
-		
+		-- Normal scenario for creating a function
+		-- as described in section 1.2 of the report, covering requirement R7.	
 		public testMalfunction: () ==> ()
 			testMalfunction() ==
 			(
@@ -67,7 +68,9 @@ operations
 				assertEqual(malf.getProblem(), <Paper>);
 				assertEqual(malf.getDescription(), "problema");
 			);
-			
+		
+		-- Normal scenario for assigning an employee/admin to this malfunction
+		-- as described in section 1.2 of the report, covering requirement R18.		
 		public testAssignEmployee: () ==> ()
 			testAssignEmployee() ==
 			(

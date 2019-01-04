@@ -47,7 +47,8 @@ operations
 				return malf;
 		);
  		
- 	
+ 	-- Normal scenario for adding an employee
+	-- as described in section 1.2 of the report, covering requirement R13.	
  	public testEmployee: () ==> ()
  		testEmployee() ==
  		(
@@ -57,7 +58,9 @@ operations
  			emp := createEmployee();
  			assertEqual(emp.getRole(), <Regular>);
  		);
- 		
+ 	
+ 	-- Normal scenario for assigning an employee to a malfunction
+	-- as described in section 1.2 of the report, covering requirement R18.		
  	public testAssignMalfunction: () ==> ()
  		testAssignMalfunction() ==
  		(
@@ -78,7 +81,9 @@ operations
  			assertEqual(malf.getState(), <InRepair>);
  			assertTrue(malf in set emp.getMalfunctions());		
  		);
- 		
+ 	
+ 	-- Normal scenario for getting his malfunctions
+	-- as described in section 1.2 of the report, covering requirement R19.		
  	public testGetAssignedMalfunctions: () ==> ()
  	 testGetAssignedMalfunctions() ==
  	 (

@@ -32,7 +32,9 @@ operations
  		(
  				return PrintManager`getInstance().addQueue(<A4>,<BlackWhite>);
  		);
- 				
+ 	
+ 	-- Normal scenario for loading (adding) 
+	-- as described in section 1.2 of the report, covering requirement R14.	
  	public testClient: () ==> ()
  		testClient() ==
  			(
@@ -42,7 +44,9 @@ operations
  				cli := createClient();
  				assertEqual(cli.getAccount(), 10.0);
  			);
- 			
+ 	
+ 	-- Normal scenario for adding money to a client's account
+	-- as described in section 1.2 of the report, covering requirement R12.				
  	public testAddMoney: () ==> ()
  		testAddMoney() ==
  			(
@@ -55,6 +59,8 @@ operations
  				assertEqual(cli.getAccount(),15.0);
  			);
  			
+ 	-- Normal scenario for creating and deleting a client document
+	-- as described in section 1.2 of the report, covering requirement R3 and R16.			
  	public testCreateAndDeleteDocument: () ==> ()
  		testCreateAndDeleteDocument() ==
  			(
@@ -72,6 +78,7 @@ operations
  				queue := createQueue();
 				PrintManager`getInstance().logout();
  				cli := PrintManager`getInstance().login("utilizador","12345678");
+ 				 -- testing add document
  				doc := cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2);
  				assertNotEqual(doc, nil);
  				assertEqual(cli.getDocs(), {doc});
@@ -81,11 +88,14 @@ operations
  				emp := PrintManager`getInstance().login("admin","admin");
  				assertEqual(cli.getDocs(), {doc});
  				PrintManager`getInstance().logout();
+ 				
+ 				 -- testing delete
  				cli := PrintManager`getInstance().login("utilizador","12345678");
  				cli.deleteDoc(doc);
  				assertEqual(cli.getDocs(), {});
  			);
  			
+ 		-- Exceptional scenario for creating a document without creating the queue it needs	
  	 	public testCreateDocumentWithoutProperQueue: () ==> ()
  		testCreateDocumentWithoutProperQueue() ==
  			(
@@ -95,7 +105,9 @@ operations
  				cli := createClient();
  				assertEqual(cli.addDocument(<A4>,<BlackWhite>,<Portrait>,"Teste", mk_Document`Date(21,12,2014), 2), nil);
  			);
- 			
+ 	
+ 	-- Normal scenario for paying a document when it is printed
+	-- as described in section 1.2 of the report, covering requirement R4.		
  	public testPayDocument: () ==> ()
  		testPayDocument() ==
  			(

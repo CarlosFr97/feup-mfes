@@ -35,17 +35,6 @@ operations
 		   	return docs;
 	  )
 	  pre PrintManager`getInstance().getCurrentUser() <> nil and isofclass(Client, PrintManager`getInstance().getCurrentUser());
-	  
-	public queryPrint: ()  ==> set of Document
-	  queryPrint() ==
-	  (
-		   	dcl docs: set of Document := {};
-		   	for all queue in set dom queues do (
-		   		docs := docs union queue.getDocs();
-		   	);
-		   	return docs;
-	  )
-	  pre isofclass(Employee,PrintManager`getInstance().getCurrentUser());
    
  public print: Document ==> ()
 		print(doc) ==

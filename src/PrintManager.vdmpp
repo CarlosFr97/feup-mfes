@@ -20,33 +20,22 @@ operations
 
 	-- User authentication
 
-	private pure clientExists: seq of (char)  ==> bool
-		clientExists(name) ==
+	private pure userExists: seq of (char)  ==> bool
+		userExists(name) ==
 			(
-				for all client in set clients do
+				dcl users: set of (User) := clients union employees;
+				for all user in set users do
 				(
-					if client.getName() = name then
+					if user.getName() = name then
 						return true;
 				);
 				return false;
 			);
-			
-	private pure employeeExists: seq of (char)  ==> bool
-		employeeExists(name) ==
-			(
-				for all employee in set employees do
-				(
-					if employee.getName() = name then
-						return true;
-				);
-				return false;
-			);
-	
 
 	public addClient: seq of (char) * seq of (char) * real ==> [Client]
 		addClient(username,password,account) ==
 			(
-				if not clientExists(username) then
+				if not userExists(username) then
 				( 
 					dcl cli:Client := new Client(username,password,account);
 					clients := clients union {cli};
@@ -61,7 +50,7 @@ operations
 	public addEmployee: seq of (char) * seq of (char) * Employee`Role ==> bool
 		addEmployee(username, password, role) ==
 			(
-				if not employeeExists(username) then
+				if not userExists(username) then
 				( 
 					dcl emp: Employee := new Employee(username, password, role);
 				 	employees := employees union {emp};
