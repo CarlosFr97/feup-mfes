@@ -323,8 +323,19 @@ public class CommandInterface {
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to print? y/n"));
 
         if(confirm == 'Y'){
+            boolean notEnough = false;
             for(Document doc:choosenDocs) {
-            	choosenPrinter.print(doc);
+                Client cli = (Client) manager.getCurrentUser();
+                
+                if(cli.getAccount().doubleValue() >= doc.getPrice().doubleValue())
+                    choosenPrinter.print(doc);
+                else{
+                    notEnough = true;
+                }
+            }
+
+            if(notEnough){
+                MyUtils.inString("Be aware that all documents solicited were not printed because you did not had sufficient funds.Press Enter to go back: ");
             }
         }
         
