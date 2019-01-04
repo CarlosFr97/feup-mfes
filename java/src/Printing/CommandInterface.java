@@ -62,12 +62,10 @@ public class CommandInterface {
                 case 1:
                     System.out.println("Log in selected");
                     loginMenu();
-                    running = false;
                     break;
                 case 2:
                     System.out.println("Register selected");
                     registerMenu();
-                    running = false;
                     break;
                 case 3:
                     System.out.println("Thanks for using our printing System");
@@ -82,6 +80,8 @@ public class CommandInterface {
     }
 
     public void loginMenu(){
+
+        MyUtils.clearScreen();
         System.out.println("============================");
         System.out.println("|       LOGIN USER         |");
         System.out.println("============================");
@@ -89,10 +89,9 @@ public class CommandInterface {
         String password = MyUtils.inPassword("Password: ");
         
         
-        // TODO DO LOG IN 
         User log = manager.login(username,password);
         if(log == null){
-            System.out.println("Invalid credentials");
+            MyUtils.inChar("Invalid credentials");
             
         }else{
             if(log instanceof Client){
@@ -108,6 +107,7 @@ public class CommandInterface {
     }
 
     public void registerMenu(){
+        MyUtils.clearScreen();
         System.out.println("============================");
         System.out.println("|      REGISTER USER       |");
         System.out.println("============================");
@@ -115,7 +115,6 @@ public class CommandInterface {
         String password = MyUtils.inPassword("Password: ");
         double account = MyUtils.inDouble("Starting money: ");
 
-        // TODO DO REGISTER 
         if(manager.addClient(username,password,account) != null);
             clientMenu();
 
@@ -167,7 +166,6 @@ public class CommandInterface {
                     System.out.println("Log Out");
                     manager.logout();
                     running = false;
-                    mainMenu();
                     break;
                 default:
                     System.out.println("Invalid Selection");
@@ -177,17 +175,20 @@ public class CommandInterface {
     }
 
     public void depositMenu(){
+        MyUtils.clearScreen();
         System.out.println("============================");
         System.out.println("|      DEPOSIT MONEY       |");
         System.out.println("============================");
         double money = MyUtils.inDouble("Money quantity: ");
+        if(money <= 0){
+            MyUtils.inChar("The funds to be add should be positive");
+        }
         char sure = Character.toUpperCase(MyUtils.inChar("Are you sure you want to add " + money + " to your account? y/n"));
 
         if(sure == 'Y') {
-             //TODO ADD MONEY
              Client user = (Client) manager.getCurrentUser();
              user.depositMoney(money);
-             System.out.println("Your money will be added to the account");
+             MyUtils.inChar("Your money will be added to the account");
         }else {
             return;
         }  
@@ -204,8 +205,7 @@ public class CommandInterface {
         System.out.println("============================");
         System.out.println("|       NEW DOCUMENT       |");
         System.out.println("============================");
-        
-        //number of pages
+     
         
         //Choose size
         System.out.println("    1 - A4        2 - A3    ");
@@ -230,7 +230,6 @@ public class CommandInterface {
         pages = MyUtils.inInt("Number of pages of the document");
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to save " + name + " as a Document of size " + size + " displayed in " + type + " printed in " + color + "? y/n"));
         if(confirm == 'Y'){
-            //TODO CREATE DOCUMENT
             Client user = (Client) manager.getCurrentUser();
             user.addDocument(size,color,type,name,date,pages);
 
@@ -242,22 +241,21 @@ public class CommandInterface {
 
     public void printDocumentsMenu(){
         MyUtils.clearScreen();
-
-        //TODO GET PRINTERS
-
        
         ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
         
-        if(printers.size() == 0)
+        if(printers.size() == 0){
+            MyUtils.inChar("There are no printers available in the system");
             return;
+        }
+            
         int i = 0;
 
-        //TODO PRINTERS LIST SHOULD SHOW WHAT TYPE OF DOCUMENTS THEY CAN PRINT
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printers:                |");
         for(Object printer:printers){
-            System.out.println("|       " + i + " - " + ((Printer)printer).getLocation() + "      ");
+            System.out.println("       " + i + " - " + ((Printer)printer).getId() + ":" +  ((Printer)printer).getLocation() + "      ");
             i++;
         }
         System.out.println("============================");
@@ -269,25 +267,25 @@ public class CommandInterface {
         }
         
     
-        
-
-        //TODO GET DOCUMENTS
         ArrayList<Object> documents = new ArrayList<>(choosenPrinter.queryPrintAsClient());
         
-        if(documents.size() == 0)
-        	return;
+        if(documents.isEmpty()){
+            MyUtils.inChar("You have no documents to print in " + choosenPrinter.getLocation());
+            return;
+        }
+        	
       
 
-        //TODO DOCUMENTS LIST SHOULD SHOW CHARACTERISTICS OF EACH
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printer:                 |");
-        System.out.println("|        "  + choosenPrinter.getLocation() + "         ");
+        System.out.println("       "  + choosenPrinter.getId() +":" +choosenPrinter.getLocation() + "         ");
         
         System.out.println("| Documents:               |");
         i = 0;
         for(Object doc:documents){
-            System.out.println("|          " + i + " - " + ((Document)doc).getName() + ":" + ((Document)doc).getDate().toString() +":" + ((Document)doc).getPrice());
+            System.out.println("          " + i + " - " + ((Document)doc).getName() + ":" + ((Document)doc).getDate().toString() +":" + ((Document)doc).getPrice() + "€:" 
+            + ((Document)doc).getSize()+"/" + ((Document)doc).getColor());
             i++;
         }	
         System.out.println("============================");
@@ -297,24 +295,29 @@ public class CommandInterface {
             if(MyUtils.isNumeric(option[a])){
                 Integer number = new Integer(option[a]);
                 if(number >= 0 && number < documents.size()){
-                    choosenDocs.add((Document)documents.get(number));
+                    if(!choosenDocs.contains((Document)documents.get(number)))
+                        choosenDocs.add((Document)documents.get(number));
                 }
             }
         }
 
-        if(choosenDocs.isEmpty())
+        if(choosenDocs.isEmpty()){
+            MyUtils.inChar("We could not find any valid selection");
             return;
+        }
+            
 
         MyUtils.clearScreen();
 
         System.out.println("============================");
         System.out.println("|          PRINT           |");
         System.out.println("| Printer:                 |");
-        System.out.println("|        "  + choosenPrinter + "         ");
+        System.out.println("       "  + choosenPrinter.getId() + ":" + choosenPrinter.getLocation() + "         ");
         System.out.println("| Choosen:                 |");
         double price = 0;
         for(int a = 0; i < choosenDocs.size(); a++){
-            System.out.println("|        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice());
+            System.out.println("        " + i + " - " + choosenDocs.get(a).getName() + ":" + choosenDocs.get(a).getDate().toString() + ":" + choosenDocs.get(a).getPrice() 
+            + "€:" + choosenDocs.get(a).getSize()+"/" + choosenDocs.get(a).getColor());
             price = price + (choosenDocs.get(a).getPrice()).doubleValue();
         }
         
@@ -335,7 +338,7 @@ public class CommandInterface {
             }
 
             if(notEnough){
-                MyUtils.inString("Be aware that all documents solicited were not printed because you did not had sufficient funds.Press Enter to go back: ");
+                MyUtils.inChar("Be aware that all documents solicited were not printed because you did not had sufficient funds.Press Enter to go back");
             }
         }
         
@@ -343,19 +346,21 @@ public class CommandInterface {
 
     public void reportMalfunctionMenu(){
 
-        //TODO GET PRINTERS
+        MyUtils.clearScreen();
 
-        //Temp printers;
     	ArrayList<Object> printers = new ArrayList<>(manager.getPrinters());
         
-        if(printers.size() == 0)
+        if(printers.size() == 0){
+            MyUtils.inChar("There are no printers in the system");
             return;
+        }
+            
         int index= 0;
         System.out.println("============================");
         System.out.println("|    REPORT MALFUNCTION    |");
         System.out.println("| Printers:                |");
         for(Object printer:printers){
-            System.out.println("|       " + index + " - " + ((Printer)printer).getLocation() + "      ");
+            System.out.println("       " + index + " - " + ((Printer)printer).getId() + ":"+((Printer)printer).getLocation() + "      ");
             index++;
         }
         System.out.println("============================");
@@ -382,7 +387,6 @@ public class CommandInterface {
         char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to report? y/n"));
 
         if(confirm == 'Y'){
-            //TODO CREATE REPORT
             User user = manager.getCurrentUser();
             Malfunction malf = user.reportMalfunction(choosenPrinter, problemType, description);
             
@@ -437,7 +441,6 @@ public class CommandInterface {
                     System.out.println("Log Out");
                     manager.logout();
                     running = false;
-                    mainMenu();
                     break;
                 default:
                     System.out.println("Invalid Selection");
@@ -504,7 +507,6 @@ public class CommandInterface {
                     System.out.println("Log Out");
                     manager.logout();
                     running = false;
-                    mainMenu();
                     break;
                 default:
                     System.out.println("Invalid Selection");
@@ -527,7 +529,6 @@ public class CommandInterface {
         String employeeName = MyUtils.inString("Write the employee name: ");
         String password = MyUtils.inPassword("Write employee password: ");
 
-        //TODO create employee
         manager.addEmployee(employeeName, password, employeeType);
 
     }
@@ -535,16 +536,19 @@ public class CommandInterface {
     
     public void assignMalfunctionMenu() {
         
-        MyUtils.clearScreen();
-    	 Object Employee;
+         MyUtils.clearScreen();
          ArrayList<Object> employees = new ArrayList<>(manager.getRegularEmployees());
          
          employees.add(manager.getCurrentUser());
          int index = 0;
     	 System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
+         System.out.println("| Employees:               |");
          for(Object employee:employees){
-             System.out.println("|       " + index + " - " + ((Employee)employee).getName() + "      ");
+             if(index == employees.size()-1){
+                System.out.println("       " + index + " - " + ((Employee)employee).getName() + "(yourself)      ");
+             }else
+                System.out.println("       " + index + " - " + ((Employee)employee).getName() + "      ");
              index++;
          }
          System.out.println("============================");
@@ -558,8 +562,11 @@ public class CommandInterface {
          
          ArrayList<Object> malfunctions = new ArrayList<>(manager.getMalfunctions());
 
-         if(malfunctions.isEmpty())
+         if(malfunctions.isEmpty()){
+             MyUtils.inChar("There are no malfunctions");
             return;
+         }
+            
          
          System.out.println("============================");
          System.out.println("|     ASSIGN MALFUNCTION   |");
@@ -572,24 +579,34 @@ public class CommandInterface {
          for(Object malfunction:malfunctions){
         	 if(((Malfunction)malfunction).getAssignedTo() == null) {
         		filteredMalfunctions.add((Malfunction)malfunction);
-        		System.out.println("|       " + index + " - " + ((Malfunction)malfunction).getProblem().toString() + ":" + ((Malfunction)malfunction).getPrinter().getLocation() + ":"+ ((Malfunction)malfunction).getDescription());
+        		System.out.println("       " + index + " - " + ((Malfunction)malfunction).getProblem().toString() + ":" + ((Malfunction)malfunction).getPrinter().getLocation() + ":"+ ((Malfunction)malfunction).getDescription());
               	index++;
         	 }
         		
          }
+
+         if(filteredMalfunctions.isEmpty()){
+             MyUtils.inChar("There are no unassigned malfunctions");
+             return;
+         }
+
          ArrayList<Malfunction> choosenMalfunctions = new ArrayList<>();
          String option[] = MyUtils.inString("Please choose the malfunctions you wish to assign to " +  choosenEmployee.getName() + " (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
          for(int a = 0; a < option.length; a++){
              if(MyUtils.isNumeric(option[a])){
                  Integer number = new Integer(option[a]);
                  if(number >= 0 && number < filteredMalfunctions.size()){
-                     choosenMalfunctions.add(filteredMalfunctions.get(number));
+                     if(!choosenMalfunctions.contains(filteredMalfunctions.get(number)))
+                        choosenMalfunctions.add(filteredMalfunctions.get(number));
                  }
              }
          }
 
-         if(choosenMalfunctions.isEmpty())
+         if(choosenMalfunctions.isEmpty()){
+             MyUtils.inChar("We could not find any valid selection");
             return;
+         }
+            
          
          
          MyUtils.clearScreen();
@@ -601,7 +618,7 @@ public class CommandInterface {
          
          System.out.println("| Malfunctions:               |");
          for(Malfunction malfunction:choosenMalfunctions){
-        		System.out.println("|       "+ (malfunction).getProblem() + ":" + malfunction.getPrinter().getLocation() + ":" + malfunction.getDescription());	
+        		System.out.println("       "+ (malfunction).getProblem() + ":" + malfunction.getPrinter().getLocation() + ":" + malfunction.getDescription());	
          }
          
          char confirm = Character.toUpperCase(MyUtils.inChar("Are you sure you want to assign? y/n"));
@@ -627,13 +644,13 @@ public class CommandInterface {
             System.out.println("|  Currently there are no printers        ");
         else{
             for(Object printer:printers){
-                System.out.println("| Id:" + ((Printer)printer).getId() + " Location: " + ((Printer)printer).getLocation());
+                System.out.println("  Id:" + ((Printer)printer).getId() + " Location: " + ((Printer)printer).getLocation());
             }
         }
         System.out.println("============================");
         ArrayList<Object> queues = new ArrayList<>(manager.getQueues());
         if(queues.size() == 0){
-            System.out.println("There are no queues available,make sure you create queues first");
+            MyUtils.inChar("There are no queues available,make sure you create queues first");
             return;
         }
 
@@ -646,16 +663,21 @@ public class CommandInterface {
             System.out.println("     "+ index + " - Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize());
             index++;
         }
-        ArrayList<Object> chooseenQueues = new ArrayList<>();
+        ArrayList<Object> choosenQueues = new ArrayList<>();
         String option[] = MyUtils.inString("Please choose the queues you wish to add to the printer (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
         for(int a = 0; a < option.length; a++){
             if(MyUtils.isNumeric(option[a])){
                 Integer number = new Integer(option[a]);
                 if(number >= 0 && number < queues.size()){
-                    if(!chooseenQueues.contains(queues.get(number)))
-                        chooseenQueues.add(queues.get(number));
+                    if(!choosenQueues.contains(queues.get(number)))
+                        choosenQueues.add(queues.get(number));
                 }
             }
+        }
+
+        if(choosenQueues.isEmpty()){
+            MyUtils.inChar("We could not find any valid selection");
+            return;
         }
 
 
@@ -663,7 +685,7 @@ public class CommandInterface {
 
          if(confirm == 'Y'){
              VDMSet setQueues = new VDMSet();
-             setQueues.addAll(chooseenQueues);
+             setQueues.addAll(choosenQueues);
              manager.addPrinter(new_id, location,setQueues);
         	 
          }
@@ -684,7 +706,7 @@ public class CommandInterface {
             System.out.println("|     There are no queues available  |");
         else{
             for(Object queue: queues){
-                System.out.println("|        Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize() + "|");
+                System.out.println("        Color:" + ((Queue)queue).getColor() + "   Size:" + ((Queue)queue).getSize() );
             }
         }
         Object size;
@@ -725,7 +747,7 @@ public class CommandInterface {
         System.out.println("|Your Malfunctions:        |");
         int index = 0;
         if(malfs.size() == 0){
-            System.out.print("|     You have no malfunctions   |");
+            MyUtils.inChar("|     You have no malfunctions   |");
             return;
         }
         else{
@@ -740,8 +762,11 @@ public class CommandInterface {
                 
             }
         }
-        if(filteredMalfunctions.isEmpty())
+        if(filteredMalfunctions.isEmpty()){
+            MyUtils.inChar("You have no malfunctions to solve");
             return;
+        }
+            
 
         ArrayList<Malfunction> choosenMalfunctions = new ArrayList<>();
         String option[] = MyUtils.inString("Please choose the malfunctions you wish to mark as resolved (you can enumerate more than one number at a time, separated with spaces): ").split(" ");
@@ -755,8 +780,11 @@ public class CommandInterface {
             }
         }
 
-        if(choosenMalfunctions.isEmpty())
+        if(choosenMalfunctions.isEmpty()){
+            MyUtils.inChar("We could not find any valid selection");
             return;
+        }
+            
 
         MyUtils.clearScreen();
 
@@ -820,7 +848,7 @@ public class CommandInterface {
 
         ArrayList<Object> employees = new ArrayList<>(manager.getRegularEmployees());
         if(employees.isEmpty()){
-            MyUtils.inString("There is no regular employees in the system. Press enter to go back: ");
+            MyUtils.inChar("There is no regular employees in the system. Press enter to go back: ");
             return;
         }
         for(Object employee: employees){
@@ -845,7 +873,7 @@ public class CommandInterface {
         }
 
 
-        MyUtils.inString("Press enter to go back: ");
+        MyUtils.inChar("Press enter to go back: ");
 
     }
 
@@ -860,7 +888,7 @@ public class CommandInterface {
         HashMap<Object,Object> reportedPrintedDocs = new HashMap<>(manager.reportPrintedDocs());
         
         if(reportedPrintedDocs.isEmpty()){
-            MyUtils.inString("There is no available info. Press Enter to go back: ");
+            MyUtils.inChar("There is no available info. Press Enter to go back: ");
             return;
         }
         System.out.println(" Queues:");
@@ -879,6 +907,8 @@ public class CommandInterface {
             }
             System.out.println();
         }
+
+        MyUtils.inChar("Press enter to go back: ");
 
     }
 
