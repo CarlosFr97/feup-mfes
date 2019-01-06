@@ -43,7 +43,7 @@ operations
 		(
 			dcl newDoc :Document; 
 			for all doc in set documents do 
-				if name = doc.getName() and date = doc.getDate() then
+				if name = doc.getName() and date = doc.getDate() and size = doc.getSize() and color = doc.getColor() and type = doc.getType() and numPages = doc.getNumPages() and doc.getPrinted() = <ToPrint> then
 					return nil;
 					
 			newDoc := new Document(self, size, color, type, name, date, numPages);

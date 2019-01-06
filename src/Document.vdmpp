@@ -70,6 +70,16 @@ operations
 		getDate() ==
 			return date
 		pre PrintManager`getInstance().getCurrentUser() = client or isofclass(Employee, PrintManager`getInstance().getCurrentUser());
+	
+	public getType: () ==> documentType
+		getType() ==
+			return type
+		pre PrintManager`getInstance().getCurrentUser() = client or isofclass(Employee, PrintManager`getInstance().getCurrentUser());
+		
+	public getNumPages: () ==> nat1
+		getNumPages() ==
+			return numPages
+		pre PrintManager`getInstance().getCurrentUser() = client or isofclass(Employee, PrintManager`getInstance().getCurrentUser());	
 		
 	public removeFromQueue: () ==> Queue
 		removeFromQueue() ==
